@@ -10,7 +10,16 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: {
+      '/api': {
+        // 测试环境
+        target: 'http://bigbigcrab.xyz/api',  // 接口域名
+        changeOrigin: true,  //是否跨域
+        pathRewrite: {
+            '^/api': ''   //需要rewrite重写的,
+        }
+      }              
+    },
 
     // Various Dev Server settings
     host: '0.0.0.0', // can be overwritten by process.env.HOST

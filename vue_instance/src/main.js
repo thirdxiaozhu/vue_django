@@ -3,9 +3,12 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import axios from 'axios'
 
+Vue.use(axios);
 Vue.config.productionTip = false
-
+Vue.prototype.$axios = axios
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-fromurlencodeed'
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
