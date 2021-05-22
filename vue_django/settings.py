@@ -38,7 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
+    'rest_framework',
     'mysite.apps.MysiteConfig',
+    'api.apps.ApiConfig',
 ]
 
 MIDDLEWARE = [
@@ -78,7 +80,7 @@ ROOT_URLCONF = 'vue_django.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR , "vue_instance/static"),],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -142,3 +144,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/api/static/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR , "vue_instance/static"),
+]

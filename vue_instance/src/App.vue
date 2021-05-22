@@ -1,27 +1,38 @@
 <template>
-  <div id="app">
-    <img src="./assets/logo.png">
-     <br>
-    <router-link to="/user">User</router-link>
-    <router-link to="/">Root</router-link>
-    <hr>
+  <div id="app" style="height:100%">
+    <Vheader></Vheader>
+    <el-row class="tac" style="height:100%">
+  <el-col :span="4" style="height:100%">
+    <VSidebar></VSidebar>
+  </el-col>
+  <el-col :span="20">
     <router-view/>
+  </el-col>
+</el-row>
+
   </div>
 </template>
 
 <script>
+//第一步：引入子组件
+import Vheader from './components/Vheader'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import VSidebar from './components/Vsidebar.vue'
 export default {
-  name: 'App'
+  name: 'App',
+  
+  //第二步：挂载
+  components:{
+    Vheader:Vheader,
+    VSidebar,
+  }
 }
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+html,body,#app {
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  height:100%;
 }
 </style>
