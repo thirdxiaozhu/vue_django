@@ -12,6 +12,8 @@ Vue.use(axios);
 Vue.use(ElementUI,{ size: 'big', zIndex: 3000 }); //size默认组件尺寸 zindex：弹窗大小
 Vue.use(Vuex);
 Vue.config.productionTip = false
+//在vue全局变量中设置了$axios = axios
+//以后每个组件使用的时候可以 this.$axios
 Vue.prototype.$axios = axios
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-fromurlencodeed'
 /* eslint-disable no-new */

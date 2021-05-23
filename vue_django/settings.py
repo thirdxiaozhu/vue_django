@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 
+import rest_framework
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -58,6 +60,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = (
         'http://localhost:8080',
+        'http://127.0.0.1:8080',
         'http://49.232.147.37:8080',
     )
 # 允许的请求方式
@@ -148,3 +151,14 @@ STATIC_URL = '/api/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR , "vue_instance/static"),
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES':[
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer'
+        ],
+    'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.QueryParameterVersioning',
+    'ALLOWED_VERSIONS':['v1','v2'], #允许的版本
+    'VERSION_PARAM': 'version', #参数
+    'DEFAULT_VERSION': 'v1', #默认版本
+}

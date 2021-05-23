@@ -1,0 +1,157 @@
+*** Starting uWSGI 2.0.19.1 (64bit) on [Sun May 23 02:43:14 2021] ***
+compiled with version: 8.3.1 20191121 (Red Hat 8.3.1-5) on 22 May 2021 18:33:28
+os: Linux-4.18.0-80.el8.x86_64 #1 SMP Tue Jun 4 09:19:46 UTC 2019
+nodename: VM-8-6-centos
+machine: x86_64
+clock source: unix
+pcre jit disabled
+detected number of CPU cores: 1
+current working directory: /root/vue_django/script
+writing pidfile to /root/vue_django/script/uwsgi.pid
+detected binary path: /usr/local/bin/uwsgi
+*** WARNING: you are running uWSGI as root !!! (use the --uid flag) *** 
+chdir() to /root/vue_django/
+your processes number limit is 7212
+your memory page size is 4096 bytes
+detected max file descriptor number: 100001
+lock engine: pthread robust mutexes
+thunder lock: enabled
+uWSGI http bound on 0.0.0.0:8082 fd 6
+uwsgi socket 0 bound to UNIX address /root/vue_django/script/uwsgi.sock fd 9
+*** WARNING: you are running uWSGI as root !!! (use the --uid flag) *** 
+Python version: 3.6.8 (default, Aug 24 2020, 17:57:11)  [GCC 8.3.1 20191121 (Red Hat 8.3.1-5)]
+Python main interpreter initialized at 0x224bd00
+*** WARNING: you are running uWSGI as root !!! (use the --uid flag) *** 
+python threads support enabled
+your server socket listen backlog is limited to 100 connections
+your mercy for graceful operations on workers is 60 seconds
+mapped 486672 bytes (475 KB) for 5 cores
+*** Operational MODE: preforking ***
+WSGI app 0 (mountpoint='') ready in 1 seconds on interpreter 0x224bd00 pid: 55983 (default app)
+*** WARNING: you are running uWSGI as root !!! (use the --uid flag) *** 
+*** uWSGI is running in multiple interpreter mode ***
+spawned uWSGI master process (pid: 55983)
+spawned uWSGI worker 1 (pid: 55985, cores: 1)
+spawned uWSGI worker 2 (pid: 55986, cores: 1)
+spawned uWSGI worker 3 (pid: 55987, cores: 1)
+spawned uWSGI worker 4 (pid: 55988, cores: 1)
+spawned uWSGI worker 5 (pid: 55989, cores: 1)
+spawned uWSGI http 1 (pid: 55990)
+SIGINT/SIGQUIT received...killing workers...
+gateway "uWSGI http 1" has been buried (pid: 55990)
+worker 1 buried after 1 seconds
+worker 2 buried after 1 seconds
+worker 3 buried after 1 seconds
+worker 4 buried after 1 seconds
+worker 5 buried after 1 seconds
+goodbye to uWSGI.
+VACUUM: pidfile removed.
+VACUUM: unix socket /root/vue_django/script/uwsgi.sock removed.
+*** Starting uWSGI 2.0.19.1 (64bit) on [Sun May 23 02:43:32 2021] ***
+compiled with version: 8.3.1 20191121 (Red Hat 8.3.1-5) on 22 May 2021 18:33:28
+os: Linux-4.18.0-80.el8.x86_64 #1 SMP Tue Jun 4 09:19:46 UTC 2019
+nodename: VM-8-6-centos
+machine: x86_64
+clock source: unix
+pcre jit disabled
+detected number of CPU cores: 1
+current working directory: /root/vue_django/script
+writing pidfile to /root/vue_django/script/uwsgi.pid
+detected binary path: /usr/local/bin/uwsgi
+*** WARNING: you are running uWSGI as root !!! (use the --uid flag) *** 
+chdir() to /root/vue_django/
+your processes number limit is 7212
+your memory page size is 4096 bytes
+detected max file descriptor number: 100001
+lock engine: pthread robust mutexes
+thunder lock: enabled
+uWSGI http bound on 0.0.0.0:8082 fd 6
+uwsgi socket 0 bound to UNIX address /root/vue_django/script/uwsgi.sock fd 9
+*** WARNING: you are running uWSGI as root !!! (use the --uid flag) *** 
+Python version: 3.6.8 (default, Aug 24 2020, 17:57:11)  [GCC 8.3.1 20191121 (Red Hat 8.3.1-5)]
+Python main interpreter initialized at 0x24a0d00
+*** WARNING: you are running uWSGI as root !!! (use the --uid flag) *** 
+python threads support enabled
+your server socket listen backlog is limited to 100 connections
+your mercy for graceful operations on workers is 60 seconds
+mapped 486672 bytes (475 KB) for 5 cores
+*** Operational MODE: preforking ***
+WSGI app 0 (mountpoint='') ready in 1 seconds on interpreter 0x24a0d00 pid: 56056 (default app)
+*** WARNING: you are running uWSGI as root !!! (use the --uid flag) *** 
+*** uWSGI is running in multiple interpreter mode ***
+spawned uWSGI master process (pid: 56056)
+spawned uWSGI worker 1 (pid: 56062, cores: 1)
+spawned uWSGI worker 2 (pid: 56063, cores: 1)
+spawned uWSGI worker 3 (pid: 56064, cores: 1)
+spawned uWSGI worker 4 (pid: 56065, cores: 1)
+spawned uWSGI worker 5 (pid: 56066, cores: 1)
+spawned uWSGI http 1 (pid: 56067)
+gateway "uWSGI http 1" has been buried (pid: 56067)
+...gracefully killing workers...
+Gracefully killing worker 1 (pid: 56062)...
+Gracefully killing worker 2 (pid: 56063)...
+Gracefully killing worker 3 (pid: 56064)...
+Gracefully killing worker 4 (pid: 56065)...
+Gracefully killing worker 5 (pid: 56066)...
+worker 1 buried after 1 seconds
+worker 2 buried after 1 seconds
+worker 3 buried after 1 seconds
+worker 4 buried after 1 seconds
+worker 5 buried after 1 seconds
+binary reloading uWSGI...
+chdir() to /root/vue_django/script
+closing all non-uwsgi socket fds > 2 (max_fd = 100001)...
+found fd 9 mapped to socket 0 (/root/vue_django/script/uwsgi.sock)
+running /usr/local/bin/uwsgi
+[uWSGI] getting INI configuration from uwsgi.ini
+*** Starting uWSGI 2.0.19.1 (64bit) on [Sun May 23 02:45:27 2021] ***
+compiled with version: 8.3.1 20191121 (Red Hat 8.3.1-5) on 22 May 2021 18:33:28
+os: Linux-4.18.0-80.el8.x86_64 #1 SMP Tue Jun 4 09:19:46 UTC 2019
+nodename: VM-8-6-centos
+machine: x86_64
+clock source: unix
+pcre jit disabled
+detected number of CPU cores: 1
+current working directory: /root/vue_django/script
+detected binary path: /usr/local/bin/uwsgi
+*** WARNING: you are running uWSGI as root !!! (use the --uid flag) *** 
+chdir() to /root/vue_django/
+your processes number limit is 7212
+your memory page size is 4096 bytes
+detected max file descriptor number: 100001
+lock engine: pthread robust mutexes
+thunder lock: enabled
+uWSGI http bound on 0.0.0.0:8082 fd 6
+uwsgi socket 0 inherited UNIX address /root/vue_django/script/uwsgi.sock fd 9
+*** WARNING: you are running uWSGI as root !!! (use the --uid flag) *** 
+Python version: 3.6.8 (default, Aug 24 2020, 17:57:11)  [GCC 8.3.1 20191121 (Red Hat 8.3.1-5)]
+Python main interpreter initialized at 0x13b0b70
+*** WARNING: you are running uWSGI as root !!! (use the --uid flag) *** 
+python threads support enabled
+your server socket listen backlog is limited to 100 connections
+your mercy for graceful operations on workers is 60 seconds
+mapped 486672 bytes (475 KB) for 5 cores
+*** Operational MODE: preforking ***
+WSGI app 0 (mountpoint='') ready in 0 seconds on interpreter 0x13b0b70 pid: 56056 (default app)
+*** WARNING: you are running uWSGI as root !!! (use the --uid flag) *** 
+*** uWSGI is running in multiple interpreter mode ***
+gracefully (RE)spawned uWSGI master process (pid: 56056)
+spawned uWSGI worker 1 (pid: 56516, cores: 1)
+spawned uWSGI worker 2 (pid: 56517, cores: 1)
+spawned uWSGI worker 3 (pid: 56518, cores: 1)
+spawned uWSGI worker 4 (pid: 56519, cores: 1)
+spawned uWSGI worker 5 (pid: 56520, cores: 1)
+spawned uWSGI http 1 (pid: 56521)
+Not Found: /
+[pid: 56519|app: 0|req: 1/1] 202.113.43.30 () {38 vars in 747 bytes} [Sun May 23 02:48:31 2021] GET / => generated 2057 bytes in 169 msecs (HTTP/1.1 404) 4 headers in 116 bytes (1 switches on core 0)
+Not Found: /favicon.ico
+[pid: 56520|app: 0|req: 1/2] 202.113.43.30 () {40 vars in 727 bytes} [Sun May 23 02:48:32 2021] GET /favicon.ico => generated 2108 bytes in 107 msecs (HTTP/1.1 404) 4 headers in 116 bytes (1 switches on core 0)
+Not Found: /
+[pid: 56517|app: 0|req: 1/3] 202.113.43.30 () {38 vars in 747 bytes} [Sun May 23 03:08:14 2021] GET / => generated 2057 bytes in 136 msecs (HTTP/1.1 404) 4 headers in 116 bytes (1 switches on core 0)
+Not Found: /
+[pid: 56518|app: 0|req: 1/4] 202.113.43.30 () {38 vars in 747 bytes} [Sun May 23 03:08:15 2021] GET / => generated 2057 bytes in 101 msecs (HTTP/1.1 404) 4 headers in 116 bytes (1 switches on core 0)
+Sun May 23 03:10:21 2021 - uWSGI worker 1 screams: UAAAAAAH my master disconnected: i will kill myself !!!
+Sun May 23 03:10:21 2021 - uWSGI worker 4 screams: UAAAAAAH my master disconnected: i will kill myself !!!
+Sun May 23 03:10:21 2021 - uWSGI worker 5 screams: UAAAAAAH my master disconnected: i will kill myself !!!
+Sun May 23 03:10:21 2021 - uWSGI worker 2 screams: UAAAAAAH my master disconnected: i will kill myself !!!
+Sun May 23 03:10:21 2021 - uWSGI worker 3 screams: UAAAAAAH my master disconnected: i will kill myself !!!
