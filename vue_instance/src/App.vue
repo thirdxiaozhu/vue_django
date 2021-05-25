@@ -2,14 +2,13 @@
   <div id="app" style="height:100%">
     <Vheader></Vheader>
     <el-row class="tac" style="height:100%">
-  <el-col :span="4" style="height:100%">
-    <VSidebar></VSidebar>
-  </el-col>
-  <el-col :span="20">
-    <router-view/>
-  </el-col>
-</el-row>
-
+      <el-col :span="4" style="height:100%">
+        <VSidebar></VSidebar>
+      </el-col>
+      <el-col :span="20">
+        <router-view />
+      </el-col>
+    </el-row>
   </div>
 </template>
 

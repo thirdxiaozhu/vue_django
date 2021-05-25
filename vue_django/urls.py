@@ -19,5 +19,6 @@ from api import urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    re_path(r'^api/(?P<version>\w+)/', include(urls)),
+    #re_path(r'^api/(?P<version>\w+)/', include(urls)),
+    path('api/',include(urls)),
 ]

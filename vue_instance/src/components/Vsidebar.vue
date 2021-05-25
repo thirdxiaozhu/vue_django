@@ -10,10 +10,10 @@
           <i class="el-icon-menu"></i>
           <span>常规管理</span>
         </template>
-          <el-menu-item index="1-1">学籍管理</el-menu-item>
-          <el-menu-item index="1-2">教籍管理</el-menu-item>
-          <el-menu-item index="1-3">课程管理</el-menu-item>
-          <el-menu-item index="1-4">考试管理</el-menu-item>
+          <el-menu-item index="1-1"><router-link to="/studentlist">学籍管理</router-link></el-menu-item>
+          <el-menu-item index="1-2"><router-link to="/teacherlist">教籍管理</router-link></el-menu-item>
+          <el-menu-item index="1-3"><router-link to="/course">课程管理</router-link></el-menu-item>
+          <el-menu-item index="1-4"><router-link to="/test">考试管理</router-link></el-menu-item>
       </el-submenu>
       <el-submenu index="2">
         <template slot="title">
@@ -31,7 +31,7 @@
         </template>
         <el-submenu index="3-1">
           <template slot="title">
-            <span>教学机构</span>
+            <span>教学机构变更</span>
           </template>
           <el-menu-item index="3-1-1">可招生学院增加</el-menu-item>
           <el-menu-item index="3-1-2">可招生学院删除</el-menu-item>
@@ -40,17 +40,24 @@
         </el-submenu>
         <el-submenu index="3-2">
           <template slot="title">
-            <span>专业</span>
+            <span>专业变更</span>
           </template>
           <el-menu-item index="3-2-1">专业增加</el-menu-item>
           <el-menu-item index="3-2-2">专业删除</el-menu-item>
         </el-submenu>
         <el-submenu index="3-3">
           <template slot="title">
-            <span>班级</span>
+            <span>班级变更</span>
           </template>
           <el-menu-item index="3-3-1">班级增加</el-menu-item>
           <el-menu-item index="3-3-2">班级删除</el-menu-item>
+        </el-submenu>
+        <el-submenu index="3-4">
+          <template slot="title">
+            <span>教学地点变更</span>
+          </template>
+          <el-menu-item index="3-4-1">教学楼变更</el-menu-item>
+          <el-menu-item index="3-4-2">教师变更</el-menu-item>
         </el-submenu>
       </el-submenu>
       <el-menu-item index="4">
@@ -97,5 +104,13 @@ export default {
 </script>
 
 <style scoped>
+.router-link-active {
+  text-decoration: none;
+  color:dodgerblue;
+}
+a{
+  text-decoration: none;
+  color:black;
+}
 
 </style>

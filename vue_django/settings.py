@@ -104,8 +104,19 @@ WSGI_APPLICATION = 'vue_django.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        #指定数据库类型
+        'ENGINE': 'django.db.backends.mysql',
+        #连接数据库的地址
+        'HOST' : '127.0.0.1',
+        #端口
+        'PORT' : 3306,
+        #数据库名称
+        'NAME': "vue_django",
+        #用户
+        'USER': "root",
+        #密码
+        'PASSWORD' : "zoujiaxv7891",
+        'OPTIONS':{'charset':'utf8mb4'},
     }
 }
 
