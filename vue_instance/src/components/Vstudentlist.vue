@@ -1,61 +1,112 @@
 <template>
     <div>
-        <h3>学籍界面</h3>
         <template>
             <el-table :data="tableData" style="width: 100%">
-                <el-table-column prop="" label="#" width="180">
+                <el-table-column prop="" label="#" width="90" type="index" align="center">
+                    <template slot-scope="scope">
+<!--                         <span>{{(pages.page - 1) * pages.size + scope.$index + 1}}</span> -->
+                        <span>{{scope.$index + 1}}</span>
+                    </template>
                 </el-table-column>
-                <el-table-column prop="stu_id" label="学号" width="180">
+                <el-table-column prop="stu_id" label="学号" width="180" align="center">
                 </el-table-column>
-                <el-table-column prop="name" label="姓名" width="180">
+                <el-table-column prop="name" label="姓名" width="180" align="center">
                 </el-table-column>
-                <el-table-column prop="class" label="所在班级" width="180">
+                <el-table-column prop="class" label="所在班级" width="180" align="center">
                 </el-table-column>
-                <el-table-column prop="sex" label="性别" width="180">
+                <el-table-column prop="sex" label="性别" width="180" align="center">
                 </el-table-column>
-                <el-table-column prop="operate" label="操作">
+                <el-table-column label="操作" align="center">
+                    <template slot-scope="scope">
+                        <el-button size="medium" type="primary" @click="handleEdit(scope.$index, scope.row);drawer=true">编辑</el-button>
+<!--                         <el-button size="medium" type="primary" @click="drawer=true">编辑</el-button> -->
+                    </template>
                 </el-table-column>
             </el-table>
+
+            <el-drawer :title="`正在编辑${operating_id} ${operating_name}同学的信息`" :visible.sync="drawer" :direction="direction" :before-close="handleClose">
+                <span>
+                    <Vstudentdraw :stu_id="operating_id"></Vstudentdraw>
+                </span>
+            </el-drawer>
         </template>
     </div>
 </template>
 
 <script>
-export default {
-    name: 'Vstudentlist',
-    data(){
-        return {
-            tableData: []
-        }
-    },
-    mounted: function(){
-        this.initList()
-    },
-    methods:{
-        initList: function(){
+    import Vstudentdraw from './Vstudentdraw'
+    export default {
+        name: 'Vstudentlist',
+        data() {
+            return {
+                tableData: [],
+                pages: {
+                    page: 1,
+                    size: 10,
+                    total: 100
+                },
+                operating_id: 0,
+                operating_name: 0,
+                drawer: false,
+                direction: 'rtl',
+            }
+        },
+        mounted: function () {
+            this.initList()
+        },
+        methods: {
+            initList: function () {
+                var that = this;
+                this.$axios.request({
+                    url: "/api/studentlist",
+                    method: "GET"
+                }).then(function (ret) {
+                    //ajax(axios)发送成功后，响应的内容
+                    if (ret.data.code === 1000) {
+                        //this.courseList = ret.data.data
+                        //为什么不能按照上面那个写？——因为这里的this指的是$axios里面的this
+                        //而不是data里面的，所以要按照下面的
+                        that.tableData = ret.data.students
+                    } else {
+                        alert('获取数据失败')
+                    }
+                }).catch(function (ret) {
+                })
+            },
+            handleClose(done) {
+                this.$confirm('确认关闭？')
+                    .then(_ => {
+                        done();
+                    })
+                    .catch(_ => { });
+            },
+            handleEdit(index, row) {
+                this.operating_id = row.stu_id;
+                this.operating_name = row.name;
+                console.log(this.operating_id, row);
+            },
+        },
 
-            var that = this;
-            this.$axios.request({
-                url:"/api/studentlist",
-                method:"GET"
-            }).then(function(ret){
-                //ajax(axios)发送成功后，响应的内容
-                if(ret.data.code === 1000){
-                    //this.courseList = ret.data.data
-                    //为什么不能按照上面那个写？——因为这里的this指的是$axios里面的this
-                    //而不是data里面的，所以要按照下面的
-                    that.tableData = ret.data.students
-                }else{
-                    alert('获取数据失败')
-                }
-            }).catch(function(ret){
-
-            })
+        components: {
+            Vstudentdraw,
         }
     }
-}
 </script>
 
 <style scoped>
 
+</style>
+
+
+<style rel="stylesheet/scss" lang="scss">
+/*1.显示滚动条：当内容超出容器的时候，可以拖动：*/
+.el-drawer__body {
+    overflow: auto;
+    /* overflow-x: auto; */
+}
+ 
+/*2.隐藏滚动条，太丑了*/
+.el-drawer__container ::-webkit-scrollbar{
+    display: none;
+}
 </style>
