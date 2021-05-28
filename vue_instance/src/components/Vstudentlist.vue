@@ -74,7 +74,7 @@
                 })
             },
             handleClose(done) {
-                this.$confirm('确认关闭？')
+                this.$confirm('未进行保存的信息将丢失，是否关闭？')
                     .then(_ => {
                         done();
                     })
@@ -98,15 +98,15 @@
 </style>
 
 
-<style rel="stylesheet/scss" lang="scss">
-/*1.显示滚动条：当内容超出容器的时候，可以拖动：*/
-.el-drawer__body {
-    overflow: auto;
-    /* overflow-x: auto; */
-}
- 
-/*2.隐藏滚动条，太丑了*/
-.el-drawer__container ::-webkit-scrollbar{
-    display: none;
-}
+<style lang="scss">
+    /*1.显示滚动条：当内容超出容器的时候，可以拖动：*/
+    .el-drawer__body {
+        overflow: auto;
+        /* overflow-x: auto; */
+    }
+     
+    /*2.隐藏滚动条，太丑了*/
+    .el-drawer__container ::-webkit-scrollbar{
+        display: none;
+    }
 </style>

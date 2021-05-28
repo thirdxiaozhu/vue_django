@@ -24,3 +24,11 @@ class studentStatus(APIView):
             'students': stulist,
         }
         return Response(ret)
+
+
+class studentInfo(APIView):
+    def get(self,request, * args , **kwargs):
+        stu_id = request.GET.get('stu_id')
+
+        print(stu_id)
+        return Response("aaa")
