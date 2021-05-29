@@ -4,7 +4,7 @@
             <el-input v-model="form.stu_id" style="width: 90%;"></el-input>
         </el-form-item>
         <el-form-item label="密码">
-            <el-input v-model="form.passeword" style="width: 90%;"></el-input>
+            <el-input v-model="form.password" style="width: 90%;"></el-input>
         </el-form-item>
         <el-form-item label="姓名">
             <el-input v-model="form.name" style="width: 90%;"></el-input>
@@ -26,8 +26,18 @@
             <el-date-picker type="date" placeholder="选择日期" v-model="form.entryday" style="width: 90%;">
             </el-date-picker>
         </el-form-item>
+        <el-form-item label="政治面貌">
+            <el-select v-model="outlookselected" placeholder="请选择" style="width: 90%">
+                <el-option
+                    v-for="item in outlooks"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                </el-option>
+            </el-select>
+        </el-form-item>
         <el-form-item label="所在年级">
-            <el-select v-model="form.region" placeholder="请选择" style="width: 90%">
+            <el-select v-model="optionselected" placeholder="请选择" style="width: 90%">
                 <el-option
                     v-for="item in options"
                     :key="item.value"
@@ -36,11 +46,20 @@
                 </el-option>
             </el-select>
         </el-form-item>
+        <el-form-item label="所在机构">
+            <el-cascader
+               placeholder="搜索专业或班级"
+               :options="classes"
+               style="width: 90%"></el-cascader>
+        </el-form-item>
         <el-form-item label="籍贯">
             <el-cascader
-               placeholder="搜索地名"
-               :options="addresses"
-               filterable style="width: 90%"></el-cascader>
+                :placeholder="defaultlocation"
+                style="width: 90%"
+                v-model="form.address"
+                :props="add_cas_props"
+                @change="locationChange"
+                ></el-cascader>
         </el-form-item>
         <el-form-item label="绩点">
             <el-input v-model="form.credit" style="width: 90%;"></el-input>
@@ -53,6 +72,7 @@
 </template>
 
 <script>
+    import {getLocation} from "@/api/location"
     export default {
         name: 'Vstudentdraw',
         data() {
@@ -63,11 +83,16 @@
                     name: '',
                     sex: '',
                     idnumber: '',
+                    grade: '',
                     birthday: '',
                     entryday: '',
-                    delivery: false,
-                    credit: ''
+                    credit: '',
+                    outlook: '',
+                    address: [],
+/*                     address: '', */
                 },
+                defaultlocation: "aaaa",
+                //年级
                 options: [{
                     value: '1',
                     label: '本科一年级'
@@ -90,45 +115,97 @@
                     value: '7',
                     label: '研究生三年级'
                 }],
+                //默认值，一定要是字符串！！！！
+                optionselected: '1',
 
-                addresses:{},
+                //政治面貌
+                outlooks: [],
+                outlookselected: '1',
+                //级联选择地区
+                add_cas_props: {
+                    lazy: true,
+                    lazyLoad(node, resolve) {
+                        const level = node.level;
+                        //请求参数
+                        const requestData = {};
+
+                        if(level === 0){  //国家
+                            requestData.type = "country";
+                        }else if(level === 1){ //省份
+                            requestData.type = "province";
+                            requestData.country_id = node.value;
+                        }else if(level === 2){ //城市
+                            requestData.type = "city";
+                            requestData.province_id = node.value;
+                        } 
+                        //省市区接口
+                        getLocation(requestData).then(res=>{
+                            resolve(res.data.data)
+                        })
+                        //resolve(nodes)
+                    }
+                }
             }
         },
         props: {
             stu_id: String,
         },
         mounted: function () {
-            this.initInfo()
+            this.getOptions();
+            this.initInfo();
         },
         methods: {
             onSave() {
                 console.log('submit!');
             },
+            getOptions() {
+                var that = this;
+
+                this.$axios.request({
+                    url: "/api/editstuoptions",
+                    method: "GET",
+                }).then(ret => {
+                    if (ret.data.code == 1000) {
+                        that.outlooks = ret.data.outlooklist;
+                    } else {
+                        alter('获取数据失败')
+                    }
+                }).catch(ret => {
+                })
+            },
             initInfo() {
                 var that = this;
-                let postdata = this.$qs.stringify({
-                    "stu_id":this.stu_id,
-                });
-                console.log(postdata);
+                /*                 let postdata = this.$qs.stringify({
+                                    "stu_id":this.stu_id,
+                                }); */
                 this.$axios.request({
                     url: "/api/studentinfo",
                     method: "GET",
                     params: {
-                        'stu_id':postdata,
+                        'stu_id': this.stu_id,
                     }
-                }).then(function (ret) {
-                    //ajax(axios)发送成功后，响应的内容
+                }).then(ret => {
                     if (ret.data.code === 1000) {
-                        //this.courseList = ret.data.data
-                        //为什么不能按照上面那个写？——因为这里的this指的是$axios里面的this
-                        //而不是data里面的，所以要按照下面的
-                        that.tableData = ret.data.students
+                        //需做一次类型转换，将number转换成string
+                        that.optionselected = ret.data.form.grade.toString();
+                        that.outlookselected = ret.data.form.outlook.toString();
+                        that.defaultlocation = ret.data.country + "/" + ret.data.province + "/" + ret.data.city;
+/*                         that.form.address.push(ret.data.form.country_id.toString())
+                        that.form.address.push(ret.data.form.province_id.toString())
+                        that.form.address.push(ret.data.form.city_id.toString()) */
+                        that.form = ret.data.form;
+                        console.log(this.form)
                     } else {
                         alert('获取数据失败')
                     }
                 }).catch(function (ret) {
                 })
             },
+            locationChange(value) {
+                console.log(value.join(","))
+                console.log(typeof(this.form.address.join(",")))
+                console.log(this.form)
+            }
         },
         components: {
         },

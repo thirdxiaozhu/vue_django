@@ -1,35 +1,60 @@
 <template>
     <div>
-        <template>
-            <el-table :data="tableData" style="width: 100%">
-                <el-table-column prop="" label="#" width="90" type="index" align="center">
-                    <template slot-scope="scope">
-<!--                         <span>{{(pages.page - 1) * pages.size + scope.$index + 1}}</span> -->
-                        <span>{{scope.$index + 1}}</span>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="stu_id" label="学号" width="180" align="center">
-                </el-table-column>
-                <el-table-column prop="name" label="姓名" width="180" align="center">
-                </el-table-column>
-                <el-table-column prop="class" label="所在班级" width="180" align="center">
-                </el-table-column>
-                <el-table-column prop="sex" label="性别" width="180" align="center">
-                </el-table-column>
-                <el-table-column label="操作" align="center">
-                    <template slot-scope="scope">
-                        <el-button size="medium" type="primary" @click="handleEdit(scope.$index, scope.row);drawer=true">编辑</el-button>
-<!--                         <el-button size="medium" type="primary" @click="drawer=true">编辑</el-button> -->
-                    </template>
-                </el-table-column>
-            </el-table>
+        <el-container>
+            <el-header style="height: 40px;" :span="5" >
+                <el-col :span="10">
+                    <el-breadcrumb separator="/" style="margin-top: 20px; font-size:large;">
+                        <el-breadcrumb-item>首页</el-breadcrumb-item>
+                        <el-breadcrumb-item>常规管理</el-breadcrumb-item>
+                        <el-breadcrumb-item style="font-weight: bold;">学籍管理</el-breadcrumb-item>
+                    </el-breadcrumb>
+                </el-col>
+                <el-col :span="3" style="margin-top: 10px; float: right;">
+                    <el-button type="success">添加学生</el-button>
+                </el-col>
+                <el-col :span="5" style="float: right; margin-top: 10px;">
+                    <el-input placeholder="请输入内容" v-model="search_text">
+                        <el-button slot="append" icon="el-icon-search"></el-button>
+                    </el-input>
+                </el-col>
+            </el-header>
+            <el-main>
+                <el-collapse v-model="activeNames" @change="handleChange">
+                    <el-collapse-item title="点击展开筛选面板" name="1" align="center">
+                    </el-collapse-item>
+                </el-collapse>
+                <el-table :data="tableData" style="width: 100%">
+                    <el-table-column prop="" label="#" width="90" type="index" align="center">
+                        <template slot-scope="scope">
+                            <!--                         <span>{{(pages.page - 1) * pages.size + scope.$index + 1}}</span> -->
+                            <span>{{scope.$index + 1}}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="stu_id" label="学号" width="180" align="center">
+                    </el-table-column>
+                    <el-table-column prop="name" label="姓名" width="180" align="center">
+                    </el-table-column>
+                    <el-table-column prop="class" label="所在班级" width="180" align="center">
+                    </el-table-column>
+                    <el-table-column prop="sex" label="性别" width="180" align="center">
+                    </el-table-column>
+                    <el-table-column label="操作" align="center">
+                        <template slot-scope="scope">
+                            <el-button size="medium" type="primary"
+                                @click="handleEdit(scope.$index, scope.row);drawer=true">编辑</el-button>
+                            <!--                         <el-button size="medium" type="primary" @click="drawer=true">编辑</el-button> -->
+                        </template>
+                    </el-table-column>
+                </el-table>
 
-            <el-drawer :title="`正在编辑${operating_id} ${operating_name}同学的信息`" :visible.sync="drawer" :direction="direction" :before-close="handleClose">
-                <span>
-                    <Vstudentdraw :stu_id="operating_id"></Vstudentdraw>
-                </span>
-            </el-drawer>
-        </template>
+                <el-drawer :title="`正在编辑${operating_id} ${operating_name}同学的信息`" v-if="drawer" :visible.sync="drawer"
+                    :direction="direction" :before-close="handleClose">
+                    <span>
+                        <Vstudentdraw :stu_id="operating_id"></Vstudentdraw>
+                    </span>
+                </el-drawer>
+            </el-main>
+        </el-container>
     </div>
 </template>
 

@@ -653,7 +653,7 @@ CREATE TABLE `adminstrator_teacher_title` (
 
 LOCK TABLES `adminstrator_teacher_title` WRITE;
 /*!40000 ALTER TABLE `adminstrator_teacher_title` DISABLE KEYS */;
-INSERT INTO `adminstrator_teacher_title` VALUES (1,'教授一级'),(2,'教授二级'),(3,'教授三级'),(4,'教授四级'),(5,'副教授一级'),(6,'副教授二级'),(7,'副教授三级'),(8,'讲师一级'),(9,'讲师二级'),(10,'讲师三级'),(11,'助教一级'),(12,'助教二级'),(13,'助教三级');
+INSERT INTO `api_teacher_title` VALUES (1,'教授一级'),(2,'教授二级'),(3,'教授三级'),(4,'教授四级'),(5,'副教授一级'),(6,'副教授二级'),(7,'副教授三级'),(8,'讲师一级'),(9,'讲师二级'),(10,'讲师三级'),(11,'助教一级'),(12,'助教二级'),(13,'助教三级');
 /*!40000 ALTER TABLE `adminstrator_teacher_title` ENABLE KEYS */;
 UNLOCK TABLES;
 

@@ -107,15 +107,15 @@ DATABASES = {
         #指定数据库类型
         'ENGINE': 'django.db.backends.mysql',
         #连接数据库的地址
-        'HOST' : '127.0.0.1',
+        'HOST' : 'bj-cynosdbmysql-grp-o8f6p4fm.sql.tencentcdb.com',
         #端口
-        'PORT' : 3306,
+        'PORT' : 25007,
         #数据库名称
         'NAME': "vue_django",
         #用户
         'USER': "root",
         #密码
-        'PASSWORD' : "zoujiaxv7891",
+        'PASSWORD' : "Zoujiaxv7891",
         'OPTIONS':{'charset':'utf8mb4'},
     }
 }
