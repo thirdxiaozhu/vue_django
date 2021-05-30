@@ -7,6 +7,7 @@ import Vstudentlist from '@/components/Vstudentlist'
 import Vteacherlist from '@/components/Vteacherlist'
 import Vcourse from '@/components/Vcourse'
 import Vtest from '@/components/Vtest'
+import admin_index from '@/views/admin_index'
 
 
 Vue.use(Router)
@@ -15,39 +16,46 @@ export default new Router({
   mode: 'history',
   routes: [
     {
-      path: '/',
-      name: 'Vmain',
-      component: Vmain
-    },
-    {
-      path: '/user',
-      name: 'User',
-      component: User
-    },
-    {
-      path: '/note',
-      name: 'Vnote',
-      component: Vnote
-    },
-    {
-      path: '/studentlist',
-      name: 'Vstudentlist',
-      component: Vstudentlist
-    },
-    {
-      path: '/teacherlist',
-      name: 'Vteacherlist',
-      component: Vteacherlist
-    },
-    {
-      path: '/course',
-      name: 'Vcourse',
-      component: Vcourse
-    },
-    {
-      path: '/test',
-      name: 'Vtest',
-      component: Vtest
+      path: '/admin',
+      name: 'admin_index',
+      component: admin_index,
+      children: [
+        {
+          path: '/',
+          name: 'Vmain',
+          component: Vmain
+        },
+        {
+          path: 'user',
+          name: 'User',
+          component: User
+        },
+        {
+          path: 'note',
+          name: 'Vnote',
+          component: Vnote
+        },
+        {
+          path: 'studentlist',
+          name: 'Vstudentlist',
+          component: Vstudentlist
+        },
+        {
+          path: 'teacherlist',
+          name: 'Vteacherlist',
+          component: Vteacherlist
+        },
+        {
+          path: 'course',
+          name: 'Vcourse',
+          component: Vcourse
+        },
+        {
+          path: 'test',
+          name: 'Vtest',
+          component: Vtest
+        },
+      ]
     },
   ]
 })

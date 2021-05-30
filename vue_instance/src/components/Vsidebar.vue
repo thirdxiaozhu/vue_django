@@ -10,10 +10,10 @@
           <i class="el-icon-menu"></i>
           <span>常规管理</span>
         </template>
-          <el-menu-item index="1-1"><router-link to="/studentlist">学籍管理</router-link></el-menu-item>
-          <el-menu-item index="1-2"><router-link to="/teacherlist">教籍管理</router-link></el-menu-item>
-          <el-menu-item index="1-3"><router-link to="/course">课程管理</router-link></el-menu-item>
-          <el-menu-item index="1-4"><router-link to="/test">考试管理</router-link></el-menu-item>
+          <el-menu-item index="1-1"><router-link to="/admin/studentlist">学籍管理</router-link></el-menu-item>
+          <el-menu-item index="1-2"><router-link to="/admin/teacherlist">教籍管理</router-link></el-menu-item>
+          <el-menu-item index="1-3"><router-link to="/admin/course">课程管理</router-link></el-menu-item>
+          <el-menu-item index="1-4"><router-link to="/admin/test">考试管理</router-link></el-menu-item>
       </el-submenu>
       <el-submenu index="2">
         <template slot="title">
