@@ -1,13 +1,14 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import User from '@/components/User'
-import Vmain from '@/components/Vmain'
-import Vnote from '@/components/Vnote'
-import Vstudentlist from '@/components/Vstudentlist'
-import Vteacherlist from '@/components/Vteacherlist'
-import Vcourse from '@/components/Vcourse'
-import Vtest from '@/components/Vtest'
+import Vmain from '@/components/adminviews/Vmain'
+import Vstudentlist from '@/components/adminviews/Vstudentlist'
+import Vteacherlist from '@/components/adminviews/Vteacherlist'
+import Vcourse from '@/components/adminviews/Vcourse'
+import Vtest from '@/components/adminviews/Vtest'
 import admin_index from '@/views/admin_index'
+import login from '@/views/login'
+import student_index from '@/views/student_index'
+import Vmain4stu from '@/components/studentviews/Vmain'
 
 
 Vue.use(Router)
@@ -24,16 +25,6 @@ export default new Router({
           path: '/',
           name: 'Vmain',
           component: Vmain
-        },
-        {
-          path: 'user',
-          name: 'User',
-          component: User
-        },
-        {
-          path: 'note',
-          name: 'Vnote',
-          component: Vnote
         },
         {
           path: 'studentlist',
@@ -57,5 +48,22 @@ export default new Router({
         },
       ]
     },
+    {
+      path: '/login',
+      name: 'login',
+      component: login
+    },
+    {
+      path: '/student',
+      name: 'student',
+      component: student_index,
+      children: [
+         {
+          path: '/',
+          name: 'Vmain',
+          component: Vmain4stu
+        },
+      ]
+    }
   ]
 })

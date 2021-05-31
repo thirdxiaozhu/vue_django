@@ -26,6 +26,7 @@ class StudentInfo (models.Model):
     #选课
     elecourse = models.ManyToManyField(to="Course", through="Student2Course",
                                        through_fields=("student_id", "course_id"))
+    token = models.ForeignKey(to="Usertoken",on_delete=models.CASCADE , null=True)
 
 
 class ClassInfo (models.Model):
@@ -61,6 +62,7 @@ class AdminInfo (models.Model):
     adm_id = models.CharField(
         null=False, max_length=20, default="", unique=True)
     password = models.CharField(null=False, max_length=50, default="123456")
+    token = models.ForeignKey(to="Usertoken",on_delete=models.CASCADE , null=True)
 
 
 class TeacherInfo(models.Model):
@@ -82,6 +84,7 @@ class TeacherInfo(models.Model):
     course = models.ManyToManyField(to="Course")
     college = models.ForeignKey(
         to="CollegeInfo4tc", on_delete=models.CASCADE, default=2)
+    token = models.ForeignKey(to="Usertoken",on_delete=models.CASCADE, null=True)
 
 
 #
@@ -234,3 +237,9 @@ class Message(models.Model):
 class IDNumber(models.Model):
     id = models.AutoField(primary_key=True)
     idnumber = models.CharField(max_length=30,unique=True)
+
+
+class Usertoken(models.Model):
+    id = models.AutoField(primary_key=True)
+    token = models.CharField(max_length = 64)
+    userid = models.CharField(max_length=30 , null=True)

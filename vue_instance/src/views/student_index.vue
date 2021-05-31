@@ -14,9 +14,9 @@
 
 <script>
 //第一步：引入子组件
-import Vheader from '../components/adminviews/Vheader'
+import Vheader from '../components/studentviews/Vheader'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import VSidebar from '../components/adminviews/Vsidebar.vue'
+import VSidebar from '../components/studentviews/Vsidebar.vue'
 export default {
   name: 'admin_index',
   

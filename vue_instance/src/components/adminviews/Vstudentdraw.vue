@@ -48,9 +48,12 @@
         </el-form-item>
         <el-form-item label="所在机构">
             <el-cascader
-               placeholder="搜索专业或班级"
-               :options="classes"
-               style="width: 90%"></el-cascader>
+               :placeholder="defaultclass"
+               style="width: 90%"
+               v-model="form.classes"
+               :props="cla_cas_props"
+               @change="classChange"
+               ></el-cascader>
         </el-form-item>
         <el-form-item label="籍贯">
             <el-cascader
@@ -72,7 +75,7 @@
 </template>
 
 <script>
-    import {getLocation} from "@/api/location"
+    import {getLocation, getClass} from "@/api/axioses"
     export default {
         name: 'Vstudentdraw',
         data() {
@@ -89,9 +92,11 @@
                     credit: '',
                     outlook: '',
                     address: [],
+                    classes: [],
 /*                     address: '', */
                 },
-                defaultlocation: "aaaa",
+                defaultlocation: "",
+                defaultclass: "",
                 //年级
                 options: [{
                     value: '1',
@@ -142,7 +147,27 @@
                         getLocation(requestData).then(res=>{
                             resolve(res.data.data)
                         })
-                        //resolve(nodes)
+                    }
+                },
+                cla_cas_props: {
+                    lazy: true,
+                    lazyLoad(node, resolve) {
+                        const level = node.level;
+                        //请求参数
+                        const requestData = {};
+                        if(level === 0){  //学院
+                            requestData.type = "college";
+                        }else if(level === 1){ //专业
+                            requestData.type = "major";
+                            requestData.college_id = node.value;
+                        }else if(level === 2){ //班级
+                            requestData.type = "class";
+                            requestData.major_id = node.value;
+                        } 
+                        //接口
+                        getClass(requestData).then(res=>{
+                            resolve(res.data.data)
+                        })
                     }
                 }
             }
@@ -175,9 +200,6 @@
             },
             initInfo() {
                 var that = this;
-                /*                 let postdata = this.$qs.stringify({
-                                    "stu_id":this.stu_id,
-                                }); */
                 this.$axios.request({
                     url: "/api/studentinfo",
                     method: "GET",
@@ -190,9 +212,7 @@
                         that.optionselected = ret.data.form.grade.toString();
                         that.outlookselected = ret.data.form.outlook.toString();
                         that.defaultlocation = ret.data.country + "/" + ret.data.province + "/" + ret.data.city;
-/*                         that.form.address.push(ret.data.form.country_id.toString())
-                        that.form.address.push(ret.data.form.province_id.toString())
-                        that.form.address.push(ret.data.form.city_id.toString()) */
+                        that.defaultclass = ret.data.college + "/" + ret.data.major + "/" + ret.data.class;
                         that.form = ret.data.form;
                         console.log(this.form)
                     } else {

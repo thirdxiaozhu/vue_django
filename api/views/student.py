@@ -33,10 +33,14 @@ class studentInfo(APIView):
         student = models.StudentInfo.objects.filter(stu_id = stu_id).first()
 
         location = []
+        classes = []
         location.append(student.native.Province.Country.id)
         location.append(student.native.Province.id)
         location.append(student.native.id)
-        print(location)
+        classes.append(student.Class.major.college.id)
+        classes.append(student.Class.major.id)
+        classes.append(student.Class.id)
+        print(classes)
         form={
             'stu_id': student.stu_id,
             'password': student.password,
@@ -49,6 +53,7 @@ class studentInfo(APIView):
             'credit': student.credit,
             'outlook': student.outlook_id,
             'address':location,
+            'class' : classes,
         }
 
         ret={
@@ -57,6 +62,9 @@ class studentInfo(APIView):
             'city': student.native.atitle,
             'province': student.native.Province.atitle,
             'country': student.native.Province.Country.atitle,
+            'college': student.Class.major.college.name,
+            'major': student.Class.major.name,
+            'class':student.Class.class_id, 
         }
 
         print(student)
@@ -131,5 +139,57 @@ class getlocation(APIView):
             ret={
                 'code': 1000,
                 'data':citylist,
+            }
+            return Response(ret)
+
+class getclass(APIView):
+    def get(self, request, *args, **kwargs):
+        ret_type = request.GET.get('type')
+        if ret_type == "college":
+            colleges = models.CollegeInfo.objects.all()
+            collegelist = []
+            for i in colleges:
+                data={
+                    'value': str(i.id),
+                    'label': i.name,
+                }
+                collegelist.append(data)
+
+            ret={
+                'code': 1000,
+                'data':collegelist,
+            }
+            return Response(ret)
+
+        elif ret_type == "major":
+            majors = models.MajorInfo.objects.filter(college_id = request.GET.get('college_id'))
+            majorlist = []
+            for i in majors:
+                data={
+                    'value': str(i.id),
+                    'label': i.name,
+                }
+                majorlist.append(data)
+
+            ret={
+                'code':1000,
+                'data': majorlist
+            }
+            return Response(ret)
+
+        else :
+            classes = models.ClassInfo.objects.filter(major_id = request.GET.get('major_id'))
+            classlist = []
+            for i in classes:
+                data={
+                    'value': str(i.id),
+                    'label': i.class_id,
+                    'leaf': 'level >= 2' #设置中止叶节点
+                }
+                classlist.append(data)
+
+            ret={
+                'code':1000,
+                'data': classlist
             }
             return Response(ret)

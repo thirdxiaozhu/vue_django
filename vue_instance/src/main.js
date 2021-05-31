@@ -8,6 +8,7 @@ import axios from 'axios'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import qs from 'qs';
+import store from './store/store' //相当于Vuex全局变量
 
 Vue.use(axios);
 Vue.use(ElementUI,{ size: 'big', zIndex: 3000 }); //size默认组件尺寸 zindex：弹窗大小
@@ -30,6 +31,7 @@ axios.defaults.transformRequest = [function (data) {
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>',
   data:{
