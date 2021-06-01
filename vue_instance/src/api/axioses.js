@@ -1,6 +1,8 @@
 import axios from 'axios'
+import qs from 'qs'
 
-axios.defaults.headers.post['Content-Type'] = 'application/x-www-fromurlencodeed';
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+/* axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8'; */
 axios.defaults.headers.get['Content-Type'] = 'application/x-www-form-urlencoded';
 axios.defaults.transformRequest = [function (data) {
     let src = ''
@@ -19,7 +21,6 @@ export function getLocation(param = {}){
 }
 
 export function getClass(param = {}){
-    console.log(param);
     return axios.request({
         method: "GET",
         url: "/api/getclass",
@@ -32,5 +33,14 @@ export function postLogin(param = {}){
         method: "POST",
         url: "/api/login/",
         params: param
+    })
+}
+
+export function postSubmit(data){
+    console.log(typeof(data.ifadd));
+    return axios.request({
+        method: "POST",
+        url: "/api/editstudent/",
+        data: data,
     })
 }

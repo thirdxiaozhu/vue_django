@@ -13,19 +13,34 @@
 </template>
 
 <script>
-//第一步：引入子组件
-import Vheader from '../components/adminviews/Vheader'
-import 'bootstrap/dist/css/bootstrap.min.css'
-import VSidebar from '../components/adminviews/Vsidebar.vue'
-export default {
-  name: 'admin_index',
-  
-  //第二步：挂载
-  components:{
-    Vheader:Vheader,
-    VSidebar,
+  //第一步：引入子组件
+  import Vheader from '../components/adminviews/Vheader'
+  import 'bootstrap/dist/css/bootstrap.min.css'
+  import VSidebar from '../components/adminviews/Vsidebar.vue'
+  export default {
+    name: 'admin_index',
+    date() {
+      return {
+        usertype: '',
+      }
+    },
+
+    //第二步：挂载
+    components: {
+      Vheader: Vheader,
+      VSidebar,
+    },
+    created() {
+      if (this.$store.state.usertype != "3") {
+        this.$alert('当前用户无法操作该页面，请返回登录', '错误', {
+          confirmButtonText: '确定',
+        })
+        this.$router.push({ path: '/login' });
+      }
+    },
+    methods: {
+    }
   }
-}
 </script>
 
 <style>

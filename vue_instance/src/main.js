@@ -18,7 +18,8 @@ Vue.config.productionTip = false;
 //以后每个组件使用的时候可以 this.$axios
 Vue.prototype.$axios = axios;
 Vue.prototype.$qs = qs;
-axios.defaults.headers.post['Content-Type'] = 'application/x-www-fromurlencodeed';
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+/* axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8'; */
 axios.defaults.headers.get['Content-Type'] = 'application/x-www-form-urlencoded';
 axios.defaults.transformRequest = [function (data) {
     let src = ''

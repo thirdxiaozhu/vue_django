@@ -1,7 +1,7 @@
 <template>
   <el-menu  class="el-menu-demo" mode="horizontal" @select="handleSelect">
     <el-menu-item index="0" style="font-size: 25px;color:black; margin-left:2%">教务管理系统（学生端）</el-menu-item>
-    <el-menu-item index="1" style="font-size: 15px; float:right; margin-right:1%">退出登录</el-menu-item>
+    <el-menu-item index="1" style="font-size: 15px; float:right; margin-right:1%" @click="logout">退出登录</el-menu-item>
     <el-menu-item style="float:right;color:white;margin-right:5px">
       <el-input placeholder="请输入内容" v-model="search_text">
         <el-button slot="append" icon="el-icon-search"></el-button>
@@ -12,7 +12,7 @@
 
 <script>
 export default {
-    name:'Vheader',
+    name:'Vh`eader',
     data(){
         return{
           routes:[
@@ -27,6 +27,10 @@ export default {
         //当点击导航栏不同按钮的时候，监听到v-for中的index值，并设置其为currentIndex
         //这样的设置可以用来做class="active"功能
         this.currentIndex = index;
+      },
+      logout(){
+        this.$store.commit('clearToken')
+        this.$router.push({ path: '/login' });
       }
     },
 

@@ -18,7 +18,7 @@ export default {
     },    
     methods:{
         initPage(){
-            this.stuname=this.$store.state.userid
+            this.stuname=this.$store.state.username
         }
     }
 }

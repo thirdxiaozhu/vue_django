@@ -10,13 +10,13 @@ class StudentInfo (models.Model):
     id = models.AutoField(primary_key=True)
     stu_id = models.CharField(
         null=False, max_length=20, default="", unique=True)
-    password = models.CharField(null=False, max_length=50, default="123456")
+    password = models.CharField(null=True, max_length=50, default="123456")
     name = models.CharField(null=False, max_length=20, default="")
     birthday = models.DateField(default=timezone.now)
     IDnumber = models.ForeignKey(to="IDNumber", on_delete=models.CASCADE)
     sex = models.CharField(null=False, max_length=5, default="")
     entrytime = models.DateField(default=timezone.now)
-    grade = models.IntegerField(default=0)
+    grade = models.ForeignKey(to="StudentGrade", on_delete=models.CASCADE)
     outlook = models.ForeignKey(to="Outlook", on_delete=models.CASCADE)
     nation = models.ForeignKey(to="Countries",on_delete=models.CASCADE)
     #native = models.IntegerField(default=0)
@@ -243,3 +243,7 @@ class Usertoken(models.Model):
     id = models.AutoField(primary_key=True)
     token = models.CharField(max_length = 64)
     userid = models.CharField(max_length=30 , null=True)
+
+class StudentGrade(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length = 20)

@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
 from rest_framework.versioning import QueryParameterVersioning,URLPathVersioning
+from django.db.models import Q
 from api import models
 import json
 
@@ -42,18 +43,19 @@ class studentInfo(APIView):
         classes.append(student.Class.id)
         print(classes)
         form={
+            'id': student.id,
             'stu_id': student.stu_id,
             'password': student.password,
             'name': student.name,
             'sex': student.sex,
             'idnumber': student.IDnumber.idnumber,
-            'grade': student.grade,
+            'grade': student.grade.id,
             'birthday': student.birthday,
             'entryday': student.entrytime,
             'credit': student.credit,
             'outlook': student.outlook_id,
             'address':location,
-            'class' : classes,
+            'classes' : classes,
         }
 
         ret={
@@ -67,13 +69,14 @@ class studentInfo(APIView):
             'class':student.Class.class_id, 
         }
 
-        print(student)
         return Response(ret)
 
 class editstuoptions(APIView):
     def get(self, request, *args, **kwargs):
         outlooks = models.Outlook.objects.all()
+        grades = models.StudentGrade.objects.all()
         outlooklist = []
+        gradelist = []
         for i in outlooks:
             data={
                 'value': str(i.id),
@@ -81,9 +84,17 @@ class editstuoptions(APIView):
             }
             outlooklist.append(data)
 
+        for i in grades:
+            data={
+                'value': str(i.id),
+                'label': i.name,
+            }
+            gradelist.append(data)
+
         ret={
             'code': 1000,
             'outlooklist':outlooklist,
+            'gradelist':gradelist,
         }
         
         return Response(ret)
@@ -193,3 +204,65 @@ class getclass(APIView):
                 'data': classlist
             }
             return Response(ret)
+
+
+class editstudent(APIView):
+    def post(self,request, *args ,**kwargs):
+        form_json = request.data.get('form')
+        outlook = request.data.get('outlook')
+        grade = request.data.get('grade')
+
+        form = json.loads(form_json)
+        new_stu_id = form['stu_id']
+        new_password = form['password']
+        new_name = form['name']
+        new_sex = form['sex']
+        new_idnumber = form['idnumber']
+        new_grade = form['grade']
+        new_birthday = form['birthday']
+        new_entryday = form['entryday']
+        new_credit = form['credit']
+        new_address = form['address']
+        new_class = form['classes']
+
+
+        if models.StudentInfo.objects.filter(Q(stu_id = new_stu_id) & ~Q(id = form['id'])):
+            ret={
+                'code': 1001,
+                'error': "学号重复,请检查",
+            }
+            return Response(ret)
+
+        id_stu_flag = models.IDNumber.objects.filter(idnumber=new_idnumber).first()
+
+        if id_stu_flag and id_stu_flag.studentinfo_set.all().first().id != form['id']:
+            ret={
+                'code': 1001,
+                'error': "身份证号重复,请检查",
+            }
+            return Response(ret)
+
+        student = models.StudentInfo.objects.filter(id = form['id']).first()
+        idnum = models.IDNumber.objects.filter(idnumber=new_idnumber).first()
+        print(new_class)
+        student.stu_id = new_stu_id
+        student.password = new_password
+        student.name = new_name
+        student.sex = new_sex
+        idnum.idnumber = new_idnumber
+        student.birthday = new_birthday
+        student.entryday = new_entryday
+        student.credit = new_credit
+        student.outlook_id = outlook
+        student.grade_id = grade
+        student.native_id = new_address[2]
+        student.nation_id = new_address[0]
+        student.Class_id = new_class[2]
+        
+        student.save()
+        idnum.save()
+
+        ret={
+            'code': 1000
+        }
+        return Response(ret)

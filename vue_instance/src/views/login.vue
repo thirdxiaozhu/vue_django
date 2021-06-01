@@ -15,13 +15,13 @@
             <el-radio-group v-model="ruleForm.radio">
                 <el-row :gutter="80" >
                     <el-col :span="6">
-                    <el-radio :label="1"  style="border-radius: 2px;" border :span="4">学生</el-radio>
+                    <el-radio :label="1"  style="border-radius: 4px;" border :span="4">学生</el-radio>
                     </el-col>
                     <el-col :span="6">
-                    <el-radio :label="2"  style="border-radius: 2px;" border :spam="4">教师</el-radio>
+                    <el-radio :label="2"  style="border-radius: 4px;" border :spam="4">教师</el-radio>
                     </el-col>
                     <el-col :span="6">
-                    <el-radio :label="3"  style="border-radius: 2px;" border>管理员</el-radio>
+                    <el-radio :label="3"  style="border-radius: 4px;" border>管理员</el-radio>
                     </el-col>
                 </el-row>
             </el-radio-group>`
@@ -69,16 +69,21 @@
 
                             if (res.data.code == "1000") {
                                 this.logining = false;
-                                that.$store.commit('saveToken',{token: res.data.token,userid: that.ruleForm.userid})
-                                console.log(that.$store);
-                                this.$alert('登录成功！欢迎您' + res.data.name, 'info', {
-                                    confirmButtonText: 'ok'
-                                })
-                                this.$router.push({ path: '/student' });
+
+                                that.$store.commit('saveToken',{token: res.data.token,userid: that.ruleForm.userid,
+                                    username: res.data.name, usertype: that.ruleForm.radio})
+
+                                if(that.ruleForm.radio == 1)
+                                    this.$router.push({ path: '/student' });
+                                else if(that.ruleForm.radio == 2)
+                                    this.$router.push({ path: '/teacher' });
+                                else
+                                    this.$router.push({ path: '/admin' });
+
                             } else {
                                 this.logining = false;
-                                this.$alert(res.data.error, 'info', {
-                                    confirmButtonText: 'ok'
+                                this.$alert(res.data.error, '错误', {
+                                    confirmButtonText: '确定'
                                 })
                             }
                         })
