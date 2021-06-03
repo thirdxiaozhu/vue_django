@@ -19,12 +19,32 @@
                 </el-col>
             </el-header>
             <el-main>
-                <el-collapse v-model="activeNames" @change="handleChange">
+                <el-collapse >
                     <el-collapse-item title="点击展开筛选面板" name="1" align="center" style="text-align: center;">
                         <el-row>
-                            <el-col :span="8">
-                                <el-cascader placeholder="筛选所在组织" style="width: 90%" v-model="organization"
-                                    :props="cla_cas_props" @change="classChange"></el-cascader>
+                            <el-col :span="7">
+                                <el-select v-model="collegeselected" filterable placeholder="请选择学院" style="width: 80%;" @change="collegeChange(2)">
+                                    <el-option v-for="item in colleges" :key="item.value" :label="item.label"
+                                        :value="item.value" >
+                                    </el-option>
+                                </el-select>
+                            </el-col>
+                            <el-col :span="7">
+                                <el-select v-model="majorselected" filterable placeholder="请选择专业" style="width: 80%;" @change="majorChange(3)">
+                                    <el-option v-for="item in majors" :key="item.value" :label="item.label"
+                                        :value="item.value" >
+                                    </el-option>
+                                </el-select>
+                            </el-col>
+                            <el-col :span="7">
+                                <el-select v-model="classselected" filterable placeholder="请选择班级" style="width: 80%;" @change="classChange(4)">
+                                    <el-option v-for="item in classes" :key="item.value" :label="item.label"
+                                        :value="item.value">
+                                    </el-option>
+                                </el-select>
+                            </el-col>
+                            <el-col :span="3">
+                                <el-button  @click="clearOptions">清空所选</el-button>
                             </el-col>
                         </el-row>
                     </el-collapse-item>
@@ -48,15 +68,18 @@
                         <template slot-scope="scope">
                             <el-button size="medium" type="primary"
                                 @click="handleEdit(scope.$index, scope.row);drawer=true">编辑</el-button>
+                            <el-button size="medium" type="danger"
+                                @click="handleEdit(scope.$index, scope.row);drawer=true">编辑</el-button>
                             <!--                         <el-button size="medium" type="primary" @click="drawer=true">编辑</el-button> -->
                         </template>
                     </el-table-column>
                 </el-table>
 
-                <el-drawer :title="title" v-if="drawer" :visible.sync="drawer"
-                    :direction="direction" :before-close="handleClose" ref="infodrawer">
+                <el-drawer :title="title" v-if="drawer" :visible.sync="drawer" :direction="direction"
+                    :before-close="handleClose" ref="infodrawer">
                     <span>
-                        <Vstudentdraw :stu_id="operating_id" :drawer="ObjDrawer" :ifadd="ifadd" @initList="initList"></Vstudentdraw>
+                        <Vstudentdraw :stu_id="operating_id" :drawer="ObjDrawer" :ifadd="ifadd" @initList="initList">
+                        </Vstudentdraw>
                     </span>
                 </el-drawer>
             </el-main>
@@ -66,7 +89,7 @@
 
 <script>
     import Vstudentdraw from './Vstudentdraw'
-    import {getClass} from "@/api/axioses"
+    import {getOrganize} from "@/api/axioses"
     export default {
         name: 'Vstudentlist',
         data() {
@@ -85,44 +108,28 @@
                 ifadd : false, //是否是“添加学生"选项
                 direction: 'rtl',
                 organization: '',
-                cla_cas_props: {
-                    lazy: true,
-                    lazyLoad(node, resolve) {
-                        const level = node.level;
-                        //请求参数
-                        const requestData = {};
-                        if(level === 0){  //学院
-                            requestData.type = "college";
-                        }else if(level === 1){ //专业
-                            requestData.type = "major";
-                            requestData.college_id = node.value;
-                        }else if(level === 2){ //班级
-                            requestData.type = "class";
-                            requestData.major_id = node.value;
-                        } 
-                        //接口
-                        getClass(requestData).then(res=>{
-                            resolve(res.data.data)
-                        })
-                    }
-                }
+                colleges: {},
+                majors: {},
+                classes: {},
+                pre: '0',
+                collegeselected: '',
+                majorselected: '',
+                classselected: '',
             }
         },
         mounted: function () {
             this.initList()
+            this.initOrganize(1)
         },
         methods: {
+            //初始化学生列表
             initList: function () {
                 var that = this;
                 this.$axios.request({
                     url: "/api/studentlist",
                     method: "GET"
                 }).then(function (ret) {
-                    //ajax(axios)发送成功后，响应的内容
                     if (ret.data.code === 1000) {
-                        //this.courseList = ret.data.data
-                        //为什么不能按照上面那个写？——因为这里的this指的是$axios里面的this
-                        //而不是data里面的，所以要按照下面的
                         that.tableData = ret.data.students
                     } else {
                         alert('获取数据失败')
@@ -130,6 +137,7 @@
                 }).catch(function (ret) {
                 })
             },
+            //关闭抽屉弹出
             handleClose(done) {
                 this.$confirm('未进行保存的信息将丢失，是否关闭？')
                     .then(_ => {
@@ -137,17 +145,81 @@
                     })
                     .catch(_ => { });
             },
+            //编辑学生初始化
             handleEdit(index, row) {
                 this.operating_id = row.stu_id;
                 this.operating_name = row.name;
                 this.ifadd = false;
                 this.title = "正在编辑" + this.operating_id + " " + this.operating_name +"同学的信息";
             },
+            //添加学生初始化
             addStudent(){
                 this.title = "正在添加学生信息";
                 this.operating_id = 0;
                 this.ifadd = true;
                 this.drawer = true;
+            },
+            //初始化学院
+            initOrganize(type){
+                const data4org  = {
+                    type: type,
+                    pre: this.pre,
+                };
+                var that = this;
+                getOrganize(data4org).then(res =>{
+                    if(res.data.code === 1000){
+                        that.colleges = res.data.data;
+                        console.log(that.colleges)
+                    }
+                })
+            },
+            //当学院更改的时候，获取专业，并更新学生列表
+            collegeChange(type){
+                this.majorselected='' //学院改变的时候，专业和班级归零
+                this.classselected=''
+                const data4org  = {
+                    type: type,
+                    pre: this.collegeselected,
+                };
+                var that = this;
+                getOrganize(data4org).then(res =>{
+                    if(res.data.code === 1000){
+                        that.majors = res.data.majors;
+                        that.tableData = res.data.students;
+                    }
+                })
+            },
+            majorChange(type){
+                this.classselected=''
+                const data4org  = {
+                    type: type,
+                    pre: this.majorselected,
+                };
+                var that = this;
+                getOrganize(data4org).then(res =>{
+                    if(res.data.code === 1000){
+                        that.classes = res.data.classes;
+                        that.tableData = res.data.students;
+                    }
+                })
+            },
+            classChange(type){
+                const data4org  = {
+                    type: type,
+                    pre: this.classselected,
+                };
+                var that = this;
+                getOrganize(data4org).then(res =>{
+                    if(res.data.code === 1000){
+                        that.tableData = res.data.students;
+                    }
+                })
+            },
+            clearOptions(){
+                this.collegeselected='' ;
+                this.majorselected='' ;
+                this.classselected='';
+                this.initList();
             }
         },
 

@@ -19,11 +19,11 @@
             <el-input v-model="form.idnumber" style="width: 90%;"></el-input>
         </el-form-item>
         <el-form-item label="生日" prop="birthday">
-            <el-date-picker type="date" placeholder="选择日期" v-model="form.birthday" style="width: 90%;">
+            <el-date-picker type="date" placeholder="选择日期" v-model="form.birthday" style="width: 90%;" value-format="yyyy-MM-dd">
             </el-date-picker>
         </el-form-item>
         <el-form-item label="入学日期" prop="entryday">
-            <el-date-picker type="date" placeholder="选择日期" v-model="form.entryday" style="width: 90%;">
+            <el-date-picker type="date" placeholder="选择日期" v-model="form.entryday" style="width: 90%;" value-format="yyyy-MM-dd">
             </el-date-picker>
         </el-form-item>
         <el-form-item label="政治面貌" prop="outlook">
@@ -36,7 +36,7 @@
                 </el-option>
             </el-select>
         </el-form-item>
-        <el-form-item label="所在年级" prop="grade">
+        <el-form-item label="所在年级" prop="gradeselected">
             <el-select v-model="gradeselected" placeholder="请选择" style="width: 90%">
                 <el-option
                     v-for="item in grades"
@@ -52,7 +52,6 @@
                style="width: 90%"
                v-model="form.classes"
                :props="cla_cas_props"
-               @change="classChange"
                ></el-cascader>
         </el-form-item>
         <el-form-item label="* 籍贯" prop="location">
@@ -61,7 +60,6 @@
                 style="width: 90%"
                 v-model="form.address"
                 :props="add_cas_props"
-                @change="locationChange"
                 ></el-cascader>
         </el-form-item>
         <el-form-item label="绩点">
@@ -75,7 +73,7 @@
 </template>
 
 <script>
-    import { getLocation, getClass, postSubmit, postAdd} from "@/api/axioses"
+    import { getLocation, getClass, postSubmit, postAdd, postaddStu } from "@/api/axioses"
     export default {
         name: 'Vstudentdraw',
         data() {
@@ -100,9 +98,8 @@
                 defaultlocation: "",
                 defaultclass: "",
                 //年级
-                gradess: [],
-                //默认值，一定要是字符串！！！！
-                gradeselected: '1',
+                grades: [],
+                gradeselected: '1',     //默认值，一定要是字符串！！！！
 
                 //政治面貌
                 outlooks: [],
@@ -160,7 +157,7 @@
                         { min: 2, max: 6, message: '长度在 2 到 6 个字符', trigger: 'blur' }
                     ],
                     sex: [
-                        { required: true }
+                        { required: true , message:"请选择性别"}
                     ],
                     idnumber: [
                         { required: true, message: '请输入身份证号', trigger: 'blur' },
@@ -172,18 +169,6 @@
                     entryday: [
                         { required: true, message: '请选择日期', trigger: 'change' }
                     ],
-                    outlook: [
-                        { required: true, message: '请选择该生政治面貌', trigger: 'change' }
-                    ],
-                    grade: [
-                        { required: true, message: '请选择该生所在年级', trigger: 'change' }
-                    ],
-/*                     location: [
-                        { required: true }
-                    ],
-                    class: [
-                        { required: true }
-                    ], */
                 }
             }
         },
@@ -191,12 +176,13 @@
         mounted: function () {
             this.getOptions();
             this.initInfo();
-            console.log(this.ifadd);
+            console.log(this.form);
         },
         methods: {
+            //点击保存之后
             onSave() {
                 let form = this.form;
-                console.log(this.form);
+                console.log(this.outlookselected , this.gradeselected);
                 this.$refs.form.validate((valid) => {
                     this.load = true;
                     var that = this;
@@ -206,25 +192,44 @@
                         form: JSON.stringify(this.form)
                     }
                     if (valid) {
-                        postSubmit(param).then(res => {
-                            that.load = false
-                            if (res.data.code == "1000") {
-                                console.log(that.drawer);
-                                this.$confirm('保存成功！')
-                                    .then(_ => {
-                                        //隐藏面板（由于面板是在父组件定义的，这里必须要操作父组件的ref）
-                                        that.drawer.infodrawer.hide();
-                                        //重新通过initList获取父组件的表格：
-                                        this.$emit('initList');
+                        that.load = false
+                        if (this.ifadd == false) { //如果是修改现有
+                            postSubmit(param).then(res => {
+                                if (res.data.code == "1000") {
+                                    console.log(that.drawer);
+                                    this.$confirm('保存成功！')
+                                        .then(_ => {
+                                            //隐藏面板（由于面板是在父组件定义的，这里必须要操作父组件的ref）
+                                            that.drawer.infodrawer.hide();
+                                            //重新通过initList获取父组件的表格：
+                                            this.$emit('initList');
+                                        })
+                                        .catch(_ => { });
+                                }
+                                else {
+                                    this.$alert(res.data.error, "错误", {
+                                        confirmButtonText: '确定'
                                     })
-                                    .catch(_ => { });
-                            }
-                            else {
-                                this.$alert(res.data.error, "错误", {
-                                    confirmButtonText: '确定'
-                                })
-                            }
-                        })
+                                }
+                            })
+                        } else { //如果是新建
+                            postaddStu(param).then(res => {
+                                if (res.data.code == "1000") {
+                                    console.log(that.drawer);
+                                    this.$confirm('保存成功！')
+                                        .then(_ => {
+                                            that.drawer.infodrawer.hide();
+                                            this.$emit('initList');
+                                        })
+                                        .catch(_ => { });
+                                }
+                                else {
+                                    this.$alert(res.data.error, "错误", {
+                                        confirmButtonText: '确定'
+                                    })
+                                }
+                            })
+                        }
                     } else {
                         that.load = false
                         this.$alert("请按照规定填写数据", '错误', {
@@ -250,7 +255,7 @@
                 })
             },
             initInfo() {
-                if (this.ifadd == false) {
+                if (this.ifadd == false) { //如果是编辑模式，那么就初始化编辑学生的数据
                     var that = this;
                     this.$axios.request({
                         url: "/api/studentinfo",
@@ -274,11 +279,6 @@
                     })
                 }
             },
-            locationChange(value) {
-                console.log(value.join(","))
-                console.log(typeof (this.form.address.join(",")))
-                console.log(this.form)
-            }
         },
         components: {
         },

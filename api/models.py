@@ -21,6 +21,8 @@ class StudentInfo (models.Model):
     nation = models.ForeignKey(to="Countries",on_delete=models.CASCADE)
     #native = models.IntegerField(default=0)
     native = models.ForeignKey(to="Cities", on_delete=models.CASCADE)
+    College = models.ForeignKey(to="CollegeInfo", on_delete=models.CASCADE, default=1)
+    Major = models.ForeignKey(to="MajorInfo", on_delete=models.CASCADE, default = 1)
     Class = models.ForeignKey(to="ClassInfo", on_delete=models.CASCADE)
     credit = models.FloatField(default=0)
     #选课

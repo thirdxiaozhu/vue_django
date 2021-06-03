@@ -44,3 +44,21 @@ export function postSubmit(data){
         data: data,
     })
 }
+
+export function getOrganize(param){
+    console.log(param);
+    return axios.request({
+        method: "GET",
+        url: "/api/getOrganize",
+        params: param
+    })
+}
+
+export function postaddStu(data){
+    console.log(typeof(data.ifadd));
+    return axios.request({
+        method: "POST",
+        url: "/api/addstudent/",
+        data: data,
+    })
+}

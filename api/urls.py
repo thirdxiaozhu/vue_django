@@ -11,4 +11,6 @@ urlpatterns = [
     path('getlocation/',student.getlocation.as_view()),
     path('getclass/',student.getclass.as_view()),
     path('editstudent/',student.editstudent.as_view()),
+    path('getOrganize/',student.getOrganize.as_view()),
+    path('addstudent/',student.addStudent.as_view()),
 ]
