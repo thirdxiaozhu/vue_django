@@ -20,6 +20,7 @@ export default {
             {url:'/note', title:'我的笔记'},
           ],
           currentIndex:0,
+          search_text: '',
         }
     },
     methods:{  

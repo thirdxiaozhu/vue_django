@@ -5,12 +5,13 @@
                 <el-col :span="10">
                     <el-breadcrumb separator="/" style="margin-top: 20px; font-size:large;">
                         <el-breadcrumb-item>首页</el-breadcrumb-item>
-                        <el-breadcrumb-item>常规管理</el-breadcrumb-item>
-                        <el-breadcrumb-item style="font-weight: bold;">学籍管理</el-breadcrumb-item>
+                        <el-breadcrumb-item>更多功能</el-breadcrumb-item>
+                        <el-breadcrumb-item>教学地点变更</el-breadcrumb-item>
+                        <el-breadcrumb-item style="font-weight: bold;">教室变更</el-breadcrumb-item>
                     </el-breadcrumb>
                 </el-col>
                 <el-col :span="3" style="margin-top: 10px; float: right;">
-                    <el-button type="success" @click="addStudent">添加学生</el-button>
+                    <el-button type="success" @click="addRoom">添加教室</el-button>
                 </el-col>
                 <el-col :span="5" style="float: right; margin-top: 10px;">
                     <el-input placeholder="请输入内容" v-model="search_text">
@@ -52,8 +53,7 @@
                 <el-table :data="tableData" style="width: 100%" ref="table">
                     <el-table-column prop="" label="#" width="90" type="index" align="center">
                         <template slot-scope="scope">
-                                                    <span>{{(pages.page - 1) * pages.size + scope.$index + 1}}</span>
-<!--                             <span>{{scope.$index + 1}}</span> -->
+                            <span>{{(pages.page - 1) * pages.size + scope.$index + 1}}</span>
                         </template>
                     </el-table-column>
                     <el-table-column prop="stu_id" label="学号" width="180" align="center">
@@ -191,7 +191,7 @@
                 this.title = "正在编辑" + this.operating_id + " " + this.operating_name +"同学的信息";
             },
             //添加学生初始化
-            addStudent(){
+            addRoom(){
                 this.title = "正在添加学生信息";
                 this.operating_id = 0;
                 this.ifadd = true;

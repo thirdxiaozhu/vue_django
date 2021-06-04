@@ -62,3 +62,21 @@ export function postaddStu(data){
         data: data,
     })
 }
+
+export function initStudentList(param){
+    console.log(param);
+    return axios.request({
+        method: "GET",
+        url: "/api/studentlist",
+        params: param
+    })
+}
+
+export function deleteStudent(param){
+    console.log(param);
+    return axios.request({
+        method: "GET",
+        url: "/api/deletestudent",
+        params: param
+    })
+}

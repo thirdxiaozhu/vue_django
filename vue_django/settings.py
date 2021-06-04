@@ -172,6 +172,4 @@ REST_FRAMEWORK = {
     'ALLOWED_VERSIONS':['v1','v2'], #允许的版本
     'VERSION_PARAM': 'version', #参数
     'DEFAULT_VERSION': 'v1', #默认版本
-    'DEFAULT_PAGINATION_CLASS': 'apps.core.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10,
 }

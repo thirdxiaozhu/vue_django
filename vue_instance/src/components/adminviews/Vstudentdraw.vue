@@ -15,15 +15,15 @@
                 <el-radio label="女"></el-radio>
             </el-radio-group>
         </el-form-item>
-        <el-form-item label="身份证号" prop="idnumber">
-            <el-input v-model="form.idnumber" style="width: 90%;"></el-input>
+        <el-form-item label="身份证号" prop="IDnumber">
+            <el-input v-model="form.IDnumber" style="width: 90%;"></el-input>
         </el-form-item>
         <el-form-item label="生日" prop="birthday">
             <el-date-picker type="date" placeholder="选择日期" v-model="form.birthday" style="width: 90%;" value-format="yyyy-MM-dd">
             </el-date-picker>
         </el-form-item>
-        <el-form-item label="入学日期" prop="entryday">
-            <el-date-picker type="date" placeholder="选择日期" v-model="form.entryday" style="width: 90%;" value-format="yyyy-MM-dd">
+        <el-form-item label="入学日期" prop="entrytime">
+            <el-date-picker type="date" placeholder="选择日期" v-model="form.entrytime" style="width: 90%;" value-format="yyyy-MM-dd">
             </el-date-picker>
         </el-form-item>
         <el-form-item label="政治面貌" prop="outlook">
@@ -86,10 +86,10 @@
                     password: '',
                     name: '',
                     sex: '',
-                    idnumber: '',
+                    IDnumber: '',
                     grade: '',
                     birthday: '',
-                    entryday: '',
+                    entrytime: '',
                     credit: '',
                     outlook: '1',
                     address: [],
@@ -159,14 +159,14 @@
                     sex: [
                         { required: true , message:"请选择性别"}
                     ],
-                    idnumber: [
+                    IDnumber: [
                         { required: true, message: '请输入身份证号', trigger: 'blur' },
                         { min: 18, max: 18, message: '身份证号长度为18位', trigger: 'blur' }
                     ],
                     birthday: [
                         { required: true, message: '请选择日期', trigger: 'change' }
                     ],
-                    entryday: [
+                    entrytime: [
                         { required: true, message: '请选择日期', trigger: 'change' }
                     ],
                 }
@@ -202,7 +202,7 @@
                                             //隐藏面板（由于面板是在父组件定义的，这里必须要操作父组件的ref）
                                             that.drawer.infodrawer.hide();
                                             //重新通过initList获取父组件的表格：
-                                            this.$emit('initList');
+                                            this.$emit('judgeOptions');
                                         })
                                         .catch(_ => { });
                                 }
@@ -219,7 +219,7 @@
                                     this.$confirm('保存成功！')
                                         .then(_ => {
                                             that.drawer.infodrawer.hide();
-                                            this.$emit('initList');
+                                            this.$emit('judgeOptions');
                                         })
                                         .catch(_ => { });
                                 }
@@ -264,6 +264,7 @@
                             'stu_id': this.stu_id,
                         }
                     }).then(ret => {
+                        console.log(ret.data)
                         if (ret.data.code === 1000) {
                             //需做一次类型转换，将number转换成string
                             that.gradeselected = ret.data.form.grade.toString();

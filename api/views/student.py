@@ -4,27 +4,27 @@ from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
 from rest_framework.versioning import QueryParameterVersioning,URLPathVersioning
 from rest_framework.pagination import LimitOffsetPagination,PageNumberPagination
 from django.db.models import Q
-from api import models
+from rest_framework import serializers
+from api import models, page
+from api import serializers as ser
 import json
 
 class studentStatus(APIView):
     versioning_class =  URLPathVersioning
     def get(self,request,*args,**kwargs):
-        students = models.StudentInfo.objects.all()
-        stulist=[]
-        for i in students:
-            data={
-                'stu_id':i.stu_id,
-                'name':i.name,
-                'sex':i.sex,
-                'class': i.Class.class_id,
-            }
-            stulist.append(data)
+        students = models.StudentInfo.objects.all().order_by('stu_id')
+        #分页
+        pages = page.MyLimitOffsetPagination()
+        #获取自己继承的类
+        page_role = pages.paginate_queryset(students, request, self)
+        #序列化分页后的内容并返回
+        stulist = ser.StudentlistSerializers(page_role,many = True)
+        print(stulist)
 
         ret = {
             'code': 1000,
-
-            'students': stulist,
+            'students': stulist.data,
+            'total':students.count()
         }
         return Response(ret)
 
@@ -36,23 +36,22 @@ class studentInfo(APIView):
 
         location = []
         classes = []
-        location.append(student.native.Province.Country.id)
-        location.append(student.native.Province.id)
-        location.append(student.native.id)
+        location.append(student.country_id)
+        location.append(student.province_id)
+        location.append(student.city_id)
         classes.append(student.College_id)
         classes.append(student.Major_id)
         classes.append(student.Class_id)
-        print(classes)
         form={
             'id': student.id,
             'stu_id': student.stu_id,
             'password': student.password,
             'name': student.name,
             'sex': student.sex,
-            'idnumber': student.IDnumber.idnumber,
+            'IDnumber': student.IDnumber.idnumber,
             'grade': student.grade.id,
             'birthday': student.birthday,
-            'entryday': student.entrytime,
+            'entrytime': student.entrytime,
             'credit': student.credit,
             'outlook': student.outlook_id,
             'address':location,
@@ -62,9 +61,9 @@ class studentInfo(APIView):
         ret={
             'code': 1000,
             'form': form,
-            'city': student.native.atitle,
-            'province': student.native.Province.atitle,
-            'country': student.native.Province.Country.atitle,
+            'city': student.city.atitle,
+            'province': student.province.atitle,
+            'country': student.country.atitle,
             'college': student.College.name,
             'major': student.Major.name,
             'class':student.Class.class_id, 
@@ -218,10 +217,10 @@ class editstudent(APIView):
         new_password = form['password']
         new_name = form['name']
         new_sex = form['sex']
-        new_idnumber = form['idnumber']
+        new_idnumber = form['IDnumber']
         new_grade = form['grade']
         new_birthday = form['birthday']
-        new_entryday = form['entryday']
+        new_entrytime = form['entrytime']
         new_credit = form['credit']
         new_address = form['address']
         new_class = form['classes']
@@ -244,15 +243,14 @@ class editstudent(APIView):
             return Response(ret)
 
         student = models.StudentInfo.objects.filter(id = form['id']).first()
-        idnum = models.IDNumber.objects.filter(idnumber=new_idnumber).first()
-        print(new_class)
+        idnum = models.IDNumber.objects.filter(id=student.IDnumber_id).first()
         student.stu_id = new_stu_id
         student.password = new_password
         student.name = new_name
         student.sex = new_sex
         idnum.idnumber = new_idnumber
         student.birthday = new_birthday
-        student.entrytime = new_entryday
+        student.entrytime = new_entrytime
         student.credit = new_credit
         student.outlook_id = outlook
         student.grade_id = grade
@@ -287,9 +285,18 @@ class getOrganize(APIView):
                 }
                 collegelist.append(data)
 
+            students = models.StudentInfo.objects.all().order_by('stu_id')
+
+            #分页
+            pages = page.MyLimitOffsetPagination()
+            page_role = pages.paginate_queryset(students, request, self)
+            stulist = ser.StudentlistSerializers(page_role,many = True)
+
             ret = {
                 'code': 1000,
-                'data': collegelist
+                'data': collegelist,
+                'students': stulist.data,
+                'total':students.count()
             }
 
             return Response(ret)
@@ -304,23 +311,18 @@ class getOrganize(APIView):
                 }
                 majorlist.append(data)
 
+            students = models.StudentInfo.objects.filter(College_id = int(pre)).order_by('stu_id')
 
-            print(majorlist)
-            students = models.StudentInfo.objects.filter(College_id = int(pre))
-            studentlist = []
-            for i in students:
-                data={
-                    'stu_id':i.stu_id,
-                    'name':i.name,
-                    'sex':i.sex,
-                    'class': i.Class.class_id,
-                }
-                studentlist.append(data)
+            #分页
+            pages = page.MyLimitOffsetPagination()
+            page_role = pages.paginate_queryset(students, request, self)
+            stulist = ser.StudentlistSerializers(page_role,many = True)
 
             ret = {
                 'code': 1000,
                 'majors': majorlist,
-                'students':studentlist
+                'students': stulist.data,
+                'total':students.count()
             }
 
             return Response(ret)
@@ -336,41 +338,30 @@ class getOrganize(APIView):
                 classlist.append(data)
 
 
-            print(classlist)
-            students = models.StudentInfo.objects.filter(Major_id = int(pre))
-            studentlist = []
-            for i in students:
-                data={
-                    'stu_id':i.stu_id,
-                    'name':i.name,
-                    'sex':i.sex,
-                    'class': i.Class.class_id,
-                }
-                studentlist.append(data)
+            students = models.StudentInfo.objects.filter(Major_id = int(pre)).order_by('stu_id')
+            pages = page.MyLimitOffsetPagination()
+            page_role = pages.paginate_queryset(students, request, self)
+            stulist = ser.StudentlistSerializers(page_role,many = True)
 
             ret = {
                 'code': 1000,
                 'classes': classlist,
-                'students':studentlist
+                'students': stulist.data,
+                'total':students.count()
             }
-
             return Response(ret)
 
         elif org_type == "4":
-            students = models.StudentInfo.objects.filter(Class_id = int(pre))
-            studentlist = []
-            for i in students:
-                data={
-                    'stu_id':i.stu_id,
-                    'name':i.name,
-                    'sex':i.sex,
-                    'class': i.Class.class_id,
-                }
-                studentlist.append(data)
+            students = models.StudentInfo.objects.filter(Class_id = int(pre)).order_by('stu_id')
+
+            pages = page.MyLimitOffsetPagination()
+            page_role = pages.paginate_queryset(students, request, self)
+            stulist = ser.StudentlistSerializers(page_role,many = True)
 
             ret = {
                 'code': 1000,
-                'students':studentlist
+                'students': stulist.data,
+                'total':students.count()
             }
 
             return Response(ret)
@@ -388,10 +379,10 @@ class addStudent(APIView):
         new_password = form['password']
         new_name = form['name']
         new_sex = form['sex']
-        new_idnumber = form['idnumber']
+        new_idnumber = form['IDnumber']
         new_grade = form['grade']
         new_birthday = form['birthday']
-        new_entryday = form['entryday']
+        new_entrytime = form['entrytime']
         new_credit = form['credit']
         new_address = form['address']
         new_class = form['classes']
@@ -414,7 +405,7 @@ class addStudent(APIView):
             return Response(ret)
 
         
-        idnumber_id = models.IDNumber.objects.create(idnumber=form['idnumber'])
+        idnumber_id = models.IDNumber.objects.create(idnumber=form['IDnumber'])
         print(idnumber_id , type(idnumber_id))
 
         models.StudentInfo.objects.create(
@@ -423,13 +414,14 @@ class addStudent(APIView):
             name = new_name,
             sex = new_sex,
             birthday = new_birthday,
-            entrytime = new_entryday,
+            entrytime = new_entrytime,
             credit = new_credit,
             outlook_id = outlook,
             grade_id = grade,
             IDnumber_id = idnumber_id.id,
-            native_id = new_address[2],
-            nation_id = new_address[0],
+            country_id = new_address[0],
+            province_id = new_address[1],
+            city_id = new_address[2],
             College_id = new_class[0],
             Major_id = new_class[1],
             Class_id = new_class[2],
@@ -442,12 +434,29 @@ class addStudent(APIView):
         return Response(ret)
 
 
-class MyLimitOffsetPagination(PageNumberPagination):
-    #每页显示多少个
-    page_size = 3
-    #默认每页显示3个，但可以通过掺入pager1/?currentPage=2&pageSize=4,改变默认每页显示的个数
-    page_size_query_param = "pagesize"
-    #最大页数
-    max_page_size = 100
-    #获取页码
-    page_query_param = "currentPage"
+class studentInfoSer(APIView):
+    def get(self, request, *args, **kwargs):
+        stu_id = request.GET.get('stu_id')
+        students = models.StudentInfo.objects.filter(stu_id = stu_id)
+        ss = ser.StudentSerializers(students,many=True)
+        defaultlocation = students[0].country.atitle + "/" + students[0].province.atitle + "/" + students[0].city.atitle
+        defaultorganize = students[0].College.name + "/" + students[0].Major.name + "/" + students[0].Class.class_id
+        
+        ret={
+            'code': 1000,
+            'form': ss.data[0],
+            'location' : defaultlocation,
+            'organize' : defaultorganize
+        }
+        return Response(ret)
+
+
+
+class deleteStudent(APIView):
+    def get(self, request, *args, **kwargs):
+        print(request.GET.get('stuid'))
+        models.StudentInfo.objects.filter(stu_id = request.GET.get('stuid')).first().delete()
+
+        ret = {'code': 1000}
+        print(ret)
+        return Response(ret)

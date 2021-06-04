@@ -13,4 +13,5 @@ urlpatterns = [
     path('editstudent/',student.editstudent.as_view()),
     path('getOrganize/',student.getOrganize.as_view()),
     path('addstudent/',student.addStudent.as_view()),
+    path('deletestudent/',student.deleteStudent.as_view()),
 ]
