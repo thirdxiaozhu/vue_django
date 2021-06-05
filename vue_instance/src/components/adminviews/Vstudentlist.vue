@@ -110,6 +110,7 @@
                 tableData: [],
                 pages: {
                     page: 1,
+                    /*如果需要修改size,不仅要在这里面更改，在page.py里也要更改*/
                     size: 3,
                     total: 1000,
                 },
@@ -129,7 +130,6 @@
             }
         },
         mounted: function () {
-/*             this.initList() */
             this.initOrganize()
         },
         methods: {
@@ -269,19 +269,15 @@
             },
             judgeOptions(){
                 if(this.classselected != ''){
-                    console.log("a4 " + this.pages.total);
                     this.classChange();
                 }
                 else if(this.majorselected != ''){
-                    console.log("a3 " + this.pages.total);
                     this.majorChange();
                 }
                 else if(this.collegeselected!= ''){
-                    console.log("a2 " + this.pages.total);
                     this.collegeChange();
                 }
                 else{
-                    console.log("a1 " + this.pages.total);
                     this.initOrganize();
                 }
             }

@@ -24,28 +24,24 @@
                     <el-collapse-item title="点击展开筛选面板" name="1" align="center" style="text-align: center;">
                         <el-row>
                             <el-col :span="7">
-                                <el-select v-model="collegeselected" filterable placeholder="请选择学院" style="width: 80%;" @change="collegeChange()">
-                                    <el-option v-for="item in colleges" :key="item.value" :label="item.label"
-                                        :value="item.value" >
+                                <el-select v-model="buildingselected" filterable placeholder="请选择教学楼" style="width: 80%;" @change="filterlist">
+                                    <el-option v-for="item in buildings" :key="item.id" :label="item.name"
+                                        :value="item.id" >
                                     </el-option>
                                 </el-select>
                             </el-col>
                             <el-col :span="7">
-                                <el-select v-model="majorselected" filterable placeholder="请选择专业" style="width: 80%;" @change="majorChange()">
-                                    <el-option v-for="item in majors" :key="item.value" :label="item.label"
-                                        :value="item.value" >
+                                <el-select v-model="functionselected" filterable placeholder="请选择教室类型" style="width: 80%;" @change="filterlist">
+                                    <el-option v-for="item in functions" :key="item.id" :label="item.name"
+                                        :value="item.id" >
                                     </el-option>
                                 </el-select>
                             </el-col>
                             <el-col :span="7">
-                                <el-select v-model="classselected" filterable placeholder="请选择班级" style="width: 80%;" @change="classChange()">
-                                    <el-option v-for="item in classes" :key="item.value" :label="item.label"
-                                        :value="item.value">
-                                    </el-option>
-                                </el-select>
+                                <el-input placeholder="请输入期望容量" v-model="capacity" style="width: 80%;" @blur="filterlist"></el-input>
                             </el-col>
                             <el-col :span="3">
-                                <el-button  @click="clearOptions">清空所选</el-button>
+                                <el-button  @click="clearOptions">清空输入</el-button>
                             </el-col>
                         </el-row>
                     </el-collapse-item>
@@ -56,13 +52,11 @@
                             <span>{{(pages.page - 1) * pages.size + scope.$index + 1}}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="stu_id" label="学号" width="180" align="center">
+                    <el-table-column prop="name" label="教室位置" width="230" align="center">
                     </el-table-column>
-                    <el-table-column prop="name" label="姓名" width="180" align="center">
+                    <el-table-column prop="capacity" label="教室容量" width="230" align="center">
                     </el-table-column>
-                    <el-table-column prop="Class" label="所在班级" width="180" align="center">
-                    </el-table-column>
-                    <el-table-column prop="sex" label="性别" width="180" align="center">
+                    <el-table-column prop="function" label="教室类型" width="230" align="center">
                     </el-table-column>
                     <el-table-column label="操作" align="center">
                         <template slot-scope="scope">
@@ -78,30 +72,29 @@
                 <el-drawer :title="title" v-if="drawer" :visible.sync="drawer" :direction="direction"
                     :before-close="handleClose" ref="infodrawer">
                     <span>
-                        <Vstudentdraw :stu_id="operating_id" :drawer="ObjDrawer" :ifadd="ifadd" @judgeOptions="judgeOptions">
-                        </Vstudentdraw>
+                        <Vroomdraw :roomname="operating_name" :drawer="ObjDrawer" :ifadd="ifadd" @judgeOptions="judgeOptions">
+                        </Vroomdraw>
                     </span>
                 </el-drawer>
             </el-main>
             <el-footer>
                 <el-pagination
-      
-      @current-change="handleCurrentChange"
-      :current-page.sync="pages.page"
-      :page-size="pages.size"
-      layout="prev, pager, next, jumper"
-      :total="pages.total">
-    </el-pagination>
+                    @current-change="handleCurrentChange"
+                    :current-page.sync="pages.page"
+                    :page-size="pages.size"
+                    layout="prev, pager, next, jumper"
+                    :total="pages.total">
+                </el-pagination>
             </el-footer>
         </el-container>
     </div>
 </template>
 
 <script>
-    import Vstudentdraw from './Vstudentdraw'
-    import { initStudentList,getOrganize, deleteStudent} from "@/api/axioses"
+    import Vroomdraw from './Vroomdraw'
+    import { getRooms,filterroomlist } from "@/api/axioses"
     export default {
-        name: 'Vstudentlist',
+        name: 'Vroomlist',
         data() {
             return {
                 ObjDrawer: this.$refs,
@@ -118,39 +111,20 @@
                 drawer: false,
                 ifadd : false, //是否是“添加学生"选项
                 direction: 'rtl',
-                organization: '',
-                colleges: {},
-                majors: {},
-                classes: {},
-                pre: '0',
-                collegeselected: '',
-                majorselected: '',
-                classselected: '',
+                buildings: {},
+                functions: {},
+                buildingselected: '',
+                functionselected: '',
+                capacity: '',
             }
         },
         mounted: function () {
-/*             this.initList() */
-            this.initOrganize()
+            this.initList()
         },
         methods: {
             //初始化学生列表
-            initList() {
-                var that = this;
-                const param = {
-                    'currentpage':this.pages.page
-                };
-                initStudentList(param).then(function (ret) {
-                    if (ret.data.code === 1000) {
-                        that.tableData = ret.data.students
-                        that.pages.total = ret.data.total
-                    } else {
-                        alert('获取数据失败')
-                    }
-                }).catch(function (ret) {
-                })
-            },
             handleCurrentChange() {
-                this.judgeOptions()
+                this.filterlist()
             },
             //关闭抽屉弹出
             handleClose(done) {
@@ -185,10 +159,9 @@
             },
             //编辑学生初始化
             handleEdit(index, row) {
-                this.operating_id = row.stu_id;
                 this.operating_name = row.name;
                 this.ifadd = false;
-                this.title = "正在编辑" + this.operating_id + " " + this.operating_name +"同学的信息";
+                this.title = "正在编辑 " + this.operating_name +" 教室的信息";
             },
             //添加学生初始化
             addRoom(){
@@ -197,98 +170,48 @@
                 this.ifadd = true;
                 this.drawer = true;
             },
-            //初始化学院
-            initOrganize(){
-                const data4org  = {
+            //初始化列表以及选项
+            initList(){
+                const data4room  = {
                     type: 1,
-                    pre: this.pre,
                     currentpage : this.pages.page
                 };
                 var that = this;
-                getOrganize(data4org).then(res =>{
+                getRooms(data4room).then(res =>{
+                    console.log(res)
                     if(res.data.code === 1000){
-                        that.colleges = res.data.data;
-                        that.tableData = res.data.students;
-                        that.pages.total = res.data.total;
-                    }
-                })
-            },
-            //当学院更改的时候，获取专业，并更新学生列表
-            collegeChange(){
-                this.majorselected='' //学院改变的时候，专业和班级归零
-                this.classselected=''
-                const data4org  = {
-                    type: 2,
-                    pre: this.collegeselected,
-                    currentpage : this.pages.page
-                };
-                var that = this;
-                getOrganize(data4org).then(res =>{
-                    if(res.data.code === 1000){
-                        that.majors = res.data.majors;
-                        that.tableData = res.data.students;
-                        that.pages.total = res.data.total;
-                    }
-                })
-            },
-            majorChange(){
-                this.classselected=''
-                const data4org  = {
-                    type: 3,
-                    pre: this.majorselected,
-                    currentpage : this.pages.page
-                };
-                var that = this;
-                getOrganize(data4org).then(res =>{
-                    if(res.data.code === 1000){
-                        that.classes = res.data.classes;
-                        that.tableData = res.data.students;
-                        that.pages.total = res.data.total;
-                    }
-                })
-            },
-            classChange(){
-                const data4org  = {
-                    type: 4,
-                    pre: this.classselected,
-                    currentpage : this.pages.page
-                };
-                var that = this;
-                getOrganize(data4org).then(res =>{
-                    if(res.data.code === 1000){
-                        that.tableData = res.data.students;
+                        that.buildings = res.data.buildings;
+                        that.functions = res.data.functions;
+                        that.tableData = res.data.roomlist;
                         that.pages.total = res.data.total;
                     }
                 })
             },
             clearOptions(){
-                this.collegeselected='' ;
-                this.majorselected='' ;
-                this.classselected='';
-                this.initOrganize();
+                this.buildingselected='' ;
+                this.functionselected='' ;
+                this.capacity='';
+                this.initList();
             },
-            judgeOptions(){
-                if(this.classselected != ''){
-                    console.log("a4 " + this.pages.total);
-                    this.classChange();
+            filterlist(){
+                const param = {
+                    'building': this.buildingselected,
+                    'function': this.functionselected,
+                    'capacity': this.capacity,
+                    'currentpage': this.pages.page
                 }
-                else if(this.majorselected != ''){
-                    console.log("a3 " + this.pages.total);
-                    this.majorChange();
-                }
-                else if(this.collegeselected!= ''){
-                    console.log("a2 " + this.pages.total);
-                    this.collegeChange();
-                }
-                else{
-                    console.log("a1 " + this.pages.total);
-                    this.initOrganize();
-                }
+                var that = this;
+                filterroomlist(param).then(res =>{
+                    if(res.data.code === 1000){
+                        that.tableData = res.data.roomlist;
+                        that.pages.total = res.data.total;
+                    }
+                })
             }
         },
 
         components: {
-            Vstudentdraw,
+            Vroomdraw
         },
         
     }

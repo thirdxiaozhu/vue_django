@@ -116,7 +116,9 @@ DATABASES = {
         'USER': "root",
         #密码
         'PASSWORD' : "Zoujiaxv7891",
-        'OPTIONS':{'charset':'utf8mb4'},
+        'OPTIONS':{
+            'charset':'utf8mb4',
+            },
     }
 }
 

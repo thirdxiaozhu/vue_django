@@ -35,3 +35,62 @@ class StudentlistSerializers(serializers.ModelSerializer):
     class Meta:
         model = models.StudentInfo
         fields = ('stu_id','name','sex','Class')
+
+class RoomlistSerializers(serializers.ModelSerializer):
+    function = serializers.CharField(source="function.name")
+    class Meta:
+        model = models.ClassRoom
+        fields = ('name','capacity','function')
+
+
+class BuildinglistSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = models.Building
+        fields = ('id','name')
+
+class FunctionlistSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = models.Function
+        fields = ('id','name')
+
+
+class TeacherlistSerializers(serializers.ModelSerializer):
+    title = serializers.CharField(source="title.name")
+    class Meta:
+        model = models.TeacherInfo
+        fields = ('tea_id','name','sex','title')
+
+
+class College4tclistSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = models.CollegeInfo4tc
+        fields = ('id','name')
+
+class TeachertitlelistSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = models.Teacher_title
+        fields = ('id','name')
+
+
+class CourselistSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = models.Course
+        fields = ('id','name')
+
+class OutlooklistSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = models.Outlook
+        fields = ('id','name')
+
+
+class TeacherInfoSerializers(serializers.ModelSerializer):
+    IDnumber = serializers.CharField(source="IDnumber.idnumber")
+    college = serializers.CharField(source="college.name")
+    outlook = serializers.CharField(source="outlook.name")
+    title = serializers.CharField(source="title.name")
+    country = serializers.CharField(source="country.atitle")
+    province = serializers.CharField(source="province.atitle")
+    city = serializers.CharField(source="city.atitle")
+    class Meta:
+        model = models.TeacherInfo
+        fields = "__all__"

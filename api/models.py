@@ -79,9 +79,9 @@ class TeacherInfo(models.Model):
     entrytime = models.DateField(auto_now_add=True)
     title = models.ForeignKey(to="Teacher_title", on_delete=models.CASCADE)
     outlook = models.ForeignKey(to="Outlook", on_delete=models.CASCADE)
-    nation = models.IntegerField(default=0)
-    native = models.ForeignKey(to="Cities", on_delete=models.CASCADE)
-    #courseGroup = models.ForeignKey (to = "Course_Group" , on_delete = models.CASCADE)
+    country = models.ForeignKey(to="Countries",on_delete=models.CASCADE, default=1)
+    province = models.ForeignKey(to="Provinces",on_delete=models.CASCADE, default = 1)
+    city = models.ForeignKey(to="Cities", on_delete=models.CASCADE,default=1)
     #教师和课程（课程组）也没有现时关系，直接使用多对多关联
     course = models.ManyToManyField(to="Course")
     college = models.ForeignKey(

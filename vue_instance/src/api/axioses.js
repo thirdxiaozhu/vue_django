@@ -1,5 +1,4 @@
 import axios from 'axios'
-import qs from 'qs'
 
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 /* axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8'; */
@@ -77,6 +76,100 @@ export function deleteStudent(param){
     return axios.request({
         method: "GET",
         url: "/api/deletestudent",
+        params: param
+    })
+}
+
+export function getRooms(param){
+    console.log(param);
+    return axios.request({
+        method: "GET",
+        url: "/api/roomlist",
+        params: param
+    })
+}
+
+export function getFunctions(param){
+    return axios.request({
+        mathod: "GET",
+        url: "/api/getfunctions",
+        params: param
+    })
+}
+
+
+export function getRoomInfo(param){
+    return axios.request({
+        mathod: "GET",
+        url: "/api/getroominfo",
+        params: param
+    })
+}
+            
+export function filterroomlist(param){
+    return axios.request({
+        method: "GET",
+        url: "/api/filterroom",
+        params: param
+    })
+}
+
+
+export function getTeacherlist(param){
+    return axios.request({
+        method: "GET",
+        url: "/api/getteacher",
+        params: param
+    })
+}
+
+
+export function getCourse(param = {}){
+    return axios.request({
+        method: "GET",
+        url: "/api/getCourse",
+        params: param
+    })
+}
+
+
+export function initTeacherinfo(param = {}){
+    return axios.request({
+        method: "GET",
+        url: "/api/getteacherinfo",
+        params: param
+    })
+}
+
+export function editTeacherOptions(){
+    return axios.request({
+        url: "/api/editteaoptions",
+        method: "GET",
+    })
+}
+
+export function postTeacherSubmit(data){
+    console.log(data.courses)
+    return axios.request({
+        method: "POST",
+        url: "/api/editteacher/",
+        data: data,
+    })
+}
+
+export function postaddTea(data){
+    console.log(typeof(data.ifadd));
+    return axios.request({
+        method: "POST",
+        url: "/api/addteacher/",
+        data: data,
+    })
+}
+
+export function changeTeaCollege(param){
+    return axios.request({
+        method: "GET",
+        url: "/api/collegechange/",
         params: param
     })
 }

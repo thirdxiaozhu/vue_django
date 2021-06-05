@@ -56,7 +56,7 @@
             <span>教学地点变更</span>
           </template>
           <el-menu-item index="3-4-1">教学楼变更</el-menu-item>
-          <el-menu-item index="3-4-2"><router-link to="/admin/roomchange">教室变更</router-link></el-menu-item>
+          <el-menu-item index="3-4-2"><router-link to="/admin/roomlist">教室变更</router-link></el-menu-item>
         </el-submenu>
       </el-submenu>
       <el-menu-item index="4">

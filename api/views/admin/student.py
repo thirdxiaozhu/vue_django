@@ -79,14 +79,14 @@ class editstuoptions(APIView):
         gradelist = []
         for i in outlooks:
             data={
-                'value': str(i.id),
+                'value': i.id,
                 'label': i.name,
             }
             outlooklist.append(data)
 
         for i in grades:
             data={
-                'value': str(i.id),
+                'value': i.id,
                 'label': i.name,
             }
             gradelist.append(data)
@@ -254,8 +254,9 @@ class editstudent(APIView):
         student.credit = new_credit
         student.outlook_id = outlook
         student.grade_id = grade
-        student.native_id = new_address[2]
-        student.nation_id = new_address[0]
+        student.country_id = new_address[0]
+        student.province_id = new_address[1]
+        student.city_id = new_address[2]
         student.College_id = new_class[0]
         student.Major_id = new_class[1]
         student.Class_id = new_class[2]

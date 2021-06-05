@@ -8,12 +8,11 @@
       <el-submenu index="1">
         <template slot="title">
           <i class="el-icon-menu"></i>
-          <span>常规管理</span>
+          <span>常规信息</span>
         </template>
-          <el-menu-item index="1-1"><router-link to="/admin/studentlist">学籍管理</router-link></el-menu-item>
-          <el-menu-item index="1-2"><router-link to="/admin/teacherlist">教籍管理</router-link></el-menu-item>
-          <el-menu-item index="1-3"><router-link to="/admin/course">课程管理</router-link></el-menu-item>
-          <el-menu-item index="1-4"><router-link to="/admin/test">考试管理</router-link></el-menu-item>
+          <el-menu-item index="1-1"><router-link to="/student/info">学籍信息</router-link></el-menu-item>
+          <el-menu-item index="1-3"><router-link to="/student/course">课程信息</router-link></el-menu-item>
+          <el-menu-item index="1-4"><router-link to="/student/test">考试信息</router-link></el-menu-item>
       </el-submenu>
       <el-submenu index="2">
         <template slot="title">
