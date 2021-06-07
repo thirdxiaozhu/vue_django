@@ -17,7 +17,12 @@ class getTeacherlist(APIView):
             teachers = models.TeacherInfo.objects.all().order_by('id')
             colleges = models.CollegeInfo4tc.objects.all().order_by('id')
 
-            teacherlist = ser.TeacherlistSerializers(teachers, many=True)
+            #分页
+            pages = page.MyLimitOffsetPagination()
+            #获取自己继承的类
+            page_role = pages.paginate_queryset(teachers, request, self)
+
+            teacherlist = ser.TeacherlistSerializers(page_role, many=True)
             collegelist = ser.College4tclistSerializers(colleges, many=True)
 
             ret = {
@@ -33,8 +38,13 @@ class getTeacherlist(APIView):
             courses = models.Course.objects.filter(college_id = pre).order_by('id')
             teachers = models.TeacherInfo.objects.filter(college_id = pre).order_by('id')
 
+            #分页
+            pages = page.MyLimitOffsetPagination()
+            #获取自己继承的类
+            page_role = pages.paginate_queryset(teachers, request, self)
+
             courselist = ser.College4tclistSerializers(courses, many=True)
-            teacherlist = ser.TeacherlistSerializers(teachers, many=True)
+            teacherlist = ser.TeacherlistSerializers(page_role, many=True)
 
             ret = {
                 'code':1000,
@@ -49,7 +59,11 @@ class getTeacherlist(APIView):
             pre = int(request.GET.get('pre'))
             teachers = models.Course.objects.get(id = pre).teacherinfo_set.all().order_by('id')
 
-            teacherlist = ser.TeacherlistSerializers(teachers, many=True)
+            #分页
+            pages = page.MyLimitOffsetPagination()
+            #获取自己继承的类
+            page_role = pages.paginate_queryset(teachers, request, self)
+            teacherlist = ser.TeacherlistSerializers(page_role, many=True)
 
             ret = {
                 'code':1000,

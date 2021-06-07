@@ -1,11 +1,11 @@
 from django.contrib import admin
 from django.urls import path , include , re_path
-from api.views.admin import course,student,room,teacher
+from api.views.admin import course,student,room,teacher,course
 from api.views import general
 from api import teacherurls
 
 urlpatterns = [
-    path('course/', course.CourseView.as_view()),
+    path('teacher/',include(teacherurls)),
     path('login/',general.login.as_view()),
     path('studentlist/',student.studentStatus.as_view()),
     path('studentinfo/',student.studentInfo.as_view()),
@@ -26,5 +26,8 @@ urlpatterns = [
     path('editteacher/',teacher.editTeacher.as_view()),
     path('addteacher/',teacher.addTeacher.as_view()),
     path('collegechange/',teacher.collegeChange.as_view()),
-    path('teacher/',include(teacherurls)),
+    path('getcourselist/',course.getCourseList.as_view()),
+    path('filtercourselist/',course.filterCourseList.as_view()),
+    path('initcourseinfo/',course.initCourseInfo.as_view()),
+    path('getcourseoption/',course.getCourseOption.as_view()),
 ]

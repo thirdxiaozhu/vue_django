@@ -70,27 +70,19 @@ class filterRoom(APIView):
             capacity = 0
         capacity = int(capacity)-1
 
-        print(building , function , capacity)
-
-
         if building == '' and function == '':
-            print('aaa')
             rooms = models.ClassRoom.objects.filter(capacity__gt = capacity-1).order_by('id')
         elif function == '':
-            print('bbb')
             rooms = models.ClassRoom.objects.filter(Q(capacity__gt = capacity-1) & Q(building_id = building)).order_by('id')
         elif building == '':
-            print('ccc')
             rooms = models.ClassRoom.objects.filter(Q(capacity__gt = capacity-1) & Q(function_id = function)).order_by('id')
         else:
-            print('ddd')
             rooms = models.ClassRoom.objects.filter(Q(capacity__gt = capacity-1) & Q(function_id = function) & Q(building_id = building)).order_by('id')
 
         pages = page.MyLimitOffsetPagination()
         page_role = pages.paginate_queryset(rooms, request, self)
         roomlist = ser.RoomlistSerializers(page_role, many = True)
 
-        print(roomlist.data)
         ret = {
             'code':1000,
             'roomlist': roomlist.data,

@@ -6,7 +6,7 @@ import admin_index from '@/views/admin_index'
 import Vmain from '@/components/adminviews/Vmain'
 import Vstudentlist from '@/components/adminviews/Vstudentlist'
 import Vteacherlist from '@/components/adminviews/Vteacherlist'
-import Vcourse from '@/components/adminviews/Vcourse'
+import Vcourselist from '@/components/adminviews/Vcourselist'
 import Vtest from '@/components/adminviews/Vtest'
 import Vroom from '@/components/adminviews/Vroom'
 
@@ -46,8 +46,8 @@ export default new Router({
         },
         {
           path: 'course',
-          name: 'Vcourse',
-          component: Vcourse
+          name: 'Vcourselist',
+          component: Vcourselist
         },
         {
           path: 'test',

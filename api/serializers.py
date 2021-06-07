@@ -91,6 +91,54 @@ class TeacherInfoSerializers(serializers.ModelSerializer):
     country = serializers.CharField(source="country.atitle")
     province = serializers.CharField(source="province.atitle")
     city = serializers.CharField(source="city.atitle")
+    course = serializers.SerializerMethodField()
+
+
     class Meta:
         model = models.TeacherInfo
         fields = "__all__"
+
+    #多对多钩子函数序列化，必须以get_ + model表名作为方法名
+    def get_course(self, obj):
+        temp = []
+        for obj in obj.course.all():
+            temp.append(obj.name)
+        return temp
+
+class CourselistSerializers4cou(serializers.ModelSerializer):
+    college = serializers.CharField(source="college.name")
+    function = serializers.CharField(source="function.name")
+    elective = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.Course
+        fields = ('cou_id','name','classhour','college','function','elective')
+
+    #实现自定义返回(elective是布尔值，js无法回显布尔)
+    def get_elective(self, obj):
+        if obj.elective == False:
+            return "否"
+        else:
+            return "是"
+
+
+class CourseinfoSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = models.Course
+        fields = "__all__"
+
+class BetyearlistSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = models.Betteryear
+        fields = "__all__"
+
+
+class PreCourseidlistSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = models.Course
+        fields = ('id','cou_id')
+
+class PreCoursenamelistSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = models.Course
+        fields = ('id','name')

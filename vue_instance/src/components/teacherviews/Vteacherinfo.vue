@@ -56,14 +56,13 @@
                     <el-input v-model="form.title" style="width: 90%;" disabled></el-input>
                 </el-form-item>
                 <el-form-item label="籍贯" prop="location">
-                    <el-cascader :placeholder="defaultlocation" style="width: 90%" v-model="form.address"
-                         disabled></el-cascader>
+                    <el-input v-model="defaultlocation" style="width: 90%;" disabled></el-input>
                 </el-form-item>
                 <el-form-item label="所属学院" prop="college">
                     <el-input v-model="form.college" style="width: 90%;" disabled></el-input>
                 </el-form-item>
                 <el-form-item label="课程组" prop="course">
-                    <el-input v-model="form.courses" style="width: 90%;" disabled></el-input>
+                    <el-input v-model="form.course" style="width: 90%;" disabled></el-input>
                 </el-form-item>
             </el-form>
         </el-main>
@@ -81,18 +80,6 @@
                 param: {},
                 form: {},
                 defaultlocation: "",
-                //年级
-                colleges: [],
-                collegeselected: 1,     //默认值，一定要是字符串！！！！
-                //政治面貌
-                outlooks: [],
-                outlookselected: 1,
-                //职称
-                titles: [],
-                titleselected: 1,
-                //教师所属课程组
-                courses: [],
-                courseselected: [],     //默认值，一定要是字符串！！！！
             }
         },
         mounted: function () {

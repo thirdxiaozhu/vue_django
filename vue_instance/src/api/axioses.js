@@ -173,3 +173,36 @@ export function changeTeaCollege(param){
         params: param
     })
 }
+
+
+export function getCourseList(param){
+    return axios.request({
+        method: "GET",
+        url: "/api/getcourselist/",
+        params: param
+    })
+}
+
+export function filterCourseList(param){
+    return axios.request({
+        method: "GET",
+        url: "/api/filtercourselist",
+        params: param
+    })
+}
+
+export function initCourseInfo(param){
+    return axios.request({
+        method: "GET",
+        url: "/api/initcourseinfo",
+        params: param
+    })
+}
+
+export function getCourseOption(param){
+    return axios.request({
+        mentod: "GET",
+        url: "/api/getcourseoption",
+        params: param
+    })
+}

@@ -6,7 +6,7 @@
                     <el-breadcrumb separator="/" style="margin-top: 20px; font-size:large;">
                         <el-breadcrumb-item>首页</el-breadcrumb-item>
                         <el-breadcrumb-item>常规管理</el-breadcrumb-item>
-                        <el-breadcrumb-item style="font-weight: bold;">学籍管理</el-breadcrumb-item>
+                        <el-breadcrumb-item style="font-weight: bold;">课程管理</el-breadcrumb-item>
                     </el-breadcrumb>
                 </el-col>
                 <el-col :span="3" style="margin-top: 10px; float: right;">
@@ -23,22 +23,22 @@
                     <el-collapse-item title="点击展开筛选面板" name="1" align="center" style="text-align: center;">
                         <el-row>
                             <el-col :span="7">
-                                <el-select v-model="collegeselected" filterable placeholder="请选择学院" style="width: 80%;" @change="collegeChange()">
-                                    <el-option v-for="item in colleges" :key="item.value" :label="item.label"
-                                        :value="item.value" >
+                                <el-select v-model="collegeselected" filterable placeholder="请选择开课学院" style="width: 80%;" @change="collegeChange()">
+                                    <el-option v-for="item in colleges" :key="item.id" :label="item.name"
+                                        :value="item.id" >
                                     </el-option>
                                 </el-select>
                             </el-col>
                             <el-col :span="7">
-                                <el-select v-model="majorselected" filterable placeholder="请选择专业" style="width: 80%;" @change="majorChange()">
-                                    <el-option v-for="item in majors" :key="item.value" :label="item.label"
-                                        :value="item.value" >
+                                <el-select v-model="functionselected" filterable placeholder="请选择课程类型" style="width: 80%;" @change="filterlist">
+                                    <el-option v-for="item in functions" :key="item.id" :label="item.name"
+                                        :value="item.id" >
                                     </el-option>
                                 </el-select>
                             </el-col>
                             <el-col :span="7">
-                                <el-select v-model="classselected" filterable placeholder="请选择班级" style="width: 80%;" @change="classChange()">
-                                    <el-option v-for="item in classes" :key="item.value" :label="item.label"
+                                <el-select v-model="electiveselected" filterable placeholder="是否选修" style="width: 80%;" @change="classChange()">
+                                    <el-option v-for="item in iselective" :key="item.value" :label="item.label"
                                         :value="item.value">
                                     </el-option>
                                 </el-select>
@@ -56,18 +56,22 @@
 <!--                             <span>{{scope.$index + 1}}</span> -->
                         </template>
                     </el-table-column>
-                    <el-table-column prop="stu_id" label="学号" width="180" align="center">
+                    <el-table-column prop="cou_id" label="课程号" width="150" align="center">
                     </el-table-column>
-                    <el-table-column prop="name" label="姓名" width="180" align="center">
+                    <el-table-column prop="name" label="课程名称" width="150" align="center">
                     </el-table-column>
-                    <el-table-column prop="Class" label="所在班级" width="180" align="center">
+                    <el-table-column prop="classhour" label="总学时" width="150" align="center">
                     </el-table-column>
-                    <el-table-column prop="sex" label="性别" width="180" align="center">
+                    <el-table-column prop="college" label="开课学院" width="150" align="center">
+                    </el-table-column>
+                    <el-table-column prop="function" label="课程类型" width="150" align="center">
+                    </el-table-column>
+                    <el-table-column prop="elective" label="是否选修" width="150" align="center">
                     </el-table-column>
                     <el-table-column label="操作" align="center">
                         <template slot-scope="scope">
                             <el-button size="medium" type="primary"
-                                @click="handleEdit(scope.$index, scope.row);drawer=true">编辑</el-button>
+                                @click="handleEdit(scope.$index, scope.row);drawer=true">详细</el-button>
                             <el-button size="medium" type="danger"
                                 @click="handleDelete(scope.$index, scope.row)">删除</el-button>
                             <!--                         <el-button size="medium" type="primary" @click="drawer=true">编辑</el-button> -->
@@ -76,10 +80,23 @@
                 </el-table>
 
                 <el-drawer :title="title" v-if="drawer" :visible.sync="drawer" :direction="direction"
-                    :before-close="handleClose" ref="infodrawer">
+                    :before-close="handleClose" ref="infodrawer" size="50%">
                     <span>
-                        <Vstudentdraw :stu_id="operating_id" :drawer="ObjDrawer" :ifadd="ifadd" @judgeOptions="judgeOptions">
-                        </Vstudentdraw>
+                        <el-button size="large" type="primary" @click="handleInnerDraw();innerDrawer=true">查看该课程本学期排课情况</el-button>
+                    </span>
+                    <span style>
+                        <Vcoursedraw style="margin-top: 5%;" :cou_id="operating_id" :drawer="ObjDrawer" :ifadd="ifadd" @judgeOptions="judgeOptions">
+                        </Vcoursedraw>
+                    </span>
+                    <span>
+                        <el-drawer
+                            :title="innertitle"
+                            :append-to-body="true"
+                            :before-close="handleClose"
+                            :visible.sync="innerDrawer"
+                            size = "45%">
+                            <p>_(:зゝ∠)_</p>
+                        </el-drawer>
                     </span>
                 </el-drawer>
             </el-main>
@@ -97,15 +114,16 @@
 </template>
 
 <script>
-    import Vstudentdraw from './Vstudentdraw'
-    import { initStudentList,getOrganize, deleteStudent} from "@/api/axioses"
+    import Vcoursedraw from './Vcoursedraw'
+    import { filterCourseList,initStudentList,getOrganize, deleteStudent, getCourseList} from "@/api/axioses"
     export default {
-        name: 'Vstudentlist',
+        name: 'Vcourselist',
         data() {
             return {
                 ObjDrawer: this.$refs,
                 search_text: '',
                 title: "",
+                innertitle: "",
                 tableData: [],
                 pages: {
                     page: 1,
@@ -116,38 +134,31 @@
                 operating_id: 0,
                 operating_name: 0,
                 drawer: false,
+                innerDrawer: false,
                 ifadd : false, //是否是“添加学生"选项
                 direction: 'rtl',
                 organization: '',
                 colleges: {},
-                majors: {},
-                classes: {},
-                pre: '0',
+                functions: {},
                 collegeselected: '',
-                majorselected: '',
-                classselected: '',
+                functionselected: '',
+                elecitveselected: '',
+                iselective: [
+                    {
+                        'value': 1,
+                        'label': '是'
+                    },
+                    {
+                        'value': 0,
+                        'label': '否'
+                    }
+                ]
             }
         },
         mounted: function () {
-            this.initOrganize()
+            this.initList()
         },
         methods: {
-            //初始化学生列表
-            initList() {
-                var that = this;
-                const param = {
-                    'currentpage':this.pages.page
-                };
-                initStudentList(param).then(function (ret) {
-                    if (ret.data.code === 1000) {
-                        that.tableData = ret.data.students
-                        that.pages.total = ret.data.total
-                    } else {
-                        alert('获取数据失败')
-                    }
-                }).catch(function (ret) {
-                })
-            },
             handleCurrentChange() {
                 this.judgeOptions()
             },
@@ -184,35 +195,38 @@
             },
             //编辑学生初始化
             handleEdit(index, row) {
-                this.operating_id = row.stu_id;
+                this.operating_id = row.cou_id;
                 this.operating_name = row.name;
                 this.ifadd = false;
-                this.title = "正在编辑" + this.operating_id + " " + this.operating_name +"同学的信息";
+                this.title = "正在编辑" + this.operating_id + " " + this.operating_name +"的课程信息";
+            },
+            handleInnerDraw() {
+                this.innertitle =  this.operating_id + " " + this.operating_name +"本学年排课情况";
             },
             //添加学生初始化
             addStudent(){
-                this.title = "正在添加学生信息";
+                this.title = "正在添加课程信息";
                 this.operating_id = 0;
                 this.ifadd = true;
                 this.drawer = true;
             },
             //初始化学院
-            initOrganize(){
-                const data4org  = {
+            initList(){
+                const data4cou  = {
                     type: 1,
-                    pre: this.pre,
                     currentpage : this.pages.page
                 };
                 var that = this;
-                getOrganize(data4org).then(res =>{
+                getCourseList(data4cou).then(res =>{
                     if(res.data.code === 1000){
-                        that.colleges = res.data.data;
-                        that.tableData = res.data.students;
+                        that.colleges = res.data.colleges;
+                        that.functions = res.data.functions;
+                        that.tableData = res.data.courselist;
                         that.pages.total = res.data.total;
                     }
                 })
             },
-            //当学院更改的时候，获取专业，并更新学生列表
+            //当学院更改的时候，列表
             collegeChange(){
                 this.majorselected='' //学院改变的时候，专业和班级归零
                 this.classselected=''
@@ -267,23 +281,24 @@
                 this.initOrganize();
             },
             judgeOptions(){
-                if(this.classselected != ''){
-                    this.classChange();
-                }
-                else if(this.majorselected != ''){
-                    this.majorChange();
-                }
-                else if(this.collegeselected!= ''){
-                    this.collegeChange();
-                }
-                else{
-                    this.initOrganize();
-                }
+                const param = {
+                    'college':this.collegeselected,
+                    'function': this.functionselected,
+                    'iselecitve': this.electiveselected,
+                    'currentpage': this.pages.page
+                };
+                var that = this;
+                filterCourseList(param).then(res => {
+                    if(res.data.code === 1000){
+                        that.tableData = res.data.courselist;
+                        that.pages.total = res.data.total;
+                    }
+                })
             }
         },
 
         components: {
-            Vstudentdraw,
+            Vcoursedraw,
         },
         
     }
