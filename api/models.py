@@ -111,7 +111,8 @@ class Course(models.Model):
     #所属学院
     college = models.ForeignKey(to="CollegeInfo4tc", on_delete=models.CASCADE)
     #先导课
-    pre_course = models.ForeignKey(to="self",on_delete=models.CASCADE, default=1 , null = True)
+    #pre_course = models.ForeignKey(to="self",on_delete=models.CASCADE, default=1 , null = True)
+    pre_course = models.ManyToManyField(to="self")
 
 
 class Results(models.Model):
