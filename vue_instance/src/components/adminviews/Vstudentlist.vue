@@ -49,7 +49,7 @@
                         </el-row>
                     </el-collapse-item>
                 </el-collapse>
-                <el-table :data="tableData" style="width: 100%" ref="table">
+                <el-table :data="tableData" style="width: 100%" ref="table" v-loading="loading">
                     <el-table-column prop="" label="#" width="90" type="index" align="center">
                         <template slot-scope="scope">
                                                     <span>{{(pages.page - 1) * pages.size + scope.$index + 1}}</span>
@@ -126,6 +126,7 @@
                 collegeselected: '',
                 majorselected: '',
                 classselected: '',
+                loading: true,
             }
         },
         mounted: function () {
@@ -209,6 +210,7 @@
                         that.colleges = res.data.data;
                         that.tableData = res.data.students;
                         that.pages.total = res.data.total;
+                        that.loading = false;
                     }
                 })
             },

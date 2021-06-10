@@ -94,7 +94,7 @@ class Course(models.Model):
     id = models.AutoField(primary_key=True)
     cou_id = models.CharField(
         null=False, max_length=10, default="", unique=True)
-    name = models.CharField(null=False, max_length=10, default="", unique=True)
+    name = models.CharField(null=False, max_length=100, default="", unique=True)
     #学时
     classhour = models.IntegerField()
     hourperweek = models.FloatField(default=1.0)
@@ -207,6 +207,7 @@ class Teacher_title(models.Model):
 class ClassTime(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=30)
+    Days = models.ForeignKey(to="Days", on_delete=models.CASCADE , null=True)
 
 
 class Building(models.Model):
@@ -214,12 +215,7 @@ class Building(models.Model):
     name = models.CharField(max_length=20)
     direct = models.CharField(max_length=5)
 
-
-#身份证也需要一张单独的表
-
-
 #选修课也需要一张单独的表
-
 
 class Message(models.Model):
     id = models.AutoField(primary_key=True)
@@ -253,5 +249,19 @@ class StudentGrade(models.Model):
 
 
 class Betteryear(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length = 20)
+
+
+class MainRelation(models.Model):
+    id = models.AutoField(primary_key=True)
+    course = models.ForeignKey(to="Course", on_delete=models.CASCADE)
+    teacher = models.ForeignKey(to="TeacherInfo", on_delete=models.CASCADE)
+    student = models.ManyToManyField(to="StudentInfo")
+    classroom = models.ForeignKey(to="ClassRoom", on_delete=models.CASCADE)
+    classtime = models.ForeignKey(to="ClassTime", on_delete=models.CASCADE)
+
+
+class Days(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length = 20)

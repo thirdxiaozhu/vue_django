@@ -112,7 +112,7 @@ class CourselistSerializers4cou(serializers.ModelSerializer):
 
     class Meta:
         model = models.Course
-        fields = ('cou_id','name','classhour','college','function','elective')
+        fields = ('id','cou_id','name','classhour','college','function','elective')
 
     #实现自定义返回(elective是布尔值，js无法回显布尔)
     def get_elective(self, obj):
@@ -142,3 +142,39 @@ class PreCoursenamelistSerializers(serializers.ModelSerializer):
     class Meta:
         model = models.Course
         fields = ('id','name')
+
+
+
+class CollegelistSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = models.CollegeInfo
+        fields = "__all__"
+
+
+class MajorlistSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = models.MajorInfo
+        fields = "__all__"
+
+
+class ClasslistSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = models.ClassInfo
+        fields = "__all__"
+
+
+
+class StudentInfoSerializers(serializers.ModelSerializer):
+    IDnumber = serializers.CharField(source="IDnumber.idnumber")
+    College = serializers.CharField(source="College.name")
+    Major = serializers.CharField(source="Major.name")
+    Class = serializers.CharField(source="Class.class_id")
+    outlook = serializers.CharField(source="outlook.name")
+    country = serializers.CharField(source="country.atitle")
+    province = serializers.CharField(source="province.atitle")
+    city = serializers.CharField(source="city.atitle")
+
+
+    class Meta:
+        model = models.StudentInfo
+        fields = "__all__"

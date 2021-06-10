@@ -1,6 +1,6 @@
 <template>
     <el-form ref="form" :model="form" label-width="80px" :rules="rules">
-        <el-form-item label="课程号" prop="stu_id">
+        <el-form-item label="课程号" prop="cou_id">
             <el-input v-model="form.cou_id" style="width: 90%;"></el-input>
         </el-form-item>
         <el-form-item label="课程名称" prop="name">
@@ -12,17 +12,17 @@
                 <el-radio :label="false">否</el-radio>
             </el-radio-group>
         </el-form-item>
-        <el-form-item label="学分" prop="IDnumber">
+        <el-form-item label="学分" prop="credit">
             <el-input v-model="form.credit" style="width: 90%;"></el-input>
         </el-form-item>
-        <el-form-item label="总课时" prop="IDnumber">
+        <el-form-item label="总课时" prop="classhour">
             <el-input v-model="form.classhour" style="width: 90%;"></el-input>
         </el-form-item>
-        <el-form-item label="周课时" prop="IDnumber">
+        <el-form-item label="周课时" prop="hourperweek">
             <el-input v-model="form.hourperweek" style="width: 90%;"></el-input>
         </el-form-item>
         <el-form-item label="建议修读年份" prop="betyear">
-            <el-select v-model="betyearselected" placeholder="请选择" style="width: 90%">
+            <el-select v-model="form.betyear" placeholder="请选择" style="width: 90%">
                 <el-option
                     v-for="item in betyear"
                     :key="item.id"
@@ -32,7 +32,7 @@
             </el-select>
         </el-form-item>
         <el-form-item label="开课学院" prop="college">
-            <el-select v-model="collegeselected" placeholder="请选择" style="width: 90%">
+            <el-select v-model="form.college" placeholder="请选择" style="width: 90%">
                 <el-option
                     v-for="item in colleges"
                     :key="item.id"
@@ -42,7 +42,7 @@
             </el-select>
         </el-form-item>
         <el-form-item label="课程类型" prop="function">
-            <el-select v-model="functionselected" placeholder="请选择" style="width: 90%">
+            <el-select v-model="form.function" placeholder="请选择" style="width: 90%">
                 <el-option
                     v-for="item in functions"
                     :key="item.id"
@@ -54,10 +54,11 @@
         <el-form-item label="先修课" prop="pre">
             <el-transfer
               filterable
-              filter-placeholder="请输入城市拼音"
-              v-model="value"
+              filter-placeholder="请输入课程代号"
+              :filter-method="filterMethod"
+              v-model="form.pre_course"
               :data="data"
-              style="text-align: left;"
+              style="text-align: left;margin-left: 8%;"
               >
             </el-transfer>
         </el-form-item>
@@ -69,7 +70,7 @@
 </template>
 
 <script>
-    import { getLocation, getClass, postSubmit, postAdd, postaddStu, initCourseInfo, getCourse, getCourseOption } from "@/api/axioses"
+    import { getLocation, getClass, postCourseSubmit, postAdd, postaddCou, initCourseInfo, getCourse, getCourseOption } from "@/api/axioses"
     export default {
         name: 'Vstudentdraw',
         data() {
@@ -77,51 +78,38 @@
                 load: false,
                 param: {},
                 form: {
-                    id: '',
-                    stu_id: '',
-                    password: '',
-                    name: '',
-                    sex: '',
-                    IDnumber: '',
-                    grade: '',
-                    birthday: '',
-                    entrytime: '',
-                    credit: '',
-                    outlook: '1',
-                    address: [],
-                    classes: [],
+                    priority: 1
                 },
                 betyearselected: 1,
                 betyear:{},
                 collegeselected: 1,
                 colleges:{},
-                preselected: 1,
+                preselected: [],
                 pre_courses:{},
                 functionselected: 1,
                 functions:{},
                 //级联选择地区
                 pre_course_id: [],
+                pre_course_cou_id: [],
                 pre_course_name: [],
                 rules: {
-                    stu_id: [
-                        { required: true, min: 9, max: 9, message: '学生学号长度需为9位', trigger: 'blur' }
+                    cou_id: [
+                        { required: true, min: 8, max:8, message: '课程号长度需为8位', trigger: 'blur' }
                     ],
                     name: [
-                        { required: true, message: '请输入学生姓名', trigger: 'blur' },
-                        { min: 2, max: 6, message: '长度在 2 到 6 个字符', trigger: 'blur' }
+                        { required: true, message: '请输入课程名', trigger: 'blur' },
                     ],
                     sex: [
-                        { required: true , message:"请选择性别"}
+                        { required: true , message:"请选择是否选修"}
                     ],
-                    IDnumber: [
-                        { required: true, message: '请输入身份证号', trigger: 'blur' },
-                        { min: 18, max: 18, message: '身份证号长度为18位', trigger: 'blur' }
+                    credit: [
+                        { required: true, message: '请输入该课程学分', trigger: 'blur' },
                     ],
-                    birthday: [
-                        { required: true, message: '请选择日期', trigger: 'change' }
+                    classhour: [
+                        { required: true, message: '请输入该课程总学时', trigger: 'blur' },
                     ],
-                    entrytime: [
-                        { required: true, message: '请选择日期', trigger: 'change' }
+                    hourperweek: [
+                        { required: true, message: '请输入该课程周学时', trigger: 'blur' },
                     ],
                 },
                 data: [],
@@ -141,14 +129,12 @@
                     this.load = true;
                     var that = this;
                     const param = {
-                        outlook: this.outlookselected,
-                        grade: this.gradeselected,
                         form: JSON.stringify(this.form)
                     }
                     if (valid) {
                         that.load = false
                         if (this.ifadd == false) { //如果是修改现有
-                            postSubmit(param).then(res => {
+                            postCourseSubmit(param).then(res => {
                                 if (res.data.code == "1000") {
                                     console.log(that.drawer);
                                     this.$confirm('保存成功！')
@@ -167,7 +153,7 @@
                                 }
                             })
                         } else { //如果是新建
-                            postaddStu(param).then(res => {
+                            postaddCou(param).then(res => {
                                 if (res.data.code == "1000") {
                                     console.log(that.drawer);
                                     this.$confirm('保存成功！')
@@ -201,7 +187,10 @@
                         that.functions = ret.data.functions;
                         that.pre_courses = ret.data.pre_courses;
                         that.pre_course_id = ret.data.pre_course_id;
+                        that.pre_course_cou_id = ret.data.pre_course_cou_id;
                         that.pre_course_name = ret.data.pre_course_name;
+                        console.log(that.pre_course_name);
+                        console.log(that.pre_course_id);
                         this.initInfo()
                     } else {
                         alter('获取数据失败')
@@ -218,18 +207,16 @@
                         console.log(ret.data)
                         if (ret.data.code === 1000) {
                             //需做一次类型转换，将number转换成string
-                            that.betyearselected = ret.data.form.betyear,
-                            that.collegeselected = ret.data.form.college,
-                            that.preselected = ret.data.form.pre_course
-                            that.functionselecte = ret.data.form.function,
                             that.form = ret.data.form;
-                            console.log(that.preselected);
+                            console.log(that.form);
                             this.generateData()
                         } else {
                             alert('获取数据失败')
                         }
                     }).catch(function (ret) {
                     })
+                }else{
+                    this.generateData()
                 }
             },
             generateData() {
@@ -237,19 +224,18 @@
                 this.pre_course_name.forEach((name, index) => {
                     data.push({
                         label: name,
-                        key: index,
-                        id: this.pre_course_id[index]
+                        key: this.pre_course_id[index],
+                        id: this.pre_course_cou_id[index]
                     });
                 });
                 this.data = data
                 console.log(this.data);
             },
             filterMethod(query, item) {
-                pre_courses_id = this.pre_courses_id;
-                return item.pre_courses_id.indexOf(query) > -1;
+                return item.id.indexOf(query) > -1;
             },
             getClick(){
-                console.log(this.value);
+                console.log(this.form.pre_course);
             }
         },
         components: {

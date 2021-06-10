@@ -221,7 +221,7 @@ class addTeacher(APIView):
         new_birthday = form['birthday']
         new_entrytime = form['entrytime']
         new_address = form['address']
-        new_title = form['title']
+        new_title = title
 
 
         if models.TeacherInfo.objects.filter(tea_id = new_tea_id):

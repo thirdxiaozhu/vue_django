@@ -9,14 +9,17 @@ import Vteacherlist from '@/components/adminviews/Vteacherlist'
 import Vcourselist from '@/components/adminviews/Vcourselist'
 import Vtest from '@/components/adminviews/Vtest'
 import Vroom from '@/components/adminviews/Vroom'
+import Vcollege from '@/components/adminviews/Vcollege'
+import Vschedule from '@/components/adminviews/Vschedule'
 
 import student_index from '@/views/student_index'
 import Vmain4stu from '@/components/studentviews/Vmain'
+import Vstudentinfo from '@/components/studentviews/Vstudentinfo'
+import Vselectcourse from '@/components/studentviews/Vselectcourse'
 
 import teacher_index from '@/views/teacher_index'
 import Vmain4tea from '@/components/teacherviews/Vmain'
 import Vteacherinfo from '@/components/teacherviews/Vteacherinfo'
-
 
 
 Vue.use(Router)
@@ -59,6 +62,16 @@ export default new Router({
           name: 'Vroom',
           component: Vroom
         },
+        {
+          path: 'collegelist',
+          name: 'Vcollege',
+          component: Vcollege
+        },
+        {
+          path: 'schedule',
+          name: 'Vschedule',
+          component: Vschedule
+        },
       ]
     },
     {
@@ -75,6 +88,16 @@ export default new Router({
           path: '/',
           name: 'Vmain',
           component: Vmain4stu
+        },
+        {
+          path: 'info',
+          name: 'Vstudentinfo',
+          component: Vstudentinfo
+        },
+        {
+          path: 'selectcourse',
+          name: 'Vselectcourse',
+          component: Vselectcourse
         },
       ]
     },

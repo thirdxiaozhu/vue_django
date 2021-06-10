@@ -206,3 +206,55 @@ export function getCourseOption(param){
         params: param
     })
 }
+
+
+export function postCourseSubmit(data){
+    return axios.request({
+        method: "POST",
+        url: "/api/submitcourse/",
+        data: data
+    })
+}
+
+
+export function postaddCou(data){
+    return axios.request({
+        method: "POST",
+        url: "/api/addcourse/",
+        data: data
+    })
+}
+
+export function deleteCourse(param){
+    console.log(param);
+    return axios.request({
+        method: "GET",
+        url: "/api/deletecourse",
+        params: param
+    })
+}
+
+export function getColleges(param){
+    return axios.request({
+        method: "GET",
+        url: "/api/getcolleges",
+        params: param
+    })
+}
+
+
+export function getMajors(param){
+    return axios.request({
+        method: "GET",
+        url: "/api/getmajors",
+        params: param
+    })
+}
+
+export function getClasses(param){
+    return axios.request({
+        method: "GET",
+        url: "/api/getclasses",
+        params: param
+    })
+}

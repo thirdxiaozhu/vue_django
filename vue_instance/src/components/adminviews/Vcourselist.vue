@@ -10,7 +10,7 @@
                     </el-breadcrumb>
                 </el-col>
                 <el-col :span="3" style="margin-top: 10px; float: right;">
-                    <el-button type="success" @click="addStudent">添加学生</el-button>
+                    <el-button type="success" @click="addCourse">添加课程</el-button>
                 </el-col>
                 <el-col :span="5" style="float: right; margin-top: 10px;">
                     <el-input placeholder="请输入内容" v-model="search_text">
@@ -82,7 +82,7 @@
                 <el-drawer :title="title" v-if="drawer" :visible.sync="drawer" :direction="direction"
                     :before-close="handleClose" ref="infodrawer" size="50%">
                     <span>
-                        <el-button size="large" type="primary" @click="handleInnerDraw();innerDrawer=true">查看该课程本学期排课情况</el-button>
+                        <el-button size="large" type="primary" @click="handleInnerDraw();innerDrawer=true" v-show="!ifadd">查看该课程本学期排课情况</el-button>
                     </span>
                     <span style>
                         <Vcoursedraw style="margin-top: 5%;" :cou_id="operating_id" :drawer="ObjDrawer" :ifadd="ifadd" @judgeOptions="judgeOptions">
@@ -115,7 +115,7 @@
 
 <script>
     import Vcoursedraw from './Vcoursedraw'
-    import { filterCourseList,initStudentList,getOrganize, deleteStudent, getCourseList} from "@/api/axioses"
+    import { filterCourseList,initStudentList,getOrganize, deleteCourse, getCourseList} from "@/api/axioses"
     export default {
         name: 'Vcourselist',
         data() {
@@ -176,7 +176,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    deleteStudent({'stuid': row.stu_id}).then(ret =>{
+                    deleteCourse({'cou_id': row.cou_id}).then(ret =>{
                         console.log(ret.data.code , typeof(ret.data.code))
                         if (ret.data.code === 1000) {
                             this.$message({
@@ -204,7 +204,7 @@
                 this.innertitle =  this.operating_id + " " + this.operating_name +"本学年排课情况";
             },
             //添加学生初始化
-            addStudent(){
+            addCourse(){
                 this.title = "正在添加课程信息";
                 this.operating_id = 0;
                 this.ifadd = true;
@@ -223,6 +223,7 @@
                         that.functions = res.data.functions;
                         that.tableData = res.data.courselist;
                         that.pages.total = res.data.total;
+                        console.log(res.data.courselist);
                     }
                 })
             },
