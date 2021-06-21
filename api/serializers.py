@@ -93,7 +93,6 @@ class TeacherInfoSerializers(serializers.ModelSerializer):
     city = serializers.CharField(source="city.atitle")
     course = serializers.SerializerMethodField()
 
-
     class Meta:
         model = models.TeacherInfo
         fields = "__all__"
@@ -104,6 +103,7 @@ class TeacherInfoSerializers(serializers.ModelSerializer):
         for obj in obj.course.all():
             temp.append(obj.name)
         return temp
+
 
 class CourselistSerializers4cou(serializers.ModelSerializer):
     college = serializers.CharField(source="college.name")
@@ -178,3 +178,52 @@ class StudentInfoSerializers(serializers.ModelSerializer):
     class Meta:
         model = models.StudentInfo
         fields = "__all__"
+
+
+class RelationlistSerializers(serializers.ModelSerializer):
+    course = serializers.CharField(source="course.name")
+    classroom = serializers.CharField(source="classroom.name")
+    teacher = serializers.CharField(source="teacher.name")
+    student = serializers.SerializerMethodField()
+    classtime = serializers.SerializerMethodField()
+    class Meta:
+        model = models.MainRelation
+        fields = "__all__"
+
+    #多对多钩子函数序列化，必须以get_ + model表名作为方法名
+    def get_classtime(self, obj):
+        temp = []
+        for obj in obj.classtime.all():
+            temp.append(obj.name)
+        return temp
+
+    def get_student(self, obj):
+        return str(obj.student.all().count()) + " / " + str(obj.stuquantity)
+
+
+
+class Relation4RoomlistSerializers(serializers.ModelSerializer):
+    course = serializers.CharField(source="course.name")
+    teacher = serializers.CharField(source="teacher.name")
+    classtime = serializers.SerializerMethodField()
+    class Meta:
+        model = models.MainRelation
+        fields = ('course','classtime','teacher')
+
+    def get_classtime(self, obj):
+        temp = []
+        for obj in obj.classtime.all():
+            temp.append(obj.id)
+        return temp
+
+
+class ClassTimelistSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = models.ClassTime
+        fields = "__all__"
+
+
+class ClassRoomlistSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = models.ClassRoom
+        fields = ('id', 'name')

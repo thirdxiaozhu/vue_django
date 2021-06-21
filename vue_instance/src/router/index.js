@@ -10,7 +10,7 @@ import Vcourselist from '@/components/adminviews/Vcourselist'
 import Vtest from '@/components/adminviews/Vtest'
 import Vroom from '@/components/adminviews/Vroom'
 import Vcollege from '@/components/adminviews/Vcollege'
-import Vschedule from '@/components/adminviews/Vschedule'
+import Vschedulemain from '@/components/adminviews/Vschedulemain'
 
 import student_index from '@/views/student_index'
 import Vmain4stu from '@/components/studentviews/Vmain'
@@ -69,8 +69,8 @@ export default new Router({
         },
         {
           path: 'schedule',
-          name: 'Vschedule',
-          component: Vschedule
+          name: 'Vschedulemain',
+          component: Vschedulemain
         },
       ]
     },

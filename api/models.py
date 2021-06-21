@@ -259,7 +259,8 @@ class MainRelation(models.Model):
     teacher = models.ForeignKey(to="TeacherInfo", on_delete=models.CASCADE)
     student = models.ManyToManyField(to="StudentInfo")
     classroom = models.ForeignKey(to="ClassRoom", on_delete=models.CASCADE)
-    classtime = models.ForeignKey(to="ClassTime", on_delete=models.CASCADE)
+    classtime = models.ManyToManyField(to="ClassTime")
+    stuquantity = models.IntegerField(default=0)
 
 
 class Days(models.Model):

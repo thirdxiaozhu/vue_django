@@ -18,3 +18,12 @@ export function initStudentinfo(param = {}){
         params : param
     })
 }
+
+
+export function getCourseList(param){
+    return axios.request({
+        mathod: "GET",
+        url: "/api/student/getcourselist",
+        params: param
+    })
+}

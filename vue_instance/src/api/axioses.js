@@ -258,3 +258,53 @@ export function getClasses(param){
         params: param
     })
 }
+
+
+export function getScheduled(param){
+    return axios.request({
+        method: "GET",
+        url: "/api/getscheduled",
+        params: param
+    })
+}
+
+
+export function filterScheduled(param){
+    return axios.request({
+        method: "GET",
+        url: "/api/getscheduled",
+        params: param
+    })
+}
+
+
+export function getValidRooms(param){
+    return axios.request({
+        method: "GET",
+        url: "/api/getvalidroom",
+        params: param
+    })
+}
+
+export function getCol_Cou(param = {}){
+    return axios.request({
+        method: "GET",
+        url: "/api/getcolcou",
+        params: param
+    })
+}
+
+export function getSchBuilding(){
+    return axios.request({
+        method: "GET",
+        url: "/api/getschbuilding",
+    })
+}
+
+export function postCreateSchedule(data){
+    return axios.request({
+        method: "POST",
+        url: "/api/addschedule/",
+        data: data
+    })
+}

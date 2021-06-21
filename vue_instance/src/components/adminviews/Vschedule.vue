@@ -1,26 +1,8 @@
 <template>
     <div>
         <el-container>
-            <el-header style="height: 40px;" :span="5">
-                <el-col :span="10">
-                    <el-breadcrumb separator="/" style="margin-top: 20px; font-size:large;">
-                        <el-breadcrumb-item>首页</el-breadcrumb-item>
-                        <el-breadcrumb-item>常规管理</el-breadcrumb-item>
-                        <el-breadcrumb-item>课程管理</el-breadcrumb-item>
-                        <el-breadcrumb-item style="font-weight: bold;">排课信息</el-breadcrumb-item>
-                    </el-breadcrumb>
-                </el-col>
-                <el-col :span="3" style="margin-top: 10px; float: right;">
-                    <el-button type="success" @click="addRoom">安排课程</el-button>
-                </el-col>
-                <el-col :span="5" style="float: right; margin-top: 10px;">
-                    <el-input placeholder="请输入内容" v-model="search_text">
-                        <el-button slot="append" icon="el-icon-search"></el-button>
-                    </el-input>
-                </el-col>
-            </el-header>
             <el-main>
-                <el-row style="margin-top: 2%;">
+                <el-row>
                     <el-col :span="8">
                         <el-select v-model="buildingselected" filterable placeholder="请选择教学楼" style="width: 80%;"
                             @change="filterlist">
@@ -59,15 +41,19 @@
                             <span>{{(pages.page - 1) * pages.size + scope.$index + 1}}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="name" label="教室位置" width="230" align="center">
+                    <el-table-column prop="course" label="课程名称" width="180" align="center">
                     </el-table-column>
-                    <el-table-column prop="capacity" label="教室容量" width="230" align="center">
+                    <el-table-column prop="teacher" label="授课教师" width="180" align="center">
                     </el-table-column>
-                    <el-table-column prop="function" label="教室类型" width="230" align="center">
+                    <el-table-column prop="classroom" label="教室" width="180" align="center">
+                    </el-table-column>
+                    <el-table-column prop="classtime" label="时间" width="180" align="center">
+                    </el-table-column>
+                    <el-table-column prop="student" label="选课人数" width="180" align="center">
                     </el-table-column>
                     <el-table-column label="操作" align="center">
                         <template slot-scope="scope">
-                            <el-button size="medium" type="primary" @click="handleEdit(scope.$index, scope.row);drawer=true">编辑
+                            <el-button size="medium" type="primary" @click="handleEdit(scope.$index, scope.row);drawer=true">详情
                             </el-button>
                             <el-button size="medium" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
                             <!--                         <el-button size="medium" type="primary" @click="drawer=true">编辑</el-button> -->
@@ -98,7 +84,7 @@
 
 <script>
     import Vroomdraw from './Vroomdraw'
-    import { getRooms,filterroomlist } from "@/api/axioses"
+    import { getScheduled,filterScheduled } from "@/api/axioses"
     export default {
         name: 'Vroomlist',
         data() {
@@ -178,17 +164,15 @@
             },
             //初始化列表以及选项
             initList(){
-                const data4room  = {
+                const data = {
                     type: 1,
                     currentpage : this.pages.page
                 };
                 var that = this;
-                getRooms(data4room).then(res =>{
+                getScheduled(data).then(res =>{
                     console.log(res)
                     if(res.data.code === 1000){
-                        that.buildings = res.data.buildings;
-                        that.functions = res.data.functions;
-                        that.tableData = res.data.roomlist;
+                        that.tableData = res.data.scheduledlist;
                         that.pages.total = res.data.total;
                     }
                 })
@@ -201,15 +185,13 @@
             },
             filterlist(){
                 const param = {
-                    'building': this.buildingselected,
-                    'function': this.functionselected,
                     'capacity': this.capacity,
                     'currentpage': this.pages.page
                 }
                 var that = this;
-                filterroomlist(param).then(res =>{
+                filterScheduled(param).then(res =>{
                     if(res.data.code === 1000){
-                        that.tableData = res.data.roomlist;
+                        that.tableData = res.data.scheduledlist;
                         that.pages.total = res.data.total;
                     }
                 })
