@@ -25,7 +25,6 @@
                     <el-table-column prop="" label="#" width="90" type="index" align="center">
                         <template slot-scope="scope">
                             <span>{{(pages.page - 1) * pages.size + scope.$index + 1}}</span>
-                            <!--                             <span>{{scope.$index + 1}}</span> -->
                         </template>
                     </el-table-column>
                     <el-table-column prop="college_id" label="学院编号" width="180" align="center">

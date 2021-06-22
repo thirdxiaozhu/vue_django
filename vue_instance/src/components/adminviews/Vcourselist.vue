@@ -95,7 +95,7 @@
                             :before-close="handleClose"
                             :visible.sync="innerDrawer"
                             size = "45%">
-                            <p>_(:зゝ∠)_</p>
+                            <Vcourseinner :cou_id="operating_id"></Vcourseinner>
                         </el-drawer>
                     </span>
                 </el-drawer>
@@ -115,6 +115,7 @@
 
 <script>
     import Vcoursedraw from './Vcoursedraw'
+    import Vcourseinner from './Vcourseinner'
     import { filterCourseList,initStudentList,getOrganize, deleteCourse, getCourseList} from "@/api/axioses"
     export default {
         name: 'Vcourselist',
@@ -300,6 +301,7 @@
 
         components: {
             Vcoursedraw,
+            Vcourseinner,
         },
         
     }

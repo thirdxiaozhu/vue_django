@@ -53,9 +53,7 @@
                     </el-table-column>
                     <el-table-column label="操作" align="center">
                         <template slot-scope="scope">
-                            <el-button size="medium" type="primary" @click="handleEdit(scope.$index, scope.row);drawer=true">详情
-                            </el-button>
-                            <el-button size="medium" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                            <el-button size="medium" type="danger" @click="handleDelete(scope.$index, scope.row)">退选</el-button>
                             <!--                         <el-button size="medium" type="primary" @click="drawer=true">编辑</el-button> -->
                         </template>
                     </el-table-column>
@@ -64,8 +62,6 @@
                 <el-drawer :title="title" v-if="drawer" :visible.sync="drawer" :direction="direction" :before-close="handleClose"
                     ref="infodrawer">
                     <span>
-                        <Vroomdraw :roomname="operating_name" :drawer="ObjDrawer" :ifadd="ifadd" @judgeOptions="judgeOptions">
-                        </Vroomdraw>
                     </span>
                 </el-drawer>
             </el-main>
@@ -83,12 +79,12 @@
 </template>
 
 <script>
-    import Vroomdraw from './Vroomdraw'
-    import { getScheduled,filterScheduled } from "@/api/axioses"
+    import { getScheduled,filterScheduled,deleteScheduled } from "@/api/axioses4stu"
     export default {
         name: 'Vroomlist',
         data() {
             return {
+                stu_id:this.$store.state.userid,
                 ObjDrawer: this.$refs,
                 search_text: '',
                 title: "",
@@ -114,59 +110,12 @@
             this.initList()
         },
         methods: {
-            //初始化学生列表
-            handleCurrentChange() {
-                this.filterlist()
-            },
-            //关闭抽屉弹出
-            handleClose(done) {
-                this.$confirm('未进行保存的信息将丢失，是否关闭？')
-                    .then(_ => {
-                        done();
-                    })
-                    .catch(_ => { });
-            },
-            handleDelete(index, row) {
-                this.$confirm('删除操作不可逆', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    deleteStudent({'stuid': row.stu_id}).then(ret =>{
-                        console.log(ret.data.code , typeof(ret.data.code))
-                        if (ret.data.code === 1000) {
-                            this.$message({
-                                type: 'success',
-                                message: '删除成功!'
-                            });
-                            that.judgeOptions();
-                        }
-                    })
-                }).catch(() => {
-                    this.$message({
-                        type: 'error',
-                        message: '已取消删除'
-                    });
-                });
-            },
-            //编辑学生初始化
-            handleEdit(index, row) {
-                this.operating_name = row.name;
-                this.ifadd = false;
-                this.title = "正在编辑 " + this.operating_name +" 教室的信息";
-            },
-            //添加学生初始化
-            addRoom(){
-                this.title = "正在添加学生信息";
-                this.operating_id = 0;
-                this.ifadd = true;
-                this.drawer = true;
-            },
             //初始化列表以及选项
             initList(){
                 const data = {
                     type: 1,
-                    currentpage : this.pages.page
+                    currentpage : this.pages.page,
+                    stu_id: this.stu_id
                 };
                 var that = this;
                 getScheduled(data).then(res =>{
@@ -185,8 +134,9 @@
             },
             filterlist(){
                 const param = {
-                    'capacity': this.capacity,
-                    'currentpage': this.pages.page
+                    capacity: this.capacity,
+                    currentpage: this.pages.page,
+                    stu_id: this.stu_id
                 }
                 var that = this;
                 filterScheduled(param).then(res =>{
@@ -195,11 +145,27 @@
                         that.pages.total = res.data.total;
                     }
                 })
+            },
+            handleDelete(index, row){
+                var that = this;
+                const params = {
+                    'id':row.id,
+                    'stu_id': this.stu_id
+                }
+                deleteScheduled(params).then(res => {
+                    if(res.data.code === 1000){
+                        this.$confirm('退选成功！')
+                            .then(_ => { this.filterlist() })
+                            .catch(_ => { });
+                    }
+                })
+            },
+            handleCurrentChange(){
+                this.filterlist()
             }
         },
 
         components: {
-            Vroomdraw
         },
         
     }

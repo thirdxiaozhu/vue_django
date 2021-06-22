@@ -189,8 +189,6 @@
                         that.pre_course_id = ret.data.pre_course_id;
                         that.pre_course_cou_id = ret.data.pre_course_cou_id;
                         that.pre_course_name = ret.data.pre_course_name;
-                        console.log(that.pre_course_name);
-                        console.log(that.pre_course_id);
                         this.initInfo()
                     } else {
                         alter('获取数据失败')
@@ -206,7 +204,6 @@
                         }).then(ret => {
                         console.log(ret.data)
                         if (ret.data.code === 1000) {
-                            //需做一次类型转换，将number转换成string
                             that.form = ret.data.form;
                             console.log(that.form);
                             this.generateData()

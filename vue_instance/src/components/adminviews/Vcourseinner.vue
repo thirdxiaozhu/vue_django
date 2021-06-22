@@ -2,54 +2,19 @@
     <div>
         <el-container>
             <el-main>
-                <el-row>
-                    <el-col :span="8">
-                        <el-select v-model="buildingselected" filterable placeholder="请选择教学楼" style="width: 80%;"
-                            @change="filterlist">
-                            <el-option v-for="item in buildings" :key="item.id" :label="item.name" :value="item.id">
-                            </el-option>
-                        </el-select>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-input placeholder="请输入教室" v-model="capacity" style="width: 80%;" @blur="filterlist"></el-input>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-select v-model="dayselected" filterable placeholder="请选择日期" style="width: 80%;"
-                            @change="filterlist">
-                            <el-option v-for="item in days" :key="item.id" :label="item.name" :value="item.id">
-                            </el-option>
-                        </el-select>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-select v-model="dayselected" filterable placeholder="请选择时间段" style="width: 80%;"
-                            @change="filterlist">
-                            <el-option v-for="item in days" :key="item.id" :label="item.name" :value="item.id">
-                            </el-option>
-                        </el-select>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-input placeholder="请输入教师姓名" v-model="capacity" style="width: 80%;" @blur="filterlist"></el-input>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-button @click="clearOptions">清空输入</el-button>
-                    </el-col>
-                </el-row>
-                </el-collapse>
                 <el-table :data="tableData" style="width: 100%" ref="table">
                     <el-table-column prop="" label="#" width="90" type="index" align="center">
                         <template slot-scope="scope">
-                            <span>{{(pages.page - 1) * pages.size + scope.$index + 1}}</span>
+                            <span>{{scope.$index + 1}}</span>
                         </template>
-                    </el-table-column>
-                    <el-table-column prop="course" label="课程名称" width="180" align="center">
                     </el-table-column>
                     <el-table-column prop="teacher" label="授课教师" width="180" align="center">
                     </el-table-column>
                     <el-table-column prop="classroom" label="教室" width="180" align="center">
                     </el-table-column>
-                    <el-table-column prop="classtime" label="时间" width="150" align="center">
+                    <el-table-column prop="classtime" label="时间" width="180" align="center">
                     </el-table-column>
-                    <el-table-column prop="student" label="选课人数" width="150" align="center">
+                    <el-table-column prop="student" label="选课人数" width="180" align="center">
                     </el-table-column>
                     <el-table-column label="操作" align="center">
                         <template slot-scope="scope">
@@ -61,30 +26,14 @@
                     </el-table-column>
                 </el-table>
             
-                <el-drawer :title="title" v-if="drawer" :visible.sync="drawer" :direction="direction" :before-close="handleClose"
-                    ref="infodrawer">
-                    <span>
-                        <Vroomdraw :roomname="operating_name" :drawer="ObjDrawer" :ifadd="ifadd" @judgeOptions="judgeOptions">
-                        </Vroomdraw>
-                    </span>
-                </el-drawer>
             </el-main>
-            <el-footer>
-                <el-pagination
-                    @current-change="handleCurrentChange"
-                    :current-page.sync="pages.page"
-                    :page-size="pages.size"
-                    layout="prev, pager, next, jumper"
-                    :total="pages.total">
-                </el-pagination>
-            </el-footer>
         </el-container>
     </div>
 </template>
 
 <script>
     import Vroomdraw from './Vroomdraw'
-    import { getScheduled,filterScheduled } from "@/api/axioses"
+    import { getScheduled,filterScheduled, getCourseSch } from "@/api/axioses"
     export default {
         name: 'Vroomlist',
         data() {
@@ -93,11 +42,6 @@
                 search_text: '',
                 title: "",
                 tableData: [],
-                pages: {
-                    page: 1,
-                    size: 3,
-                    total: 1000,
-                },
                 operating_id: 0,
                 operating_name: 0,
                 drawer: false,
@@ -110,6 +54,7 @@
                 capacity: '',
             }
         },
+        props: ['cou_id'],
         mounted: function () {
             this.initList()
         },
@@ -165,15 +110,13 @@
             //初始化列表以及选项
             initList(){
                 const data = {
-                    type: 1,
-                    currentpage : this.pages.page
+                	cou_id : this.cou_id
                 };
                 var that = this;
-                getScheduled(data).then(res =>{
+                getCourseSch(data).then(res =>{
                     console.log(res)
                     if(res.data.code === 1000){
-                        that.tableData = res.data.scheduledlist;
-                        that.pages.total = res.data.total;
+                        that.tableData = res.data.relationlist;
                     }
                 })
             },

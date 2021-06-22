@@ -14,9 +14,7 @@ class CourseinfoSerializers(serializers.ModelSerializer):
     function = serializers.CharField(source="function.name")
     class Meta:
         model = models.Course
-        fields = ('cou_id','name','classhour','college','function')
-
-
+        fields = ('id','cou_id','name','classhour','college','function')
 
 
 class StudentInfoSerializers(serializers.ModelSerializer):
@@ -33,3 +31,25 @@ class StudentInfoSerializers(serializers.ModelSerializer):
     class Meta:
         model = models.StudentInfo
         fields = "__all__"
+
+
+
+class RelationlistSerializers(serializers.ModelSerializer):
+    course = serializers.CharField(source="course.name")
+    classroom = serializers.CharField(source="classroom.name")
+    teacher = serializers.CharField(source="teacher.name")
+    student = serializers.SerializerMethodField()
+    classtime = serializers.SerializerMethodField()
+    class Meta:
+        model = models.MainRelation
+        fields = "__all__"
+
+    #多对多钩子函数序列化，必须以get_ + model表名作为方法名
+    def get_classtime(self, obj):
+        temp = []
+        for obj in obj.classtime.all():
+            temp.append(obj.name)
+        return temp
+
+    def get_student(self, obj):
+        return str(obj.student.all().count()) + " / " + str(obj.stuquantity)

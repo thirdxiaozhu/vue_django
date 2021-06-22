@@ -20,6 +20,7 @@ import Vselectcourse from '@/components/studentviews/Vselectcourse'
 import teacher_index from '@/views/teacher_index'
 import Vmain4tea from '@/components/teacherviews/Vmain'
 import Vteacherinfo from '@/components/teacherviews/Vteacherinfo'
+import Vteachercourse from '@/components/teacherviews/Vteachercourse'
 
 
 Vue.use(Router)
@@ -115,6 +116,11 @@ export default new Router({
           path: 'info',
           name: 'Vteacherinfo',
           component: Vteacherinfo
+        },
+        {
+          path: 'course',
+          name: 'Vteachercourse',
+          component: Vteachercourse
         },
       ]
     }

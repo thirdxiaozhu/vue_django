@@ -22,8 +22,60 @@ export function initStudentinfo(param = {}){
 
 export function getCourseList(param){
     return axios.request({
-        mathod: "GET",
+        method: "GET",
         url: "/api/student/getcourselist",
         params: param
+    })
+}
+
+export function initCourseList(param){
+    return axios.request({
+        method: "GET",
+        url: "/api/student/initcourselist",
+        params: param
+    })
+}
+
+export function getRelations(param){
+    return axios.request({
+        method: "GET",
+        url: "/api/student/getrelations",
+        params: param
+    })
+}
+
+
+export function updateChoice(data){
+    console.log(data)
+    return axios.request({
+        method: "POST",
+        url: "/api/student/updatechoice/",
+        data: data
+    })
+}
+
+
+export function getScheduled(param){
+    return axios.request({
+        method: "GET",
+        url: "/api/student/getscheduled",
+        params: param
+    })
+}
+
+export function filterScheduled(param){
+    return axios.request({
+        method: "GET",
+        url: "/api/student/getscheduled",
+        params: param
+    })
+}
+
+
+export function deleteScheduled(param){
+    return axios.request({
+        method: "POST",
+        url: "/api/student/deletescheduled/",
+        data: param
     })
 }

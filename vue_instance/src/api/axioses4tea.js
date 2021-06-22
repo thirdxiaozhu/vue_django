@@ -18,3 +18,21 @@ export function initTeacherinfo(param = {}){
         params : param
     })
 }
+
+
+export function getScheduled(param = {}){
+    return axios.request({
+        method: "GET",
+        url: "/api/teacher/getscheduled",
+        params : param
+    })
+}
+
+
+export function initStudentList(param = {}){
+    return axios.request({
+        method: "GET",
+        url: "/api/teacher/initstudentlist",
+        params : param
+    })
+}

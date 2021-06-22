@@ -1,6 +1,7 @@
 <template>
     <div>
-        <el-table highlight-current-row :data="tableData" style="width: 100%" row-key="id" ref="refTable" lazy @row-click="clickTable"  >
+        <el-table highlight-current-row :data="tableData" style="width: 100%" row-key="id" ref="refTable" lazy
+            @row-click="clickTable">
             <el-table-column type="expand" width="1">
                 <template slot-scope="props">
                     <Vclass :content="currentid"></Vclass>
@@ -18,26 +19,38 @@
             </el-table-column>
             <el-table-column label="操作" align="center">
                 <template slot-scope="scope">
-                    <el-button size="small" type="success"
-                        @click="handleEditMajor(scope.$index, scope.row);drawer=true" style="width: 15%;">管理</el-button>
-                    <el-button size="small" type="primary"
-                        @click="handleAddMajor(scope.$index, scope.row);drawer=true">增加下属班级</el-button>
+                    <el-button size="small" type="success" @click="handleEditMajor(scope.$index, scope.row);drawer=true"
+                        style="width: 15%;">管理</el-button>
+                    <el-button size="small" type="primary" @click="handleAddMajor(scope.$index, scope.row);drawer=true">
+                        增加下属班级</el-button>
                     <el-button size="small" type="danger" @click="handleDeleteCollege(scope.$index, scope.row)">删除该专业
                     </el-button>
                 </template>
             </el-table-column>
         </el-table>
+        <el-drawer :title="drawtitle" v-if="drawer" :visible.sync="drawer" :direction="direction"
+            :before-close="handleClose" ref="infodrawer" size="50%" align="center">
+            <span>
+                <Vmajoredit :maj_id="operating_id" :col_id="content" :drawer="ObjDrawer" :ifadd="ifadd" @initMajorList="initMajorList" ></Vmajoredit>
+            </span>
+        </el-drawer>
     </div>
 </template>
 
 <script>
+    import Vmajoredit from './Vmajoredit'
     import Vclass from './Vclass'
     import { getMajors } from "@/api/axioses"
     export default {
         name: 'Vcollege',
         data() {
             return {
+                ObjDrawer: this.$refs,
+                operating_id: 0,
                 currentid: 1,
+                drawer: false,
+                drawtitle: "",
+                direction: 'rtl',
                 tableData: [],
                 pages: {
                     page: 1,
@@ -83,10 +96,16 @@
             },
             handleDeleteCollege(){
 
+            },
+            handleEditMajor(index, row){
+                this.operating_id = row.major_id;
+                this.ifadd = false;
+                this.drawtitle = "正在编辑" + row.name + "专业的信息";
             }
         },
 
         components: {
+            Vmajoredit,
             Vclass,
         },
         

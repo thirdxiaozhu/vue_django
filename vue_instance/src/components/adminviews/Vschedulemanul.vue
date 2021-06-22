@@ -1,52 +1,37 @@
 <template>
-	<div>
-    <el-form ref="form" :model="form" label-width="120px" :rules="rules">
-        <el-form-item label="选择课程/教师" prop="course">
-            <el-cascader
-               style="width: 90%"
-               v-model="form.course"
-               :props="cou_cas_props"
-               ></el-cascader>
-        </el-form-item>
-        <el-form-item label="期望人数">
-            <el-input v-model="form.capacity" style="width: 90%;"></el-input>
-        </el-form-item>
-        <el-form-item label="选择时间" prop="timeselected" >
-            <el-select v-model="form.time"placeholder="请选择" style="width: 90%" multiple>
-                <el-option
-                    v-for="item in timelist"
-                    :key="item.id"
-                    :label="item.name"
-                    :value="item.id">
-                </el-option>
-            </el-select>
-        </el-form-item>
-        <el-form-item label="所在教学楼" prop="buildingselected">
-            <el-select v-model="form.building"placeholder="请选择" style="width: 90%">
-                <el-option
-                    v-for="item in buildings"
-                    :key="item.id"
-                    :label="item.name"
-                    :value="item.id">
-                </el-option>
-            </el-select>
-        </el-form-item>
-        <el-form-item label="选择教室" prop="roomselected">
-            <el-select v-model="form.rooms"placeholder="仅展示该教学楼在该时间段有空闲的教室！" style="width: 90%" @click.native="getValidRoom()">
-                <el-option
-                    v-for="item in rooms"
-                    :key="item.id"
-                    :label="item.name"
-                    :value="item.id">
-                </el-option>
-            </el-select>
-        </el-form-item>
-        <el-form-item>
-            <el-button type="success" @click="onSave" :loading="load">保存</el-button>
-            <el-button>取消</el-button>
-        </el-form-item>
-    </el-form>
-	</div>
+    <div>
+        <el-form ref="form" :model="form" label-width="120px" :rules="rules">
+            <el-form-item label="选择课程/教师" prop="course">
+                <el-cascader style="width: 90%" v-model="form.course" :props="cou_cas_props"></el-cascader>
+            </el-form-item>
+            <el-form-item label="期望人数">
+                <el-input v-model="form.capacity" style="width: 90%;"></el-input>
+            </el-form-item>
+            <el-form-item label="选择时间" prop="timeselected">
+                <el-select v-model="form.time" placeholder="请选择" style="width: 90%" multiple>
+                    <el-option v-for="item in timelist" :key="item.id" :label="item.name" :value="item.id">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="所在教学楼" prop="buildingselected">
+                <el-select v-model="form.building" placeholder="请选择" style="width: 90%">
+                    <el-option v-for="item in buildings" :key="item.id" :label="item.name" :value="item.id">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="选择教室" prop="roomselected">
+                <el-select v-model="form.rooms" placeholder="仅展示该教学楼在该时间段有空闲的教室！" style="width: 90%"
+                    @click.native="getValidRoom()">
+                    <el-option v-for="item in rooms" :key="item.id" :label="item.name" :value="item.id">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="success" @click="onSave" :loading="load">保存</el-button>
+                <el-button>取消</el-button>
+            </el-form-item>
+        </el-form>
+    </div>
 </template>
 
 <script>
@@ -151,6 +136,7 @@
                     if (res.data.code === 1000) {
                         this.$confirm('保存成功！')
                             .then(_ => {
+                                this.$refs['form'].resetFields()
                             })
                             .catch(_ => { });
                     }
@@ -161,7 +147,7 @@
                             .catch(_ => { });
                     }
 				})
-            }
+            },
 		}
 	}
 </script>

@@ -12,12 +12,12 @@
                 </el-col>
             </el-header>
             <el-main>
-                <el-tabs type="border-card">
+                <el-tabs type="border-card" @tab-click="handleClick">
                     <el-tab-pane label="已排课程">
-                        <Vschedule></Vschedule>
+                        <Vschedule  ref="schedule"></Vschedule>
                     </el-tab-pane>
-                    <el-tab-pane label="手动排课">
-                        <Vschedulemanul></Vschedulemanul>
+                    <el-tab-pane label="手动排课" >
+                        <Vschedulemanul ref="manul"></Vschedulemanul>
 		            </el-tab-pane>
                     <el-tab-pane label="自动排课">
                         <h4>有待研究！！！</h4>
@@ -64,53 +64,6 @@
         },
         methods: {
             //初始化学生列表
-            handleCurrentChange() {
-                this.filterlist()
-            },
-            //关闭抽屉弹出
-            handleClose(done) {
-                this.$confirm('未进行保存的信息将丢失，是否关闭？')
-                    .then(_ => {
-                        done();
-                    })
-                    .catch(_ => { });
-            },
-            handleDelete(index, row) {
-                this.$confirm('删除操作不可逆', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    deleteStudent({'stuid': row.stu_id}).then(ret =>{
-                        console.log(ret.data.code , typeof(ret.data.code))
-                        if (ret.data.code === 1000) {
-                            this.$message({
-                                type: 'success',
-                                message: '删除成功!'
-                            });
-                            that.judgeOptions();
-                        }
-                    })
-                }).catch(() => {
-                    this.$message({
-                        type: 'error',
-                        message: '已取消删除'
-                    });
-                });
-            },
-            //编辑学生初始化
-            handleEdit(index, row) {
-                this.operating_name = row.name;
-                this.ifadd = false;
-                this.title = "正在编辑 " + this.operating_name +" 教室的信息";
-            },
-            //添加学生初始化
-            addRoom(){
-                this.title = "正在添加学生信息";
-                this.operating_id = 0;
-                this.ifadd = true;
-                this.drawer = true;
-            },
             //初始化列表以及选项
             initList(){
                 const data4room  = {
@@ -148,6 +101,12 @@
                         that.pages.total = res.data.total;
                     }
                 })
+            },
+            handleClick(tab,event){
+                if(tab.index == 0){
+                    this.$refs.schedule.initList()
+                }else if(tab.index == 1){
+                }
             }
         },
 

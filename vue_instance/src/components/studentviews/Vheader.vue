@@ -1,5 +1,5 @@
 <template>
-  <el-menu  class="el-menu-demo" mode="horizontal" @select="handleSelect">
+  <el-menu  class="el-menu-demo" mode="horizontal" >
     <el-menu-item index="0" style="font-size: 25px;color:black; margin-left:2%">教务管理系统（学生端）</el-menu-item>
     <el-menu-item index="1" style="font-size: 15px; float:right; margin-right:1%" @click="logout">退出登录</el-menu-item>
     <el-menu-item style="float:right;color:white;margin-right:5px">

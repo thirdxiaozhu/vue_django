@@ -42,7 +42,7 @@
       </template>
       <el-submenu index="3-1">
         <template slot="title">
-          <span>教学机构变更</span>
+          <span>教学机构管理</span>
         </template>
         <el-menu-item index="3-1-1">
           <router-link to="/admin/collegelist">可招生机构管理</router-link>

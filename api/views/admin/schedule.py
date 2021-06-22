@@ -155,3 +155,18 @@ class addSchedule(APIView):
         new_schedule.classtime.set(form['time'])
 
         return Response({'code': 1000})
+
+
+class getCourseSch(APIView):
+    def get(self, request, *args, **kwargs):
+        cou_id = request.GET.get('cou_id')
+
+        id = models.Course.objects.filter(cou_id=cou_id).first().id
+        relations = models.MainRelation.objects.filter(course_id = id).order_by('id')
+        relationlist = ser.RelationlistSerializers(relations, many = True)
+
+        ret = {
+            'code': 1000,
+            'relationlist': relationlist.data
+        }
+        return Response(ret)

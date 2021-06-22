@@ -308,3 +308,36 @@ export function postCreateSchedule(data){
         data: data
     })
 }
+
+export function getCourseSch(param){
+    return axios.request({
+        method: "GET",
+        url: "/api/getcoursesch/",
+        params: param
+    })
+}
+
+export function initMajorInfo(param){
+    return axios.request({
+        method:"GET",
+        url: "/api/initmajorinfo",
+        params: param
+    })
+}
+
+
+export function editMajorOptions(param){
+    return axios.request({
+        method:"GET",
+        url: "/api/editmajoroptions",
+        params: param
+    })
+}
+
+export function postMajorSubmit(data){
+    return axios.request({
+        method: "POST",
+        url: "/api/postmajorsubmit/",
+        data: data
+    })
+}

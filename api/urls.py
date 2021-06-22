@@ -37,9 +37,13 @@ urlpatterns = [
     path('getcolleges/',college.getColleges.as_view()),
     path('getmajors/',college.getMajors.as_view()),
     path('getclasses/',college.getClasses.as_view()),
+    path('initmajorinfo/',college.initMajorInfo.as_view()),
+    path('editmajoroptions/',college.editMajorOptions.as_view()),
+    path('postmajorsubmit/',college.postMajorSubmit.as_view()),
     path('getscheduled/',schedule.getScheduled.as_view()),
     path('getvalidroom/',schedule.getValidRoom.as_view()),
     path('getcolcou/',schedule.getColCou.as_view()),
     path('getschbuilding/',schedule.getSchBuilding.as_view()),
     path('addschedule/',schedule.addSchedule.as_view()),
+    path('getcoursesch/',schedule.getCourseSch.as_view()),
 ]

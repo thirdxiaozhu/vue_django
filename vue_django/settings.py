@@ -175,3 +175,21 @@ REST_FRAMEWORK = {
     'VERSION_PARAM': 'version', #参数
     'DEFAULT_VERSION': 'v1', #默认版本
 }
+
+""" LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console':{
+            'level':'DEBUG',
+            'class':'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django.db.backends': {
+            'handlers': ['console'],
+            'propagate': True,
+            'level':'DEBUG',
+        },
+    }
+} """

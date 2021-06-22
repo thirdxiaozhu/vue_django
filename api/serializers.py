@@ -227,3 +227,7 @@ class ClassRoomlistSerializers(serializers.ModelSerializer):
     class Meta:
         model = models.ClassRoom
         fields = ('id', 'name')
+
+
+
+        
