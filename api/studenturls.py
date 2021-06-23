@@ -10,4 +10,8 @@ urlpatterns = [
     path('updatechoice/',views.updateChoice.as_view()),
     path('getscheduled/',views.getScheduled.as_view()),
     path('deletescheduled/',views.deleteScheduled.as_view()),
+    path('getcollegelist/',views.getCollegelist.as_view()),
+    path('initcourseinfo/',views.initCourseInfo.as_view()),
+    path('getcourses/',views.getCourses.as_view()),
+    path('filtercourses/',views.filterCourses.as_view()),
 ]

@@ -101,7 +101,7 @@ class Course(models.Model):
     #学分
     credit = models.FloatField()
     #建议修读年份
-    betyear = models.IntegerField()
+    betyear = models.ForeignKey(to="StudentGrade", on_delete=models.CASCADE)
     #是否选修
     elective = models.BooleanField(default=False)
     #课程类型 普通 ordinary 上机 opc  实验exper
@@ -223,6 +223,7 @@ class Message(models.Model):
     teacher = models.ForeignKey(to="TeacherInfo", on_delete=models.CASCADE , null=True)
     admin = models.ForeignKey(to="AdminInfo", on_delete=models.CASCADE , null=True)
     fromwho = models.CharField(max_length=30, default="none")
+    #messagetype = models.ForeignKey(to="MessageType", on_delete=models.CASCADE)
     title = models.CharField(max_length=50)
     content = models.CharField(max_length=1000 , null=True)
     gettime = models.DateTimeField(default=timezone.now)
@@ -264,5 +265,10 @@ class MainRelation(models.Model):
 
 
 class Days(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length = 20)
+
+
+class MessageType(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length = 20)

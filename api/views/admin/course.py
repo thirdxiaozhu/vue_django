@@ -24,8 +24,6 @@ class getCourseList(APIView):
         functionlist = ser.FunctionlistSerializers(functions, many = True)
         collegelist = ser.College4tclistSerializers(colleges, many=True)
 
-        print(courselist.data)
-
         ret = {
             'code': 1000,
             'colleges': collegelist.data,

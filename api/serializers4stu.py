@@ -53,3 +53,41 @@ class RelationlistSerializers(serializers.ModelSerializer):
 
     def get_student(self, obj):
         return str(obj.student.all().count()) + " / " + str(obj.stuquantity)
+
+
+class College4tclistSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = models.CollegeInfo4tc
+        fields = ('id','name')
+
+
+class Courseinfo4planSerializers(serializers.ModelSerializer):
+    college = serializers.CharField(source="college.name")
+    function = serializers.CharField(source="function.name")
+    betyear = serializers.CharField(source="betyear.name")
+    elective = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.Course
+        fields = "__all__"
+
+    def get_elective(self, obj):
+        if obj.elective == False:
+            return "否"
+        else:
+            return "是"
+
+class Courseinfo4plandrawSerializers(serializers.ModelSerializer):
+    college = serializers.CharField(source="college.name")
+    function = serializers.CharField(source="function.name")
+    betyear = serializers.CharField(source="betyear.name")
+
+    class Meta:
+        model = models.Course
+        fields = "__all__"
+
+
+class FunctionlistSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = models.Function
+        fields = ('id','name')

@@ -16,6 +16,7 @@ import student_index from '@/views/student_index'
 import Vmain4stu from '@/components/studentviews/Vmain'
 import Vstudentinfo from '@/components/studentviews/Vstudentinfo'
 import Vselectcourse from '@/components/studentviews/Vselectcourse'
+import Vstudentplan from '@/components/studentviews/Vstudentplan'
 
 import teacher_index from '@/views/teacher_index'
 import Vmain4tea from '@/components/teacherviews/Vmain'
@@ -94,6 +95,11 @@ export default new Router({
           path: 'info',
           name: 'Vstudentinfo',
           component: Vstudentinfo
+        },
+        {
+          path: 'plan',
+          name: 'Vstudentplan',
+          component: Vstudentplan
         },
         {
           path: 'selectcourse',

@@ -10,7 +10,8 @@
           <span>常规信息</span>
         </template>
           <el-menu-item index="1-1"><router-link to="/student/info">学籍信息</router-link></el-menu-item>
-          <el-menu-item index="1-3"><router-link to="/student/selectcourse">课程信息</router-link></el-menu-item>
+          <el-menu-item index="1-2"><router-link to="/student/plan">培养计划</router-link></el-menu-item>
+          <el-menu-item index="1-3"><router-link to="/student/selectcourse">学生选课</router-link></el-menu-item>
           <el-menu-item index="1-4"><router-link to="/student/test">考试信息</router-link></el-menu-item>
       </el-submenu>
       <el-submenu index="2">

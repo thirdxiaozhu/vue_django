@@ -15,7 +15,8 @@
                     <el-tab-pane label="必修课">
                         <Vcompulsory ref="compulsory"></Vcompulsory>
                         <div style="margin-top: 20px">
-                            <el-button type="warning" @click="onekey">一键查看必修课</el-button>
+                            <el-button type="warning" @click="selectOnly()">一键查看必修课</el-button>
+                            <el-button type="primary" @click="selectAll()" style="width: 12%;">查看全部</el-button>
                         </div>
                     </el-tab-pane>
                     <el-tab-pane label="选修课">
@@ -44,12 +45,6 @@
                 title: "",
                 innertitle: "",
                 tableData: [],
-                pages: {
-                    page: 1,
-                    /*如果需要修改size,不仅要在这里面更改，在page.py里也要更改*/
-                    size: 3,
-                    total: 1000,
-                },
                 operating_id: 0,
                 operating_name: 0,
                 drawer: false,
@@ -82,11 +77,17 @@
             },
             handleClick(tab,event){
                 if(tab.index == 0){
-                    this.$refs.compulsory.initCourse()
+                    this.$refs.compulsory.initCourse(2)
                 }else if(tab.index == 2){
                     this.$refs.schedule.initList()
                 }
-            }
+            },
+			selectOnly(){
+				this.$refs.compulsory.initCourse(1)
+			},
+			selectAll(){
+				this.$refs.compulsory.initCourse(2)
+			},
         },
 
         components: {

@@ -50,11 +50,17 @@ class initCourseList(APIView):
         if mod == "1":
             major = student.Major
             courses = major.course.filter(betyear = student.grade.id).exclude(id__in = list(haveselecteds)).order_by('id')
-            courselist = ser.CourseinfoSerializers(courses, many=True)
-            ret = {
-                'code': 1000,
-                'form': courselist.data
-            }
+        else:
+            courses = models.Course.objects.all().exclude(id__in = list(haveselecteds)).order_by('id')
+
+        pages = page.MyLimitOffsetPagination()
+        page_role = pages.paginate_queryset(courses, request, self)
+        courselist = ser.CourseinfoSerializers(page_role, many=True)
+        ret = {
+            'code': 1000,
+            'form': courselist.data,
+            'total': courses.count()
+        }
         return Response(ret)
 
 
@@ -110,6 +116,94 @@ class deleteScheduled(APIView):
 
         ret = {
             'code': 1000,
+        }
+
+        return Response(ret)
+
+class getCollegelist(APIView):
+    def get(self, request, *args, **kwargs):
+        colleges = models.CollegeInfo4tc.objects.all().order_by('id')
+        collegelist = ser.College4tclistSerializers(colleges, many=True)
+
+        ret = {
+            'code': 1000,
+            'colleges': collegelist.data,
+        }
+
+        return Response(ret)
+
+
+class initCourseInfo(APIView):
+    def get(self,request,*args,**kwargs):
+        cou_id = request.GET.get('cou_id')
+        course = models.Course.objects.filter(cou_id = cou_id).first()
+        courselist = ser.Courseinfo4plandrawSerializers(course, many=False)
+
+        ret = {
+            'code': 1000,
+            'form': courselist.data,
+        }
+        print(ret)
+        return Response(ret)
+
+
+class getScheduled(APIView):
+    def get(self, request, *args, **kwargs):
+        student = models.StudentInfo.objects.filter(stu_id = request.GET.get('stu_id')).first()
+        relations = student.mainrelation_set.all().order_by('id')
+
+        pages = page.MyLimitOffsetPagination()
+        page_role = pages.paginate_queryset(relations, request, self)
+        relationlist = ser.RelationlistSerializers(page_role, many = True)
+
+        ret = {
+            'code': 1000,
+            'scheduledlist': relationlist.data,
+            'total':relations.count()
+        }
+
+        return Response(ret)
+
+
+class getCourses(APIView):
+    def get(self, request, *args, **kwargs):
+        stu_id = request.GET.get('stu_id')
+        major = models.StudentInfo.objects.filter(stu_id = stu_id).first().Major.id
+        functions = models.Function.objects.all().order_by('id')
+        functionlist = ser.FunctionlistSerializers(functions, many = True)
+
+        courses = models.MajorInfo.objects.filter(id=major).first().course.all().order_by('betyear','id')
+        pages = page.MyLimitOffsetPagination()
+        page_role = pages.paginate_queryset(courses, request, self)
+        courseinfo = ser.Courseinfo4planSerializers(page_role, many=True)
+        print(courseinfo.data)
+
+        ret = {
+            'code': 1000,
+            'courselist': courseinfo.data,
+            'functions':functionlist.data,
+            'total': courses.count()
+        }
+
+        return Response(ret)
+
+
+class filterCourses(APIView):
+    def get(self, request, *args, **kwargs):
+        stu_id = request.GET.get('stu_id')
+        major = models.StudentInfo.objects.filter(stu_id = stu_id).first().Major.id
+
+        courses = models.MajorInfo.objects.filter(id=major).first().course.all().order_by('betyear','id')
+        pages = page.MyLimitOffsetPagination()
+        page_role = pages.paginate_queryset(courses, request, self)
+
+        courseinfo = ser.Courseinfo4planSerializers(page_role, many=True)
+        print(courseinfo.data)
+
+        ret = {
+            'code': 1000,
+            'courselist': courseinfo.data,
+            'total': courses.count()
         }
 
         return Response(ret)

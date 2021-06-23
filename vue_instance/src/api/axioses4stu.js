@@ -79,3 +79,36 @@ export function deleteScheduled(param){
         data: param
     })
 }
+
+export function getCollegelist(){
+    return axios.request({
+        method: "GET",
+        url: "/api/student/getcollegelist",
+    })
+}
+
+
+export function initCourseInfo(params){
+    return axios.request({
+        method: "get",
+        url: "/api/student/initcourseinfo",
+        params: params
+    })
+}
+
+export function getCourses(params){
+    return axios.request({
+        method: "get",
+        url: "/api/student/getcourses",
+        params: params
+    })
+}
+
+
+export function filterCourses(params){
+    return axios.request({
+        method: "get",
+        url: "/api/student/filtercourses",
+        params: params
+    })
+}
