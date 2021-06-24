@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path , include , re_path
-from api.views.admin import course,student,room,teacher,course,college,schedule
+from api.views.admin import course,student,room,teacher,course,college,schedule,test
 from api.views import general
 from api import teacherurls,studenturls
 
@@ -46,4 +46,9 @@ urlpatterns = [
     path('getschbuilding/',schedule.getSchBuilding.as_view()),
     path('addschedule/',schedule.addSchedule.as_view()),
     path('getcoursesch/',schedule.getCourseSch.as_view()),
+    path('initcourselist4test/',test.initCourseList4test.as_view()),
+    path('getcollegelist4test/',test.getCollegeList4test.as_view()),
+    path('updatechoice/',test.updateChoice.as_view()),
+    path('initcourselist4testarr/',test.initCourseList4testarr.as_view()),
+    path('updatechoicearr/',test.updateChoicearr.as_view()),
 ]

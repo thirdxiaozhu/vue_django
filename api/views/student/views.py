@@ -50,12 +50,16 @@ class initCourseList(APIView):
         if mod == "1":
             major = student.Major
             courses = major.course.filter(betyear = student.grade.id).exclude(id__in = list(haveselecteds)).order_by('id')
-        else:
+        elif mod == "2":
             courses = models.Course.objects.all().exclude(id__in = list(haveselecteds)).order_by('id')
+        else:
+            courses = models.Course.objects.filter(college=request.GET.get('college')).exclude(id__in = list(haveselecteds)).order_by('id')
 
         pages = page.MyLimitOffsetPagination()
         page_role = pages.paginate_queryset(courses, request, self)
         courselist = ser.CourseinfoSerializers(page_role, many=True)
+        print(courselist.data)
+
         ret = {
             'code': 1000,
             'form': courselist.data,
@@ -207,3 +211,4 @@ class filterCourses(APIView):
         }
 
         return Response(ret)
+

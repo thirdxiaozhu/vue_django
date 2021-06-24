@@ -33,6 +33,7 @@ class getScheduled(APIView):
         relations = models.MainRelation.objects.filter(teacher_id = id).order_by('id')
         relationlist = ser.RelationlistSerializers(relations, many = True)
 
+        print(relationlist.data)
         ret = {
             'code': 1000,
             'relationlist': relationlist.data
@@ -44,7 +45,7 @@ class getScheduled(APIView):
 class initStudentList(APIView):
     def get(self , request, *args, **kwargs):
         print(request.GET)
-        students = models.MainRelation.objects.filter(id = request.GET.get('rel_id')).first().student.all().order_by('id')
+        students = models.MainRelation.objects.filter(id = request.GET.get('relation_id')).first().student.all().order_by('id')
         print(students)
         studentlist = ser_tea.StudentlistSerializers(students, many=True)
         print(studentlist.data)

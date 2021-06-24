@@ -9,22 +9,14 @@
                         <el-breadcrumb-item style="font-weight: bold;">考试管理</el-breadcrumb-item>
                     </el-breadcrumb>
                 </el-col>
-                <el-col :span="3" style="margin-top: 10px; float: right;">
-                    <el-button type="success" @click="addCourse">添加课程</el-button>
-                </el-col>
-                <el-col :span="5" style="float: right; margin-top: 10px;">
-                    <el-input placeholder="请输入内容" v-model="search_text">
-                        <el-button slot="append" icon="el-icon-search"></el-button>
-                    </el-input>
-                </el-col>
             </el-header>
             <el-main>
                 <el-tabs type="border-card" @tab-click="handleClick">
                     <el-tab-pane label="未安排考试课程">
-                        <Vschedule  ref="schedule"></Vschedule>
+                        <Varrnot  ref="notarr"></Varrnot>
                     </el-tab-pane>
                     <el-tab-pane label="已安排考试课程" >
-                        <Vschedulemanul ref="manul"></Vschedulemanul>
+                        <Varrhave ref="havearr"></Varrhave>
 		                </el-tab-pane>
                 </el-tabs>
             </el-main>
@@ -33,8 +25,8 @@
 </template>
 
 <script>
-    import Vcoursedraw from './Vcoursedraw'
-    import Vcourseinner from './Vcourseinner'
+    import Varrhave from './Varrhave'
+    import Varrnot from './Varrnot'
     import { filterCourseList,initStudentList,getOrganize, deleteCourse, getCourseList} from "@/api/axioses"
     export default {
         name: 'Vcourselist',
@@ -130,22 +122,18 @@
             },
             handleClick(tab,event){
                 if(tab.index == 0){
-                    this.$refs.compulsory.initCourse(2)
-                }else if(tab.index == 2){
-                    this.$refs.schedule.initList()
+                    this.$refs.notarr.collegeselected = ''
+                    this.$refs.notarr.initCourse(1)
+                }else if(tab.index == 1){
+                    this.$refs.havearr.collegeselected = ''
+                    this.$refs.havearr.initCourse(1)
                 }
             },
-			      selectOnly(){
-			      	this.$refs.compulsory.initCourse(1)
-			      },
-			      selectAll(){
-			      	this.$refs.compulsory.initCourse(2)
-			      },
         },
 
         components: {
-            Vcoursedraw,
-            Vcourseinner,
+          Varrnot,
+          Varrhave,
         },
         
     }

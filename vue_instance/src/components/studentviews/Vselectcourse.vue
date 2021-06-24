@@ -77,15 +77,18 @@
             },
             handleClick(tab,event){
                 if(tab.index == 0){
+                    this.$refs.compulsory.collegeselected = ''
                     this.$refs.compulsory.initCourse(2)
                 }else if(tab.index == 2){
                     this.$refs.schedule.initList()
                 }
             },
 			selectOnly(){
+                    this.$refs.compulsory.collegeselected = ''
 				this.$refs.compulsory.initCourse(1)
 			},
 			selectAll(){
+                    this.$refs.compulsory.collegeselected = ''
 				this.$refs.compulsory.initCourse(2)
 			},
         },

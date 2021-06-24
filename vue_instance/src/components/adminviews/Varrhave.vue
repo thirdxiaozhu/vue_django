@@ -18,36 +18,37 @@
             <el-main>
                 <el-table :data="form" tooltip-effect="dark" highlight-current-row style="width: 100%" row-key="id"
                     ref="refTable" lazy @row-click="clickTable" :row-class-name="tableRowClassName">
-                    <el-table-column type="expand" width="1">
-                        <template slot-scope="props">
-                            <el-table :data="tableData" style="width: 100%" ref="innerTable" :showHeader="false">
-                                <el-table-column prop="teacher" label="授课教师" width="200" align="center">
-                                </el-table-column>
-                                <el-table-column prop="classroom" label="教室" width="200" align="center">
-                                </el-table-column>
-                                <el-table-column prop="classtime" label="时间" width="200" align="center">
-                                </el-table-column>
-                                <el-table-column prop="student" label="选课人数" width="200" align="center">
-                                </el-table-column>
-                                <el-table-column>
-                                    <template slot-scope="scope">
-                                        <el-button type="success" @click="onChoose(scope.row)" :loading="load">选择该课
-                                        </el-button>
-                                    </template>
-                                </el-table-column>
-                            </el-table>
+                    <el-table-column prop="cou_id" label="课程号" align="center" width="140">
+                    </el-table-column>
+                    <el-table-column prop="name" label="课程名称" align="center" width="140">
+                    </el-table-column>
+                    <el-table-column prop="classhour" label="总学时" align="center" width="140">
+                    </el-table-column>
+                    <el-table-column prop="college" label="开课学院" align="center" width="140">
+                    </el-table-column>
+                    <el-table-column prop="function" label="课程类型" align="center" width="140">
+                    </el-table-column>
+                    <el-table-column prop="testtime" label="考试时间" align="center" width="150">
+                    </el-table-column>
+                    <el-table-column label="操作" align="center">
+                        <template slot-scope="scope">
+                            <el-button type="info" @click="operating_id = scope.row.id; dialogVisible=true" >重新排考
+                            </el-button>
+                            <el-button type="danger" @click="operating_id = scope.row.id; ">取消排考
+                            </el-button>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="cou_id" label="课程号" align="center" width="220">
-                    </el-table-column>
-                    <el-table-column prop="name" label="课程名称" align="center" width="220">
-                    </el-table-column>
-                    <el-table-column prop="classhour" label="总学时" align="center" width="220">
-                    </el-table-column>
-                    <el-table-column prop="college" label="开课学院" align="center" width="220">
-                    </el-table-column>
-                    <el-table-column prop="function" label="课程类型" align="center">
-                    </el-table-column>
+
+                    <el-dialog title="选择时间" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
+                        <span>
+                            <el-date-picker v-model="value" type="datetime" placeholder="选择日期时间" value-format="yyyy-MM-dd HH:mm:ss">
+                            </el-date-picker>
+                        </span>
+                        <span slot="footer" class="dialog-footer">
+                            <el-button @click="dialogVisible = false">取消</el-button>
+                            <el-button type="primary" @click="onChoose();dialogVisible = false">确定</el-button>
+                        </span>
+                    </el-dialog>
             </el-table>
             </el-main>
             <el-footer>
@@ -64,11 +65,11 @@
 </template>
 
 <script>
-    import { initCourseList, getRelations,updateChoice,getCollegelist, getCoursesAsCollege } from '@/api/axioses4stu'
+
+    import { initCourseList4testarr, getRelations,updateChoice,getCollegelist4test, getCoursesAsCollege4arr } from '@/api/axioses'
     export default {
         data() {
             return {
-                stu_id:this.$store.state.userid,
                 form: [],
                 tableData: [],
                 mod: 1,
@@ -82,11 +83,15 @@
                     total: 1000,
                 },
                 collegeselected: '',
+                colleges: [],
+                dialogVisible: false,
+                value: '',
+                operating_id: ''
             }
         },
         mounted: function () {
             this.initCollegelist()
-            this.initCourse(2)
+            this.initCourse(1)
         },
         methods: {
             initCourse(mod) {
@@ -94,55 +99,27 @@
                 var that = this;
                 const params = {
                     'mod': this.mod,
-                    'stu_id': this.stu_id,
                     'college':this.collegeselected,
                     'currentpage' : this.pages.page,
                 }
-                console.log(params)
-                initCourseList(params).then(res => {
+                initCourseList4testarr(params).then(res => {
                     if (res.data.code === 1000) {
-                        this.form = res.data.form
+                        that.form = res.data.form
                         that.pages.total = res.data.total;
+                        that.form.forEach(element => {
+                            element.testtime = element.testtime.replace(/T/g,' ').replace(/Z/g,'')
+                        });
                     }
                 })
             },
-            clickTable(row, index, e) {
-                /*展开行的手风琴效果*/
-                let $table = this.$refs.refTable;
-                this.form.map((item) => {
-                    if (row.id != item.id) {
-                        $table.toggleRowExpansion(item, false)
-                    }
-                })
-                $table.toggleRowExpansion(row)
-                /*row.id存的是课程的id*/
-                this.currentid = row.id
-                this.currentindex = row.index
-                console.log(row.id,this.currentindex);
-                this.currentrow = row
-                const params = {
-                    'id':row.id,
-                    'currentpage' : this.pages.page,
-                }
-                var that = this;
-                getRelations(params).then(res =>{
-                    if(res.data.code === 1000){
-                        that.tableData = res.data.tableData
-                        that.rel_id = res.data.rel_id
-                    }
-                })
-            },
-            onChoose(row){
-                this.selected_rel.push(row.id)
-                this.selected_cou.push(this.currentid)
-
+            onChoose(){
                 const data = {
-                    'stu_id':this.stu_id,
-                    'id': row.id
+                    'id': this.operating_id,
+                    'time': this.value
                 }
                 updateChoice(data).then(res =>{
                     if(res.data.code === 1000){
-                        this.$confirm('选课成功！')
+                        this.$confirm('安排成功！时间为'+this.value)
                             .then(_ => { this.initCourse(this.mod) })
                             .catch(_ => { });
                     }
@@ -154,31 +131,25 @@
                 })
             },
 
-            //把每一行的索引放进row,这样在row_click的时候，就可以获取到每一行的索引了
-            tableRowClassName ({row, rowIndex}) {
-                row.index = rowIndex;
-            },
             handleCurrentChange(){
                 this.initCourse(this.mod)
             },
             initCollegelist(){
-                getCollegelist().then(res =>{
+                getCollegelist4test().then(res =>{
                     if(res.data.code === 1000){
                         this.colleges = res.data.colleges
                     }
                 })
             },
             collegeChange(){
-                this.mod = 3
-                this.pages.page = 1
+                this.mod = 2
                 const params = {
                     'mod': this.mod,
                     'college':this.collegeselected,
                     'currentpage': 1,
-                    'stu_id': this.stu_id,
                 }
                 var that = this;
-                getCoursesAsCollege(params).then(res =>{
+                getCoursesAsCollege4arr(params).then(res =>{
                     if(res.data.code === 1000){
                         that.form = res.data.form;
                         that.pages.total = res.data.total;

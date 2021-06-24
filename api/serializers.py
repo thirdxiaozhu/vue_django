@@ -229,5 +229,19 @@ class ClassRoomlistSerializers(serializers.ModelSerializer):
         fields = ('id', 'name')
 
 
+class Courseinfo4testSerializers(serializers.ModelSerializer):
+    college = serializers.CharField(source="college.name")
+    function = serializers.CharField(source="function.name")
+    testtime = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.Course
+        fields = ('id','cou_id','name','classhour','college','function','testtime')
+
+    def get_testtime(self,obj):
+        print(obj.testtime)
+        return obj.testtime
+
+
 
         

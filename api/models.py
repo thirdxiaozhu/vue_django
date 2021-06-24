@@ -113,6 +113,9 @@ class Course(models.Model):
     #先导课
     #pre_course = models.ForeignKey(to="self",on_delete=models.CASCADE, default=1 , null = True)
     pre_course = models.ManyToManyField(to="self")
+    #是否安排了考试
+    isarranged = models.BooleanField(default=False)
+    testtime = models.DateTimeField(null = True)
 
 
 class Results(models.Model):
@@ -262,6 +265,7 @@ class MainRelation(models.Model):
     classroom = models.ForeignKey(to="ClassRoom", on_delete=models.CASCADE)
     classtime = models.ManyToManyField(to="ClassTime")
     stuquantity = models.IntegerField(default=0)
+    testroom = models.ForeignKey(to="ClassRoom", on_delete=models.CASCADE, related_name='testroom', null=True)
 
 
 class Days(models.Model):

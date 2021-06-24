@@ -112,3 +112,14 @@ export function filterCourses(params){
         params: params
     })
 }
+
+
+export function getCoursesAsCollege(params){
+    return axios.request({
+        method: "GET",
+        url: "/api/student/initcourselist",
+        params: params
+    })
+}
+
+

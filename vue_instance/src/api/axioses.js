@@ -341,3 +341,64 @@ export function postMajorSubmit(data){
         data: data
     })
 }
+
+export function initCourseList4test(params){
+    return axios.request({
+        method: "get",
+        url: "/api/initcourselist4test",
+        params: params
+    })
+}
+
+export function getCollegelist4test(params){
+    return axios.request({
+        method: "get",
+        url: "/api/getcollegelist4test",
+        params: params
+    })
+}
+
+
+export function updateChoice(data){
+    return axios.request({
+        method: "POST",
+        url: "/api/updatechoice/",
+        data: data
+    })
+}
+
+
+export function getCoursesAsCollege(params){
+    return axios.request({
+        method: "get",
+        url: "/api/initcourselist4test",
+        params: params
+    })
+}
+
+
+export function initCourseList4testarr(params){
+    return axios.request({
+        method: "get",
+        url: "/api/initcourselist4testarr",
+        params: params
+    })
+}
+
+
+export function updateChoice4arr(data){
+    return axios.request({
+        method: "POST",
+        url: "/api/updatechoice4arr/",
+        data: data
+    })
+}
+
+
+export function getCoursesAsCollege4arr(params){
+    return axios.request({
+        method: "get",
+        url: "/api/initcourselist4testarr",
+        params: params
+    })
+}
