@@ -11,17 +11,21 @@ import Vtest from '@/components/adminviews/Vtest'
 import Vroom from '@/components/adminviews/Vroom'
 import Vcollege from '@/components/adminviews/Vcollege'
 import Vschedulemain from '@/components/adminviews/Vschedulemain'
+import Vmessagerec from '@/components/adminviews/Vmessagerec'
 
 import student_index from '@/views/student_index'
 import Vmain4stu from '@/components/studentviews/Vmain'
 import Vstudentinfo from '@/components/studentviews/Vstudentinfo'
 import Vselectcourse from '@/components/studentviews/Vselectcourse'
 import Vstudentplan from '@/components/studentviews/Vstudentplan'
+import Vstudentgrade from '@/components/studentviews/Vgrade'
+import Vstudenttest from '@/components/studentviews/Vtest'
 
 import teacher_index from '@/views/teacher_index'
 import Vmain4tea from '@/components/teacherviews/Vmain'
 import Vteacherinfo from '@/components/teacherviews/Vteacherinfo'
 import Vteachercourse from '@/components/teacherviews/Vteachercourse'
+import Vteachergrade from '@/components/teacherviews/Vteachergrade'
 
 
 Vue.use(Router)
@@ -74,6 +78,11 @@ export default new Router({
           name: 'Vschedulemain',
           component: Vschedulemain
         },
+        {
+          path: 'messagerec',
+          name: 'Vmessagerec',
+          component: Vmessagerec
+        },
       ]
     },
     {
@@ -106,6 +115,16 @@ export default new Router({
           name: 'Vselectcourse',
           component: Vselectcourse
         },
+        {
+          path: 'test',
+          name: 'Vtest',
+          component: Vstudenttest
+        },
+        {
+          path: 'grade',
+          name: 'Vgrade',
+          component: Vstudentgrade
+        },
       ]
     },
     {
@@ -127,6 +146,11 @@ export default new Router({
           path: 'course',
           name: 'Vteachercourse',
           component: Vteachercourse
+        },
+        {
+          path: 'grade',
+          name: 'Vteachergrade',
+          component: Vteachergrade
         },
       ]
     }

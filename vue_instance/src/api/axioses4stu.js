@@ -122,4 +122,10 @@ export function getCoursesAsCollege(params){
     })
 }
 
-
+export function getTestlist(params){
+    return axios.request({
+        method: "GET",
+        url: "/api/student/gettestlist",
+        params: params
+    })
+}

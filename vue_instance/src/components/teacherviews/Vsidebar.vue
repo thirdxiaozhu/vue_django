@@ -11,7 +11,7 @@
         </template>
           <el-menu-item index="1-1"><router-link to="/teacher/info">教籍信息</router-link></el-menu-item>
           <el-menu-item index="1-3"><router-link to="/teacher/course">课程信息</router-link></el-menu-item>
-          <el-menu-item index="1-4"><router-link to="/teacher/test">考试信息</router-link></el-menu-item>
+          <el-menu-item index="1-4"><router-link to="/teacher/grade">成绩录入</router-link></el-menu-item>
       </el-submenu>
       <el-submenu index="2">
         <template slot="title">

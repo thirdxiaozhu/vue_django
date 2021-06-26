@@ -276,3 +276,10 @@ class Days(models.Model):
 class MessageType(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length = 20)
+
+
+class Student2Relation(models.Model):
+    id = models.AutoField(primary_key=True)
+    relation = models.ForeignKey(to="MainRelation", on_delete=models.CASCADE)
+    student = models.ForeignKey(to="StudentInfo", on_delete=models.CASCADE)
+    grade = models.IntegerField(null=True)

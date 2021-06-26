@@ -28,11 +28,35 @@ export function getScheduled(param = {}){
     })
 }
 
+export function getScheduled4test(param = {}){
+    return axios.request({
+        method: "GET",
+        url: "/api/teacher/getscheduled4test",
+        params : param
+    })
+}
 
 export function initStudentList(param = {}){
     return axios.request({
         method: "GET",
         url: "/api/teacher/initstudentlist",
         params : param
+    })
+}
+
+export function ifarrange(param = {}){
+    return axios.request({
+        method: "GET",
+        url: "/api/teacher/ifarrange",
+        params : param
+    })
+}
+
+
+export function updateGrade(data){
+    return axios.request({
+        method: "POST",
+        url: "/api/teacher/updategrade/",
+        data : data
     })
 }

@@ -87,3 +87,12 @@ class updateChoicearr(APIView):
 
         
         return Response({'code': 1000})
+
+
+class deleteChoicearr(APIView):
+    def post(self, request, *args, **kwargs):
+        course = models.Course.objects.filter(id = request.data.get('id')).first()
+        course.isarranged = False
+        course.save()
+
+        return Response({'code': 1000})

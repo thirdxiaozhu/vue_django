@@ -25,11 +25,11 @@
                     </el-table-column>
                     <el-table-column prop="student" label="选课人数" width="180" align="center">
                     </el-table-column>
-                    <el-table-column prop="testtime" label="考试时间" width="180" align="center">
+                    <el-table-column prop="testtime" label="截止时间" width="180" align="center">
                     </el-table-column>
                     <el-table-column label="操作" align="center">
                         <template slot-scope="scope">
-                            <el-button size="medium" type="primary" @click="handleEdit(scope.$index, scope.row);drawer=true">查看选修该课学生
+                            <el-button size="medium" type="primary" @click="handleEdit(scope.$index, scope.row);">录入成绩
                             </el-button>
                         </template>
                     </el-table-column>
@@ -38,8 +38,8 @@
                 <el-drawer :title="title" v-if="drawer" :visible.sync="drawer" :direction="direction" :before-close="handleClose"
                     ref="infodrawer" size="50%">
                     <span>
-                        <Vteacoustudraw :relation_id="operating_id" :drawer="ObjDrawer"  @judgeOptions="judgeOptions">
-                        </Vteacoustudraw>
+                        <Vteachergradedraw :relation_id="operating_id" :drawer="ObjDrawer"  @judgeOptions="judgeOptions">
+                        </Vteachergradedraw>
                     </span>
                 </el-drawer>
             </el-main>
@@ -48,8 +48,8 @@
 </template>
 
 <script>
-    import Vteacoustudraw from './Vteacoustudraw'
-    import { getScheduled } from "@/api/axioses4tea"
+    import Vteachergradedraw from './Vteachergradedraw'
+    import { getScheduled4test, ifarrange } from "@/api/axioses4tea"
     export default {
         name: 'Vteachercourse',
         data() {
@@ -115,11 +115,23 @@
             handleEdit(index, row) {
                 this.operating_id = row.id;
                 this.title = "正在查看选修该课程的学生";
+                ifarrange({'id': row.id}).then(res => {
+                    if(res.data.code === 1001){
+                        this.$message({
+                            type: 'warning',
+                            message: '未排考课程禁止录入!'
+                        });
+                        this.drawer=false
+                    }
+                    else if(res.data.code === 1000){
+                        this.drawer=true
+                    }
+                })
             },
             //初始化列表以及选项
             initList(){
                 var that = this;
-                getScheduled({ 'tea_id': this.tea_id }).then(res =>{
+                getScheduled4test({ 'tea_id': this.tea_id }).then(res =>{
                     console.log(res)
                     if(res.data.code === 1000){
                         that.tableData = res.data.relationlist;
@@ -151,7 +163,7 @@
         },
 
         components: {
-            Vteacoustudraw
+            Vteachergradedraw
         },
         
     }

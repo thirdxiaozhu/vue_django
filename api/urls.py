@@ -51,4 +51,5 @@ urlpatterns = [
     path('updatechoice/',test.updateChoice.as_view()),
     path('initcourselist4testarr/',test.initCourseList4testarr.as_view()),
     path('updatechoicearr/',test.updateChoicearr.as_view()),
+    path('deletechoice4arr/',test.deleteChoicearr.as_view()),
 ]

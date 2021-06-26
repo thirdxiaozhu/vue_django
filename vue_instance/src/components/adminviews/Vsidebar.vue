@@ -31,7 +31,9 @@
         <i class="el-icon-message-solid"></i>
         <span>消息处理</span>
       </template>
-      <el-menu-item index="2-1">收信箱</el-menu-item>
+      <el-menu-item index="2-1">
+        <router-link to="/admin/messagerec">收信箱</router-link>
+      </el-menu-item>
       <el-menu-item index="2-2">发送信息</el-menu-item>
       <el-menu-item index="2-3">广播</el-menu-item>
     </el-submenu>

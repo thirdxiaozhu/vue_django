@@ -14,4 +14,5 @@ urlpatterns = [
     path('initcourseinfo/',views.initCourseInfo.as_view()),
     path('getcourses/',views.getCourses.as_view()),
     path('filtercourses/',views.filterCourses.as_view()),
+    path('gettestlist/',views.getTestlist.as_view()),
 ]

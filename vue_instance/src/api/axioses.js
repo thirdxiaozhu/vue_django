@@ -402,3 +402,12 @@ export function getCoursesAsCollege4arr(params){
         params: params
     })
 }
+
+
+export function deleteChoice(data){
+    return axios.request({
+        method: "POST",
+        url: "/api/deletechoice4arr/",
+        data: data
+    })
+}

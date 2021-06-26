@@ -7,6 +7,7 @@ from django.db.models import Q
 from rest_framework import serializers
 from api import models
 import json
+import datetime
 
 class StudentSerializers(serializers.Serializer):
 
@@ -186,6 +187,7 @@ class RelationlistSerializers(serializers.ModelSerializer):
     teacher = serializers.CharField(source="teacher.name")
     student = serializers.SerializerMethodField()
     classtime = serializers.SerializerMethodField()
+    testtime = serializers.SerializerMethodField()
     class Meta:
         model = models.MainRelation
         fields = "__all__"
@@ -198,7 +200,15 @@ class RelationlistSerializers(serializers.ModelSerializer):
         return temp
 
     def get_student(self, obj):
-        return str(obj.student.all().count()) + " / " + str(obj.stuquantity)
+        students = models.Student2Relation.objects.filter(relation = obj.id)
+        return str(students.count()) + " / " + str(obj.stuquantity)
+
+
+    def get_testtime(self, obj):
+        if obj.course.testtime:
+            return obj.course.testtime
+        else:
+            return "尚未排考"
 
 
 
@@ -243,5 +253,31 @@ class Courseinfo4testSerializers(serializers.ModelSerializer):
         return obj.testtime
 
 
+class Relationlist4testSerializers(serializers.ModelSerializer):
+    course = serializers.CharField(source="course.name")
+    classroom = serializers.CharField(source="classroom.name")
+    teacher = serializers.CharField(source="teacher.name")
+    student = serializers.SerializerMethodField()
+    classtime = serializers.SerializerMethodField()
+    testtime = serializers.SerializerMethodField()
+    class Meta:
+        model = models.MainRelation
+        fields = "__all__"
 
-        
+    #多对多钩子函数序列化，必须以get_ + model表名作为方法名
+    def get_classtime(self, obj):
+        temp = []
+        for obj in obj.classtime.all():
+            temp.append(obj.name)
+        return temp
+
+    def get_student(self, obj):
+        students = models.Student2Relation.objects.filter(relation = obj.id)
+        return str(students.count()) + " / " + str(obj.stuquantity)
+
+
+    def get_testtime(self, obj):
+        if obj.course.testtime:
+            return obj.course.testtime + datetime.timedelta(days = 30)
+        else:
+            return "尚未排考"

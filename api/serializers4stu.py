@@ -52,7 +52,8 @@ class RelationlistSerializers(serializers.ModelSerializer):
         return temp
 
     def get_student(self, obj):
-        return str(obj.student.all().count()) + " / " + str(obj.stuquantity)
+        students = models.Student2Relation.objects.filter(relation = obj.id)
+        return str(students.count()) + " / " + str(obj.stuquantity)
 
 
 class College4tclistSerializers(serializers.ModelSerializer):
@@ -91,3 +92,37 @@ class FunctionlistSerializers(serializers.ModelSerializer):
     class Meta:
         model = models.Function
         fields = ('id','name')
+
+
+class Relationlist4testSerializers(serializers.ModelSerializer):
+    teacher = serializers.CharField(source="teacher.name")
+    course = serializers.CharField(source="course.name")
+    testtime = serializers.SerializerMethodField()
+    class Meta:
+        model = models.MainRelation
+        fields = ('course','teacher','testtime')
+
+    def get_testtime(self, obj):
+        if obj.course.testtime:
+            return obj.course.testtime 
+        else:
+            return "尚未排考"
+
+
+class GradeSerializers(serializers.ModelSerializer):
+    teacher = serializers.CharField(source="relation.teacher.name")
+    #teacher = serializers.SerializerMethodField()
+    course = serializers.SerializerMethodField()
+    grade = serializers.SerializerMethodField()
+    class Meta:
+        model = models.Student2Relation
+        fields = ('course','teacher','grade')
+
+    def get_course(self, obj):
+        return obj.relation.course.name
+    
+    def get_grade(self, obj):
+        if obj.grade:
+            return obj.grade
+        else:
+            return "尚未录入"
