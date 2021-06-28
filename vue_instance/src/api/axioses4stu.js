@@ -129,3 +129,20 @@ export function getTestlist(params){
         params: params
     })
 }
+
+export function applyChangepasswd(data){
+    return axios.request({
+        method: "POST",
+        url: "/api/student/applychangepasswd/",
+        data: data
+    })
+}
+
+
+export function getSendlist(params){
+    return axios.request({
+        method: "GET",
+        url: "/api/student/getsendlist",
+        params: params
+    })
+}

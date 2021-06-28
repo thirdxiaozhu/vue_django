@@ -23,7 +23,7 @@
                             <el-input v-model="form.password" style="width: 89%;" disabled></el-input>
                         </el-col>
                         <el-col :span="3">
-                            <el-button type="success" style="width: 80%;">申请修改</el-button>
+                            <el-button type="success" style="width: 80%;" @click="changePasswd()">申请修改</el-button>
                         </el-col>
                     </el-row>
                 </el-form-item>
@@ -67,7 +67,7 @@
 </template>
 
 <script>
-    import { initStudentinfo } from "@/api/axioses4stu"
+    import { initStudentinfo, applyChangepasswd } from "@/api/axioses4stu"
     export default {
         name: 'Vstudentinfo',
         data() {
@@ -101,6 +101,16 @@
                 }).catch(function (ret) {
                 })
             },
+            changePasswd(){
+                applyChangepasswd({'stu_id': this.stu_id}).then(res =>{
+                    if(res.data.code === 1000){
+                        this.$message({
+                            message: '提交申请成功，请等待管理员回复', 
+                            type: 'success'
+                        });
+                    }
+                })
+            }
         },
     }
 </script>

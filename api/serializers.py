@@ -281,3 +281,34 @@ class Relationlist4testSerializers(serializers.ModelSerializer):
             return obj.course.testtime + datetime.timedelta(days = 30)
         else:
             return "尚未排考"
+
+
+class MessagelistSerializers(serializers.ModelSerializer):
+    messagetype = serializers.CharField(source="messagetype.name")
+    finishtime = serializers.SerializerMethodField()
+    fromwho = serializers.SerializerMethodField()
+    isFinished = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = models.Message
+        fields = "__all__"
+
+    def get_finishtime(self, obj):
+        if obj.finishtime:
+            return obj.finishtime
+        else:
+            return "-"
+
+    def get_isFinished(self, obj):
+        if obj.isFinished:
+            return "是"
+        else:
+            return "否"
+
+    def get_fromwho(self, obj):
+        if obj.fromwho == "student":
+            return str(obj.student.stu_id) + " " + obj.student.name
+        elif obj.fromwho == "teacher":
+            return str(obj.student.tea_id) + " " + obj.teacher.name
+        else :
+            return str(obj.admin.adm_id)

@@ -11,7 +11,8 @@ import Vtest from '@/components/adminviews/Vtest'
 import Vroom from '@/components/adminviews/Vroom'
 import Vcollege from '@/components/adminviews/Vcollege'
 import Vschedulemain from '@/components/adminviews/Vschedulemain'
-import Vmessagerec from '@/components/adminviews/Vmessagerec'
+import Vsend4adm from '@/components/adminviews/Vsend'
+import Vsave4adm from '@/components/adminviews/Vsave'
 
 import student_index from '@/views/student_index'
 import Vmain4stu from '@/components/studentviews/Vmain'
@@ -20,6 +21,8 @@ import Vselectcourse from '@/components/studentviews/Vselectcourse'
 import Vstudentplan from '@/components/studentviews/Vstudentplan'
 import Vstudentgrade from '@/components/studentviews/Vgrade'
 import Vstudenttest from '@/components/studentviews/Vtest'
+import Vsend from '@/components/studentviews/Vsend'
+import Vsave from '@/components/studentviews/Vsave'
 
 import teacher_index from '@/views/teacher_index'
 import Vmain4tea from '@/components/teacherviews/Vmain'
@@ -79,9 +82,14 @@ export default new Router({
           component: Vschedulemain
         },
         {
-          path: 'messagerec',
-          name: 'Vmessagerec',
-          component: Vmessagerec
+          path: 'sendmessage',
+          name: 'Vsend',
+          component: Vsend4adm
+        },
+        {
+          path: 'savemessage',
+          name: 'Vsave',
+          component: Vsave4adm
         },
       ]
     },
@@ -124,6 +132,16 @@ export default new Router({
           path: 'grade',
           name: 'Vgrade',
           component: Vstudentgrade
+        },
+        {
+          path: 'sendmessage',
+          name: 'Vsend',
+          component: Vsend
+        },
+        {
+          path: 'savemessage',
+          name: 'Vsave',
+          component: Vsave
         },
       ]
     },

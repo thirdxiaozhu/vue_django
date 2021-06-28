@@ -1,3 +1,4 @@
+
 <template>
     <div>
         <el-container>
@@ -17,11 +18,19 @@
                             <span>{{scope.$index + 1}}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="course" label="课程名称"  align="center">
+                    <el-table-column prop="course" label="收件人"  align="center">
                     </el-table-column>
-                    <el-table-column prop="teacher" label="任课教师"  align="center">
+                    <el-table-column prop="teacher" label="发送时间"  align="center">
                     </el-table-column>
-                    <el-table-column prop="testtime" label="考试时间"  align="center" >
+                    <el-table-column prop="testtime" label="消息类型"  align="center" >
+                    </el-table-column>
+                    <el-table-column prop="testtime" label="标题"  align="center" >
+                    </el-table-column>
+                    <el-table-column prop="testtime" label="是否完成"  align="center" >
+                    </el-table-column>
+                    <el-table-column prop="testtime" label="完成时间"  align="center" >
+                    </el-table-column>
+                    <el-table-column prop="testtime" label="处理结果"  align="center" >
                     </el-table-column>
                 </el-table>
             

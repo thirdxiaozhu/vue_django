@@ -84,11 +84,12 @@
                 }
             },
 			selectOnly(){
-                    this.$refs.compulsory.collegeselected = ''
+                this.$refs.compulsory.collegeselected = ''
+                this.$refs.compulsory.pages.page = 1
 				this.$refs.compulsory.initCourse(1)
 			},
 			selectAll(){
-                    this.$refs.compulsory.collegeselected = ''
+                this.$refs.compulsory.collegeselected = ''
 				this.$refs.compulsory.initCourse(2)
 			},
         },

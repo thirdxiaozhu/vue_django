@@ -15,4 +15,6 @@ urlpatterns = [
     path('getcourses/',views.getCourses.as_view()),
     path('filtercourses/',views.filterCourses.as_view()),
     path('gettestlist/',views.getTestlist.as_view()),
+    path('applychangepasswd/',views.applyChangepasswd.as_view()),
+    path('getsendlist/',views.getSendlist.as_view()),
 ]

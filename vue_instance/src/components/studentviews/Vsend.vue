@@ -5,10 +5,13 @@
             <el-col :span="10">
                 <el-breadcrumb separator="/" style="margin-top: 20px; font-size:large;">
                     <el-breadcrumb-item>首页</el-breadcrumb-item>
-                    <el-breadcrumb-item>常规信息</el-breadcrumb-item>
-                    <el-breadcrumb-item style="font-weight: bold;">我的考试</el-breadcrumb-item>
+                    <el-breadcrumb-item>消息处理</el-breadcrumb-item>
+                    <el-breadcrumb-item style="font-weight: bold;">我的发送</el-breadcrumb-item>
                 </el-breadcrumb>
             </el-col>
+                <el-col :span="3" style="margin-top: 10px; float: right;">
+                    <el-button type="success" @click="sendMessage();drawer=true">发送消息</el-button>
+                </el-col>
         </el-header>
             <el-main>
                 <el-table :data="tableData" style="width: 100%" ref="table">
@@ -17,21 +20,37 @@
                             <span>{{scope.$index + 1}}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="course" label="课程名称"  align="center">
+                    <el-table-column prop="towho" label="收件人"  align="center">
                     </el-table-column>
-                    <el-table-column prop="teacher" label="任课教师"  align="center">
+                    <el-table-column prop="gettime" label="发送时间"  align="center">
                     </el-table-column>
-                    <el-table-column prop="testtime" label="考试时间"  align="center" >
+                    <el-table-column prop="messagetype" label="消息类型"  align="center" >
+                    </el-table-column>
+                    <el-table-column prop="title" label="标题"  align="center" >
+                    </el-table-column>
+                    <el-table-column prop="isFinished" label="是否完成"  align="center" >
+                    </el-table-column>
+                    <el-table-column prop="finishtime" label="完成时间"  align="center" >
+                    </el-table-column>
+                    <el-table-column prop="result" label="处理结果"  align="center" >
                     </el-table-column>
                 </el-table>
             
             </el-main>
+
+                <el-drawer :title="title" v-if="drawer" :visible.sync="drawer" :direction="direction"
+                    :before-close="handleClose" ref="infodrawer">
+                    <span>
+                        <Vstudentdraw :drawer="ObjDrawer"  @judgeOptions="judgeOptions">
+                        </Vstudentdraw>
+                    </span>
+                </el-drawer>
         </el-container>
     </div>
 </template>
 
 <script>
-    import { getTestlist } from "@/api/axioses4stu"
+    import { getSendlist } from "@/api/axioses4stu"
     export default {
         name: 'Vteachercourse',
         data() {
@@ -55,18 +74,19 @@
         },
         mounted: function () {
             this.stu_id = this.$store.state.userid
-            this.initList()
+            this.initSendList()
         },
         methods: {
             //初始化列表以及选项
-            initList(){
+            initSendList(){
                 var that = this;
-                getTestlist({ 'stu_id': this.stu_id, 'type': 1 }).then(res =>{
+                getSendlist({ 'stu_id': this.stu_id }).then(res =>{
                     console.log(res)
                     if(res.data.code === 1000){
-                        that.tableData = res.data.relations;
+                        that.tableData = res.data.messages;
                         that.tableData.forEach(element => {
-                            element.testtime = element.testtime.replace(/T/g, ' ').replace(/Z/g, '')
+                            element.gettime = element.gettime.replace(/T/g, ' ').replace(/Z/g, '')
+                            element.finishtime = element.finishtime.replace(/T/g, ' ').replace(/Z/g, '')
                         });
                     }
                 })
@@ -89,6 +109,9 @@
                         that.pages.total = res.data.total;
                     }
                 })
+            },
+            sendMessage(){
+
             }
         },
 

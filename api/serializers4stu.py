@@ -126,3 +126,24 @@ class GradeSerializers(serializers.ModelSerializer):
             return obj.grade
         else:
             return "尚未录入"
+
+class MessagelistSerializers(serializers.ModelSerializer):
+    messagetype = serializers.CharField(source="messagetype.name")
+    finishtime = serializers.SerializerMethodField()
+    isFinished = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = models.Message
+        fields = "__all__"
+
+    def get_finishtime(self, obj):
+        if obj.finishtime:
+            return obj.finishtime
+        else:
+            return "-"
+
+    def get_isFinished(self, obj):
+        if obj.isFinished:
+            return "是"
+        else:
+            return "否"

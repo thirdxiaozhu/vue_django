@@ -27,7 +27,7 @@ class login(APIView):
             else:
                 ret = {
                     'code': 1001,
-                    'error':"用户名和密码错误"
+                    'error':"用户名或密码错误"
                 }
             return Response(ret)
         if usertype == "2":
@@ -46,7 +46,7 @@ class login(APIView):
             else:
                 ret = {
                     'code': 1001,
-                    'error':"用户名和密码错误"
+                    'error':"用户名或密码错误"
                 }
             return Response(ret)
         if usertype == "3":
@@ -65,6 +65,6 @@ class login(APIView):
             else:
                 ret = {
                     'code': 1001,
-                    'error':"用户名和密码错误"
+                    'error':"用户名或密码错误"
                 }
             return Response(ret)

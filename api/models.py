@@ -226,16 +226,19 @@ class Message(models.Model):
     teacher = models.ForeignKey(to="TeacherInfo", on_delete=models.CASCADE , null=True)
     admin = models.ForeignKey(to="AdminInfo", on_delete=models.CASCADE , null=True)
     fromwho = models.CharField(max_length=30, default="none")
-    #messagetype = models.ForeignKey(to="MessageType", on_delete=models.CASCADE)
-    title = models.CharField(max_length=50)
+    towho = models.CharField(max_length=30, default="none")
+    messagetype = models.ForeignKey(to="MessageType", on_delete=models.CASCADE, null=True)
+    title = models.CharField(max_length=100)
     content = models.CharField(max_length=1000 , null=True)
+    reply = models.CharField(max_length=1000 , null=True)
     gettime = models.DateTimeField(default=timezone.now)
-    finishtime = models.DateTimeField(default=timezone.now)
-    isFinished = models.IntegerField(default=0)
+    finishtime = models.DateTimeField(null=True)
+    isFinished = models.BooleanField(default=False)
+    isWatched = models.BooleanField(default=False)
     result= models.CharField(max_length=30, default="none")
 
     class Meta:
-        ordering = ['-isFinished', ['-gettime'],['-finishtie']]
+        ordering = ['-isFinished', ['-gettime'],['-finishtime']]
 
 class IDNumber(models.Model):
     id = models.AutoField(primary_key=True)

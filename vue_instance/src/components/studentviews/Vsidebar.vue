@@ -20,8 +20,8 @@
           <i class="el-icon-menu"></i>
           <span>消息处理</span>
         </template>
-          <el-menu-item index="2-1">收信箱</el-menu-item>
-          <el-menu-item index="2-2">发送信息</el-menu-item>
+          <el-menu-item index="2-1"><router-link to="/student/savemessage">收件箱</router-link></el-menu-item>
+          <el-menu-item index="2-2"><router-link to="/student/sendmessage">我的发送</router-link></el-menu-item>
       </el-submenu>
 
     </el-menu>

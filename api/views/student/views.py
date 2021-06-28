@@ -217,3 +217,35 @@ class getTestlist(APIView):
                 'relations': relationlist.data
             }
             return Response(ret)
+
+
+class applyChangepasswd(APIView):
+    def post(self, request, *args, **kwargs):
+        print(request.data.get('stu_id'))
+        student = models.StudentInfo.objects.filter(stu_id = request.data.get('stu_id')).first()
+        admin = models.AdminInfo.objects.filter(id = 1).first()
+        models.Message.objects.create(
+            fromwho = "student",
+            towho = "admin",
+            student = student,
+            admin = admin,
+            messagetype = models.MessageType.objects.get(id = 1),
+            title = str(student.stu_id) + " " + student.name + "申请修改密码",
+        )
+
+        return Response({'code': 1000})
+
+class getSendlist(APIView):
+    def get(self, request, *args, **kwargs):
+        student = models.StudentInfo.objects.filter(stu_id = request.GET.get('stu_id')).first()
+        messages = models.Message.objects.filter(student = student).order_by('id')
+        print(student, messages)
+        messagelist = ser.MessagelistSerializers(messages, many=True)
+
+        print(messages.count())
+        ret = {
+            'code': 1000,
+            'messages': messagelist.data,
+            'total': messages.count()
+        }
+        return Response(ret)

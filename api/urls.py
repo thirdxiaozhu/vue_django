@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path , include , re_path
-from api.views.admin import course,student,room,teacher,course,college,schedule,test
+from api.views.admin import course,student,room,teacher,course,college,schedule, test, message
 from api.views import general
 from api import teacherurls,studenturls
 
@@ -52,4 +52,7 @@ urlpatterns = [
     path('initcourselist4testarr/',test.initCourseList4testarr.as_view()),
     path('updatechoicearr/',test.updateChoicearr.as_view()),
     path('deletechoice4arr/',test.deleteChoicearr.as_view()),
+    path('getsendlist/',message.getSendlist.as_view()),
+    path('replymessage/',message.replyMessage.as_view()),
+    path('rejectmessage/',message.rejectMessage.as_view()),
 ]

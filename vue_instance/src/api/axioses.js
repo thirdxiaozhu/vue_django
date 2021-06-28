@@ -411,3 +411,30 @@ export function deleteChoice(data){
         data: data
     })
 }
+
+
+export function getSendlist(params){
+    return axios.request({
+        method: "get",
+        url: "/api/getsendlist",
+        params: params
+    })
+}
+
+
+export function replyMessage(data){
+    return axios.request({
+        method: "post",
+        url: "/api/replymessage/",
+        data: data
+    })
+}
+
+
+export function rejectMessage(data){
+    return axios.request({
+        method: "post",
+        url: "/api/rejectmessage/",
+        data: data
+    })
+}
