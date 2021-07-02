@@ -17,4 +17,7 @@ urlpatterns = [
     path('gettestlist/',views.getTestlist.as_view()),
     path('applychangepasswd/',views.applyChangepasswd.as_view()),
     path('getsendlist/',views.getSendlist.as_view()),
+    path('postmessage/',views.postMessage.as_view()),
+    path('getsavelist/',views.getSavelist.as_view()),
+    path('replymessage/',views.replyMessage.as_view()),
 ]

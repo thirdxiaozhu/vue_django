@@ -9,17 +9,17 @@
           <i class="el-icon-menu"></i>
           <span>常规信息</span>
         </template>
-          <el-menu-item index="1-1"><router-link to="/teacher/info">教籍信息</router-link></el-menu-item>
-          <el-menu-item index="1-3"><router-link to="/teacher/course">课程信息</router-link></el-menu-item>
+          <el-menu-item index="1-1"><router-link to="/teacher/info">我的教籍</router-link></el-menu-item>
+          <el-menu-item index="1-3"><router-link to="/teacher/course">我的课程</router-link></el-menu-item>
           <el-menu-item index="1-4"><router-link to="/teacher/grade">成绩录入</router-link></el-menu-item>
       </el-submenu>
       <el-submenu index="2">
         <template slot="title">
-          <i class="el-icon-menu"></i>
+          <i class="el-icon-message-solid"></i>
           <span>消息处理</span>
         </template>
-          <el-menu-item index="2-1">收信箱</el-menu-item>
-          <el-menu-item index="2-2">发送信息</el-menu-item>
+          <el-menu-item index="2-1"><router-link to="/teacher/save">收件箱</router-link></el-menu-item>
+          <el-menu-item index="2-2"><router-link to="/teacher/send">我的发送</router-link></el-menu-item>
       </el-submenu>
 
     </el-menu>

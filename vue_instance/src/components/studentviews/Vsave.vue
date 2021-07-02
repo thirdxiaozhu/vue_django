@@ -1,4 +1,3 @@
-
 <template>
     <div>
         <el-container>
@@ -6,76 +5,104 @@
             <el-col :span="10">
                 <el-breadcrumb separator="/" style="margin-top: 20px; font-size:large;">
                     <el-breadcrumb-item>首页</el-breadcrumb-item>
-                    <el-breadcrumb-item>常规信息</el-breadcrumb-item>
-                    <el-breadcrumb-item style="font-weight: bold;">我的考试</el-breadcrumb-item>
+                    <el-breadcrumb-item>消息处理</el-breadcrumb-item>
+                    <el-breadcrumb-item style="font-weight: bold;">收件箱</el-breadcrumb-item>
                 </el-breadcrumb>
             </el-col>
         </el-header>
             <el-main>
-                <el-table :data="tableData" style="width: 100%" ref="table">
-                    <el-table-column prop="" label="#" width="90" type="index" align="center">
-                        <template slot-scope="scope">
-                            <span>{{scope.$index + 1}}</span>
+                <el-table :data="tableData" style="width: 100%" ref="refTable" tooltip-effect="dark" highlight-current-row row-key="id"
+                    lazy @row-click="clickTable" :row-class-name="tableRowClassName">
+                    <el-table-column type="expand" width="1">
+                        <template slot-scope="props">
+                            <div class="sub-title">标题</div>
+                            <el-input type="text" v-model="currentrow.title" disabled>
+                            </el-input>
+                            <div class="sub-title">正文</div>
+                            <el-input type="textarea" rows="4"  v-model="currentrow.content" disabled>
+                            </el-input>
+                            <div class="sub-title">回复</div>
+                            <el-input type="textarea" rows="4"  v-model="currentrow.reply" :disabled="currentrow.disabled">
+                            </el-input>
+                            <el-col align="center">
+                                <el-button type="success" row="" @click="onConfirm()" :disabled="currentrow.disabled">确认
+                                </el-button>
+                            </el-col>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="course" label="收件人"  align="center">
+                    <el-table-column prop="fromwho" label="发件人"  align="center">
                     </el-table-column>
-                    <el-table-column prop="teacher" label="发送时间"  align="center">
+                    <el-table-column prop="gettime" label="发送时间"  align="center">
                     </el-table-column>
-                    <el-table-column prop="testtime" label="消息类型"  align="center" >
+                    <el-table-column prop="messagetype" label="消息类型"  align="center" >
                     </el-table-column>
-                    <el-table-column prop="testtime" label="标题"  align="center" >
+                    <el-table-column prop="title" label="标题"  align="center" >
                     </el-table-column>
-                    <el-table-column prop="testtime" label="是否完成"  align="center" >
+                    <el-table-column prop="isFinished" label="是否完成"  align="center" >
                     </el-table-column>
-                    <el-table-column prop="testtime" label="完成时间"  align="center" >
+                    <el-table-column prop="finishtime" label="完成时间"  align="center" >
                     </el-table-column>
-                    <el-table-column prop="testtime" label="处理结果"  align="center" >
+                    <el-table-column prop="result" label="处理结果"  align="center" >
                     </el-table-column>
                 </el-table>
             
             </el-main>
+            <el-footer>
+                <el-pagination
+                    @current-change="initSaveList()"
+                    :current-page.sync="pages.page"
+                    :page-size="pages.size"
+                    layout="prev, pager, next, jumper"
+                    :total="pages.total">
+                </el-pagination>
+            </el-footer>
         </el-container>
     </div>
 </template>
 
 <script>
-    import { getTestlist } from "@/api/axioses4stu"
+    import { getSavelist,replyMessage } from "@/api/axioses4stu"
     export default {
         name: 'Vteachercourse',
         data() {
             return {
-				stu_id: "",
                 ObjDrawer: this.$refs,
                 search_text: '',
                 title: "",
                 tableData: [],
-                operating_id: 0,
-                operating_name: 0,
-                drawer: false,
-                ifadd : false, //是否是“添加学生"选项
-                direction: 'rtl',
-                buildings: {},
-                functions: {},
-                buildingselected: '',
-                functionselected: '',
-                capacity: '',
+                currentid: "",
+                currentindex: "",
+                pages: {
+                    page: 1,
+                    /*如果需要修改size,不仅要在这里面更改，在page.py里也要更改*/
+                    size: 3,
+                    total: 1000,
+                },
+                reply: "",
+                stu_id: "",
             }
         },
         mounted: function () {
             this.stu_id = this.$store.state.userid
-            this.initList()
+            this.initSaveList()
         },
         methods: {
             //初始化列表以及选项
-            initList(){
+            initSaveList(){
                 var that = this;
-                getTestlist({ 'stu_id': this.stu_id, 'type': 1 }).then(res =>{
+                getSavelist({ 'stu_id': this.stu_id, 'currentpage': this.pages.page }).then(res =>{
                     console.log(res)
                     if(res.data.code === 1000){
-                        that.tableData = res.data.relations;
+                        that.tableData = res.data.messages;
+                        that.pages.total = res.data.total;
                         that.tableData.forEach(element => {
-                            element.testtime = element.testtime.replace(/T/g, ' ').replace(/Z/g, '')
+                            element.gettime = element.gettime.replace(/T/g, ' ').replace(/Z/g, '')
+                            element.finishtime = element.finishtime.replace(/T/g, ' ').replace(/Z/g, '')
+                            if(element.isFinished == "是"){
+                                element.disabled = true;
+                            }else{
+                                element.disabled = false;
+                            }
                         });
                     }
                 })
@@ -98,7 +125,42 @@
                         that.pages.total = res.data.total;
                     }
                 })
-            }
+            },
+            clickTable(row, index, e) {
+                /*展开行的手风琴效果*/
+                let $table = this.$refs.refTable;
+                this.tableData.map((item) => {
+                    if (row.id != item.id) {
+                        $table.toggleRowExpansion(item, false);
+                    }
+                })
+                $table.toggleRowExpansion(row)
+                /*row.id存的是课程的id*/
+                this.currentid = row.id;
+                this.currentindex = row.index;
+                this.currentrow = row;
+            },
+            tableRowClassName ({row, rowIndex}) {
+                row.index = rowIndex;
+            },
+            onConfirm(){
+                console.log(this.currentid)
+                var that = this;
+                const data = {
+                    'reply': this.reply,
+                    'id': this.currentid,
+                }
+                replyMessage(data).then(res => {
+                    if(res.data.code === 1000){
+                        this.$message({
+                            message: '回复成功', 
+                            type: 'success'
+                        });
+                        this.initSaveList();
+                        this.currentrow.disabled = true
+                    }
+                })
+            },
         },
 
     }

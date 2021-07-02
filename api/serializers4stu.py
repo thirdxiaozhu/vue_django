@@ -131,6 +131,8 @@ class MessagelistSerializers(serializers.ModelSerializer):
     messagetype = serializers.CharField(source="messagetype.name")
     finishtime = serializers.SerializerMethodField()
     isFinished = serializers.SerializerMethodField()
+    fromwho = serializers.SerializerMethodField()
+    towho = serializers.SerializerMethodField()
     
     class Meta:
         model = models.Message
@@ -147,3 +149,20 @@ class MessagelistSerializers(serializers.ModelSerializer):
             return "是"
         else:
             return "否"
+
+    def get_towho(self, obj):
+        if obj.towho == "student":
+            return str(obj.student.stu_id) + " " + obj.student.name
+        elif obj.towho == "teacher":
+            return str(obj.teacher.tea_id) + " " + obj.teacher.name
+        else :
+            return "管理员"
+
+
+    def get_fromwho(self, obj):
+        if obj.fromwho == "student":
+            return str(obj.student.stu_id) + " " + obj.student.name
+        elif obj.fromwho == "teacher":
+            return str(obj.teacher.tea_id) + " " + obj.teacher.name
+        else :
+            return "管理员"

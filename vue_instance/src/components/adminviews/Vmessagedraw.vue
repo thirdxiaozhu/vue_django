@@ -10,8 +10,8 @@
                 </el-option>
             </el-select>
         </el-form-item>
-        <el-form-item label="收件人" prop="towho" :rules="form.option==1?rules.name:[{ required: false, trigger: 'blur' }]"> 
-            <el-input v-model="form.towho" placeholder="仅支持输入教工号" style="width: 90%;" :disabled="disabled"></el-input>
+        <el-form-item label="收件人" prop="towho" > 
+            <el-input v-model="form.towho" placeholder="仅支持输入教工号和学生号" style="width: 90%;" ></el-input>
         </el-form-item>
         <el-form-item label="标题" prop="title"> 
             <el-input v-model="form.title" style="width: 90%;"></el-input>
@@ -27,7 +27,7 @@
 </template>
 
 <script>
-    import { postMessage } from "@/api/axioses4stu"
+    import { postMessage } from "@/api/axioses"
     export default {
         name: 'Vmessagedraw',
         data() {
@@ -48,18 +48,16 @@
                 },
 				options: [{
         		  value: '1',
-        		  label: '教师'
+        		  label: '学生'
         		}, {
         		  value: '2',
-        		  label: '管理员'
+        		  label: '教师'
         		}],
 				stu_id: "",
-				disabled: false,
             }
         },
         props: ['drawer', 'stu_id', 'ifadd'],
         mounted: function () {
-            this.stu_id = this.$store.state.userid;
         },
         methods: {
             //点击保存之后
@@ -70,7 +68,6 @@
                     var that = this;
                     const param = {
                         form: JSON.stringify(this.form),
-						stu_id: this.stu_id
                     }
                     if (valid) {
                        	postMessage(param).then(res => {
@@ -97,13 +94,6 @@
                     }
                 })
             },
-			typeChange(){
-				if(this.form.option == 1){
-					this.disabled = false
-				}else{
-					this.disabled = true
-				}
-			}
         },
         components: {
         },

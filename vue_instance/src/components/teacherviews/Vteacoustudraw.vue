@@ -2,7 +2,7 @@
     <div>
         <el-container>
             <el-main>
-                <el-table :data="tableData" style="width: 100%" ref="table" >
+                <el-table :data="tableData" style="width: 100%" ref="table">
                     <el-table-column prop="" label="#" width="90" type="index" align="center">
                         <template slot-scope="scope">
                             <span>{{scope.$index + 1}}</span>
@@ -54,7 +54,7 @@
             initList() {
                 var that = this;
                 const param = {
-					relation_id: this.relation_id
+                    relation_id: this.relation_id
                 };
                 initStudentList(param).then(ret => {
                     if (ret.data.code === 1000) {
@@ -81,9 +81,9 @@
         overflow: auto;
         /* overflow-x: auto; */
     }
-     
+
     /*2.隐藏滚动条，太丑了*/
-    .el-drawer__container ::-webkit-scrollbar{
+    .el-drawer__container ::-webkit-scrollbar {
         display: none;
     }
 </style>

@@ -14,18 +14,19 @@
                     </el-table-column>
                     <el-table-column prop="Class" label="所在班级" width="150" align="center">
                     </el-table-column>
-                    <el-table-column label="成绩" align="center">
+                    <el-table-column label="成绩" align="center" prop="grade">
                         <template slot-scope="scope">
-                            <el-input v-model="scope.row.grade" placeholder="请输入"></el-input>
+                            <el-input v-model="scope.row.grade" placeholder="请输入" @change="onInputChange(scope.row)"></el-input>
                         </template>
                     </el-table-column>
                 </el-table>
             </el-main>
             <el-footer>
-                <el-button size="medium" type="success" @click="handleUpdate();">确认
+                <el-button size="medium" type="success" @click="checkNull();">确认
                 </el-button>
             </el-footer>
         </el-container>
+
     </div>
 </template>
 
@@ -50,7 +51,7 @@
         mounted: function () {
             this.initList()
         },
-        props: ['relation_id'],
+        props: ['relation_id', 'drawer'],
         methods: {
             //初始化学生列表
             initList() {
@@ -79,8 +80,31 @@
                             type: 'success',
                             message: '录入成功!'
                         });
+                    }else{
+                        this.$message.error({
+                            message: '录入失败!' + res.data.error
+                        });
                     }
                 })
+            },
+            onInputChange(row){
+                if(row.grade > 100 || row.grade < 0){
+                    this.$message.error({
+                        message: '仅接受位于0-100的正数'
+                    });
+                    row.grade = ""
+                }
+            },
+            checkNull(){
+                for(let i in this.tableData){
+                    if(!this.tableData[i].grade){
+                        this.$message.error({
+                            message: '存在未赋予成绩的学生'
+                        });
+                        return
+                    }
+                }
+                this.handleUpdate()
             }
         },
 

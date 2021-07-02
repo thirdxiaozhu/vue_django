@@ -412,11 +412,18 @@ export function deleteChoice(data){
     })
 }
 
-
 export function getSendlist(params){
     return axios.request({
-        method: "get",
+        method: "GET",
         url: "/api/getsendlist",
+        params: params
+    })
+}
+
+export function getSavelist(params){
+    return axios.request({
+        method: "get",
+        url: "/api/getsavelist",
         params: params
     })
 }
@@ -436,5 +443,13 @@ export function rejectMessage(data){
         method: "post",
         url: "/api/rejectmessage/",
         data: data
+    })
+}
+
+export function postMessage(params){
+    return axios.request({
+        method: "POST",
+        url: "/api/postmessage/",
+        data: params
     })
 }

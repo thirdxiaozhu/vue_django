@@ -53,6 +53,8 @@ urlpatterns = [
     path('updatechoicearr/',test.updateChoicearr.as_view()),
     path('deletechoice4arr/',test.deleteChoicearr.as_view()),
     path('getsendlist/',message.getSendlist.as_view()),
+    path('getsavelist/',message.getSavelist.as_view()),
     path('replymessage/',message.replyMessage.as_view()),
     path('rejectmessage/',message.rejectMessage.as_view()),
+    path('postmessage/',message.postMessage.as_view()),
 ]

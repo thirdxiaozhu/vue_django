@@ -5,7 +5,7 @@
                 <el-breadcrumb separator="/" style="margin-top: 20px; font-size:large;">
                     <el-breadcrumb-item>首页</el-breadcrumb-item>
                     <el-breadcrumb-item>常规信息</el-breadcrumb-item>
-                    <el-breadcrumb-item style="font-weight: bold;">教籍信息</el-breadcrumb-item>
+                    <el-breadcrumb-item style="font-weight: bold;">我的教籍</el-breadcrumb-item>
                 </el-breadcrumb>
             </el-col>
         </el-header>

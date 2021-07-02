@@ -9,4 +9,9 @@ urlpatterns = [
     path('initstudentlist/',views.initStudentList.as_view()),
     path('ifarrange/',views.ifarrange.as_view()),
     path('updategrade/',views.updateGrade.as_view()),
+    path('getsendlist/',views.getSendlist.as_view()),
+    path('getsavelist/',views.getSavelist.as_view()),
+    path('replymessage/',views.replyMessage.as_view()),
+    path('rejectmessage/',views.rejectMessage.as_view()),
+    path('postmessage/',views.postMessage.as_view()),
 ]

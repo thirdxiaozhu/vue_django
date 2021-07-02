@@ -14,10 +14,16 @@
                 </el-col>
         </el-header>
             <el-main>
-                <el-table :data="tableData" style="width: 100%" ref="table">
-                    <el-table-column prop="" label="#" width="90" type="index" align="center">
-                        <template slot-scope="scope">
-                            <span>{{scope.$index + 1}}</span>
+                <el-table :data="tableData" style="width: 100%" ref="refTable" tooltip-effect="dark" highlight-current-row row-key="id"
+                    lazy @row-click="clickTable" :row-class-name="tableRowClassName">
+                    <el-table-column type="expand" width="1">
+                        <template slot-scope="props">
+                            <div class="sub-title">标题</div>
+                            <el-input type="text" v-model="currentrow.title" disabled>
+                            </el-input>
+                            <div class="sub-title">正文</div>
+                            <el-input type="textarea" rows="4"  v-model="currentrow.content" disabled>
+                            </el-input>
                         </template>
                     </el-table-column>
                     <el-table-column prop="towho" label="收件人"  align="center">
@@ -37,12 +43,21 @@
                 </el-table>
             
             </el-main>
+            <el-footer>
+                <el-pagination
+                    @current-change="initSendList()"
+                    :current-page.sync="pages.page"
+                    :page-size="pages.size"
+                    layout="prev, pager, next, jumper"
+                    :total="pages.total">
+                </el-pagination>
+            </el-footer>
 
                 <el-drawer :title="title" v-if="drawer" :visible.sync="drawer" :direction="direction"
-                    :before-close="handleClose" ref="infodrawer">
+                    :before-close="handleClose" ref="infodrawer" size="50%">
                     <span>
-                        <Vstudentdraw :drawer="ObjDrawer"  @judgeOptions="judgeOptions">
-                        </Vstudentdraw>
+                        <Vmessagedraw :drawer="ObjDrawer"  @judgeOptions="judgeOptions">
+                        </Vmessagedraw>
                     </span>
                 </el-drawer>
         </el-container>
@@ -50,6 +65,7 @@
 </template>
 
 <script>
+    import Vmessagedraw from './Vmessagedraw'
     import { getSendlist } from "@/api/axioses4stu"
     export default {
         name: 'Vteachercourse',
@@ -70,6 +86,12 @@
                 buildingselected: '',
                 functionselected: '',
                 capacity: '',
+                pages: {
+                    page: 1,
+                    /*如果需要修改size,不仅要在这里面更改，在page.py里也要更改*/
+                    size: 3,
+                    total: 1000,
+                },
             }
         },
         mounted: function () {
@@ -80,10 +102,11 @@
             //初始化列表以及选项
             initSendList(){
                 var that = this;
-                getSendlist({ 'stu_id': this.stu_id }).then(res =>{
+                getSendlist({ 'currentpage': this.pages.page, 'stu_id': this.stu_id }).then(res =>{
                     console.log(res)
                     if(res.data.code === 1000){
                         that.tableData = res.data.messages;
+                        that.pages.total = res.data.total;
                         that.tableData.forEach(element => {
                             element.gettime = element.gettime.replace(/T/g, ' ').replace(/Z/g, '')
                             element.finishtime = element.finishtime.replace(/T/g, ' ').replace(/Z/g, '')
@@ -111,8 +134,35 @@
                 })
             },
             sendMessage(){
-
-            }
+                this.title="发送消息"
+            },
+            handleClose(done){
+                this.$confirm('未进行保存的信息将丢失，是否关闭？')
+                    .then(_ => {
+                        done();
+                    })
+                    .catch(_ => { });
+            },
+            clickTable(row, index, e) {
+                /*展开行的手风琴效果*/
+                let $table = this.$refs.refTable;
+                this.tableData.map((item) => {
+                    if (row.id != item.id) {
+                        $table.toggleRowExpansion(item, false);
+                    }
+                })
+                $table.toggleRowExpansion(row)
+                /*row.id存的是课程的id*/
+                this.currentid = row.id;
+                this.currentindex = row.index;
+                this.currentrow = row;
+            },
+            tableRowClassName ({row, rowIndex}) {
+                row.index = rowIndex;
+            },
+        },
+        components: {
+            Vmessagedraw,
         },
 
     }

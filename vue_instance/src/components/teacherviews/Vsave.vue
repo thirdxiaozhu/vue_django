@@ -63,7 +63,7 @@
 </template>
 
 <script>
-    import { getSavelist,replyMessage, rejectMessage } from "@/api/axioses"
+    import { getSavelist,replyMessage,rejectMessage } from "@/api/axioses4tea"
     export default {
         name: 'Vteachercourse',
         data() {
@@ -81,17 +81,18 @@
                     total: 1000,
                 },
                 reply: "",
+                tea_id: "",
             }
         },
         mounted: function () {
+            this.tea_id = this.$store.state.userid
             this.initSaveList()
         },
         methods: {
             //初始化列表以及选项
             initSaveList(){
                 var that = this;
-                getSavelist({  'currentpage': this.pages.page }).then(res =>{
-                    console.log(res)
+                getSavelist({ 'tea_id': this.tea_id, 'currentpage': this.pages.page }).then(res =>{
                     if(res.data.code === 1000){
                         that.tableData = res.data.messages;
                         that.pages.total = res.data.total;

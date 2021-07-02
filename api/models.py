@@ -238,7 +238,7 @@ class Message(models.Model):
     result= models.CharField(max_length=30, default="none")
 
     class Meta:
-        ordering = ['-isFinished', ['-gettime'],['-finishtime']]
+        ordering = ['isFinished', '-gettime', '-finishtime']
 
 class IDNumber(models.Model):
     id = models.AutoField(primary_key=True)

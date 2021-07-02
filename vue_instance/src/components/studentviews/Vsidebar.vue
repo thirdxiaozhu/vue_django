@@ -17,7 +17,7 @@
       </el-submenu>
       <el-submenu index="2">
         <template slot="title">
-          <i class="el-icon-menu"></i>
+          <i class="el-icon-message-solid"></i>
           <span>消息处理</span>
         </template>
           <el-menu-item index="2-1"><router-link to="/student/savemessage">收件箱</router-link></el-menu-item>

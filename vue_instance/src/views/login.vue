@@ -25,7 +25,7 @@
                     </el-col>
                 </el-row>
             </el-radio-group>`
-            <el-checkbox v-model="checked" class="rememberme">记住密码</el-checkbox>
+            <el-checkbox v-model="checked" class="rememberme">七天免登录</el-checkbox>
             <el-form-item style="width:100%;">
                 <el-button type="primary" style="width:100%;" @click="handleSubmit" :loading="logining">登录</el-button>
             </el-form-item>
@@ -57,6 +57,7 @@
         },
         mounted: function(){
             console.log(this.$store);
+            this.isChecked()
         },
         methods: {
             handleSubmit(event) {
@@ -70,8 +71,13 @@
                             if (res.data.code == "1000") {
                                 this.logining = false;
 
-                                that.$store.commit('saveToken',{token: res.data.token,userid: that.ruleForm.userid,
-                                    username: res.data.name, usertype: that.ruleForm.radio})
+                                if(that.checked == true){
+                                    that.$store.commit('saveToken',{token: res.data.token,userid: that.ruleForm.userid,
+                                        username: res.data.name, usertype: that.ruleForm.radio, ischecked: true})
+                                }else{
+                                    that.$store.commit('saveToken',{token: res.data.token,userid: that.ruleForm.userid,
+                                        username: res.data.name, usertype: that.ruleForm.radio, ischecked: false})
+                                }
 
                                 if(that.ruleForm.radio == 1)
                                     this.$router.push({ path: '/student' });
@@ -93,7 +99,20 @@
                         return false;
                     }
                 })
+            },
+            isChecked(){
+                if(this.$store.state.ischecked){
+                    const type = this.$store.state.usertype
+                    if(type == 1)
+                        this.$router.push({ path: '/student' });
+                    else if(type == 2)
+                        this.$router.push({ path: '/teacher' });
+                    else
+                        this.$router.push({ path: '/admin' });
+
+                }
             }
+
         }
     };
 </script>

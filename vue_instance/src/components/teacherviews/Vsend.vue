@@ -6,9 +6,12 @@
                 <el-breadcrumb separator="/" style="margin-top: 20px; font-size:large;">
                     <el-breadcrumb-item>首页</el-breadcrumb-item>
                     <el-breadcrumb-item>消息处理</el-breadcrumb-item>
-                    <el-breadcrumb-item style="font-weight: bold;">收件箱</el-breadcrumb-item>
+                    <el-breadcrumb-item style="font-weight: bold;">我的发送</el-breadcrumb-item>
                 </el-breadcrumb>
             </el-col>
+                <el-col :span="3" style="margin-top: 10px; float: right;">
+                    <el-button type="success" @click="sendMessage();drawer=true">发送消息</el-button>
+                </el-col>
         </el-header>
             <el-main>
                 <el-table :data="tableData" style="width: 100%" ref="refTable" tooltip-effect="dark" highlight-current-row row-key="id"
@@ -21,18 +24,9 @@
                             <div class="sub-title">正文</div>
                             <el-input type="textarea" rows="4"  v-model="currentrow.content" disabled>
                             </el-input>
-                            <div class="sub-title">回复</div>
-                            <el-input type="textarea" rows="4"  v-model="currentrow.reply" :disabled="currentrow.disabled">
-                            </el-input>
-                            <el-col align="center">
-                                <el-button type="success" row="" @click="onConfirm()" :disabled="currentrow.disabled">确认
-                                </el-button>
-                                <el-button type="danger" row="" @click="onReject()" :disabled="currentrow.disabled">驳回
-                                </el-button>
-                            </el-col>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="fromwho" label="发件人"  align="center">
+                    <el-table-column prop="towho" label="收件人"  align="center">
                     </el-table-column>
                     <el-table-column prop="gettime" label="发送时间"  align="center">
                     </el-table-column>
@@ -51,46 +45,64 @@
             </el-main>
             <el-footer>
                 <el-pagination
-                    @current-change="initSaveList()"
+                    @current-change="initSendList()"
                     :current-page.sync="pages.page"
                     :page-size="pages.size"
                     layout="prev, pager, next, jumper"
                     :total="pages.total">
                 </el-pagination>
             </el-footer>
+
+                <el-drawer :title="title" v-if="drawer" :visible.sync="drawer" :direction="direction"
+                    :before-close="handleClose" ref="infodrawer" size="50%">
+                    <span>
+                        <Vmessagedraw :drawer="ObjDrawer"  @judgeOptions="judgeOptions">
+                        </Vmessagedraw>
+                    </span>
+                </el-drawer>
         </el-container>
     </div>
 </template>
 
 <script>
-    import { getSavelist,replyMessage, rejectMessage } from "@/api/axioses"
+    import Vmessagedraw from './Vmessagedraw'
+    import { getSendlist } from "@/api/axioses4tea"
     export default {
         name: 'Vteachercourse',
         data() {
             return {
+				stu_id: "",
                 ObjDrawer: this.$refs,
                 search_text: '',
                 title: "",
                 tableData: [],
-                currentid: "",
-                currentindex: "",
+                operating_id: 0,
+                operating_name: 0,
+                drawer: false,
+                ifadd : false, //是否是“添加学生"选项
+                direction: 'rtl',
+                buildings: {},
+                functions: {},
+                buildingselected: '',
+                functionselected: '',
+                capacity: '',
                 pages: {
                     page: 1,
                     /*如果需要修改size,不仅要在这里面更改，在page.py里也要更改*/
                     size: 3,
                     total: 1000,
                 },
-                reply: "",
             }
         },
         mounted: function () {
-            this.initSaveList()
+            this.tea_id = this.$store.state.userid
+            this.initSendList()
         },
         methods: {
             //初始化列表以及选项
-            initSaveList(){
+            initSendList(){
                 var that = this;
-                getSavelist({  'currentpage': this.pages.page }).then(res =>{
+                getSendlist({ 'currentpage': this.pages.page, 'tea_id': this.tea_id }).then(res =>{
                     console.log(res)
                     if(res.data.code === 1000){
                         that.tableData = res.data.messages;
@@ -98,11 +110,6 @@
                         that.tableData.forEach(element => {
                             element.gettime = element.gettime.replace(/T/g, ' ').replace(/Z/g, '')
                             element.finishtime = element.finishtime.replace(/T/g, ' ').replace(/Z/g, '')
-                            if(element.isFinished == "是"){
-                                element.disabled = true;
-                            }else{
-                                element.disabled = false;
-                            }
                         });
                     }
                 })
@@ -126,6 +133,16 @@
                     }
                 })
             },
+            sendMessage(){
+                this.title="发送消息"
+            },
+            handleClose(done){
+                this.$confirm('未进行保存的信息将丢失，是否关闭？')
+                    .then(_ => {
+                        done();
+                    })
+                    .catch(_ => { });
+            },
             clickTable(row, index, e) {
                 /*展开行的手风琴效果*/
                 let $table = this.$refs.refTable;
@@ -143,41 +160,9 @@
             tableRowClassName ({row, rowIndex}) {
                 row.index = rowIndex;
             },
-            onConfirm(){
-                console.log(this.currentid)
-                var that = this;
-                const data = {
-                    'reply': this.reply,
-                    'id': this.currentid,
-                }
-                replyMessage(data).then(res => {
-                    if(res.data.code === 1000){
-                        this.$message({
-                            message: '回复成功', 
-                            type: 'success'
-                        });
-                        this.initSaveList();
-                        this.currentrow.disabled = true
-                    }
-                })
-            },
-            onReject(){
-                var that = this;
-                const data = {
-                    'reply': this.reply,
-                    'id': this.currentid,
-                }
-                rejectMessage(data).then(res => {
-                    if(res.data.code === 1000){
-                        this.$message({
-                            message: '驳回成功', 
-                            type: 'success'
-                        });
-                        this.initSaveList();
-                        this.currentrow.disabled = true
-                    }
-                })
-            }
+        },
+        components: {
+            Vmessagedraw,
         },
 
     }

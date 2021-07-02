@@ -29,6 +29,8 @@ import Vmain4tea from '@/components/teacherviews/Vmain'
 import Vteacherinfo from '@/components/teacherviews/Vteacherinfo'
 import Vteachercourse from '@/components/teacherviews/Vteachercourse'
 import Vteachergrade from '@/components/teacherviews/Vteachergrade'
+import Vsend4tea from '@/components/teacherviews/Vsend'
+import Vsave4tea from '@/components/teacherviews/Vsave'
 
 
 Vue.use(Router)
@@ -169,6 +171,16 @@ export default new Router({
           path: 'grade',
           name: 'Vteachergrade',
           component: Vteachergrade
+        },
+        {
+          path: 'save',
+          name: 'Vsave',
+          component: Vsave4tea
+        },
+        {
+          path: 'send',
+          name: 'Vsend',
+          component: Vsend4tea
         },
       ]
     }

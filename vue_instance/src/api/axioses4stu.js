@@ -146,3 +146,28 @@ export function getSendlist(params){
         params: params
     })
 }
+
+export function postMessage(params){
+    return axios.request({
+        method: "POST",
+        url: "/api/student/postmessage/",
+        data: params
+    })
+}
+
+export function getSavelist(params){
+    return axios.request({
+        method: "get",
+        url: "/api/student/getsavelist",
+        params: params
+    })
+}
+
+
+export function replyMessage(data){
+    return axios.request({
+        method: "post",
+        url: "/api/student/replymessage/",
+        data: data
+    })
+}
