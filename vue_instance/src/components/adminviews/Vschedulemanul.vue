@@ -116,6 +116,7 @@
 					}
                 })
             },
+            //获取空闲教室
             getValidRoom(){
                 const params = {
                     form: JSON.stringify(this.form)
