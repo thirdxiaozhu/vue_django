@@ -67,7 +67,7 @@
                         this.logining = true;
                         postLogin(this.ruleForm).then(res => {
                             console.log(res)
-
+                            // 如果返回的是1000，那么代表登录成功，记录Token
                             if (res.data.code == "1000") {
                                 this.logining = false;
 

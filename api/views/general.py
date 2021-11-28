@@ -35,7 +35,7 @@ class login(APIView):
             if user:
                 uid = str(uuid.uuid4())
                 token = models.Usertoken.objects.update_or_create(userid = user.id, defaults={'token':uid})
-                user.token_id = token[0].id #token返回的是元组，该元组第一个才是查到的字段
+                user.token_id = token[0].id 
                 user.save()
                 print(user.token)
                 ret = {
